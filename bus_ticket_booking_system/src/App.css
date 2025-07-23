@@ -42,3 +42,31 @@ a.nav-link.active {
     margin-right: 30px;
 }
 */
+
+.small-size-page {
+    width: 600px;
+}
+
+.medium-size-page{
+    width: 1200px;
+}
+.header-color{
+    background-color: rgb(116, 103, 163);;
+}
+.ticket-page{
+    background-color: rgb(252, 203, 111);
+    width: 400px;
+}
+.ticket-heading{
+    background-color: rgb(246, 134, 42);
+}
+.ticket-end-part{
+    background-color: rgb(241, 215, 189);
+}
+.ticket-body-part{
+    background-color: rgb(244, 233, 209);
+}
+.seat-box:hover {
+  transform: scale(1.1);
+  transition: 0.2s;
+}
