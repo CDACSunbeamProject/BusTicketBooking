@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 function Ticket() {
-  const [ticketDeatils,setTicketDetails] = useState({
+  const [ticketDeatils, setTicketDetails] = useState({
     ticketId: "12345",
     date: "2023-10-01",
     totalAmount: "1500",
