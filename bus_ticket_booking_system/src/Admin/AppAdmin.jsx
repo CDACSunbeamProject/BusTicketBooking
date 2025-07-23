@@ -2,6 +2,7 @@ import { Routes,Route } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import Dashboard from './pages/Dashboard';
 import AddBuses1 from './pages/AddBuses1';
+import ViewBuses from './pages/ViewBuses';
 
 function AppAdmin(){
     return(
@@ -13,6 +14,7 @@ function AppAdmin(){
                 <Routes>
                     <Route path="dashboard" element={<Dashboard />} />
                     <Route path="addbus" element={<AddBuses1 />}/>
+                    <Route path="viewbuses" element={<ViewBuses />} />
                     <Route path='*' element={<h3>Page Not Found</h3>} />
                 </Routes>
                 </div>
