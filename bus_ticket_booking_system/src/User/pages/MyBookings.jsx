@@ -9,8 +9,8 @@ function MyBookings() {
       from: "City A",
       to: "City B",
       date: "2023-10-01",
-      seatNo:'11',
-      price: 500,
+      seatsCount: "02",
+      price: 1000,
     },
     {
       ticketId: "TKT54321",
@@ -19,8 +19,8 @@ function MyBookings() {
       from: "City C",
       to: "City D",
       date: "2023-10-02",
-      seatNo:'23',
-      price: 600,
+      seatsCount: "03",
+      price: 1800,
     },
     {
       ticketId: "TKT67890",
@@ -29,8 +29,8 @@ function MyBookings() {
       from: "City E",
       to: "City F",
       date: "2023-10-03",
-      seatNo:'07',
-      price: 700,
+      seatsCount: "03",
+      price: 1700,
     },
     {
       ticketId: "TKT11223",
@@ -39,7 +39,7 @@ function MyBookings() {
       from: "City G",
       to: "City H",
       date: "2023-10-04",
-      seatNo:'15',
+      seatsCount: "01",
       price: 800,
     },
   ]);
@@ -67,7 +67,7 @@ function MyBookings() {
                   <th>From</th>
                   <th>To</th>
                   <th>Date</th>
-                  <th>Seat No</th>
+                  <th>No. Seats Booked</th>
                   <th>Price</th>
                 </tr>
               </thead>
@@ -81,7 +81,7 @@ function MyBookings() {
                     <td>{booking.from}</td>
                     <td>{booking.to}</td>
                     <td>{booking.date}</td>
-                    <td>{booking.seatNo}</td>
+                    <td>{booking.seatsCount}</td>
                     <td>{booking.price}</td>
                   </tr>
                 ))}
