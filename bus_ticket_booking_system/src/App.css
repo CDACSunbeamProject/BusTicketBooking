@@ -70,3 +70,7 @@ a.nav-link.active {
   transform: scale(1.1);
   transition: 0.2s;
 }
+
+.bg-color-1{
+    background-color: rgba(98, 87, 68, 0.508);
+}

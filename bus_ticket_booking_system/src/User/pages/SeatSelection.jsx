@@ -263,6 +263,9 @@ function SeatSelection() {
       </div>
     );
   };
+  
+  
+  
   return (
     <div className="container bg-light border rounded-4 mt-5 mb-5 pb-4 shadow text-center ">
       <div className="row header-color rounded-top-4 justify-content-center mb-4">
