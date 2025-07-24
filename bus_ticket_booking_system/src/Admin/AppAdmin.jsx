@@ -3,7 +3,7 @@ import Sidebar from './components/Sidebar';
 import Dashboard from './pages/Dashboard';
 import AddBuses1 from './pages/AddBuses1';
 import ViewBuses from './pages/ViewBuses';
-import UserInfo from './pages/UserInfo';
+import Bookings from './pages/Bookings';
 
 function AppAdmin(){
     return(
@@ -16,7 +16,7 @@ function AppAdmin(){
                     <Route path="dashboard" element={<Dashboard />} />
                     <Route path="addbus" element={<AddBuses1 />}/>
                     <Route path="viewbuses" element={<ViewBuses />} />
-                    <Route path="userinfo" element={<UserInfo />} />
+                    <Route path="bookings" element={<Bookings />} />
                     <Route path='*' element={<h3>Page Not Found</h3>} />
                 </Routes>
                 </div>
