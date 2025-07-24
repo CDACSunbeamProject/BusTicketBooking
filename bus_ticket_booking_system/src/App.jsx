@@ -4,7 +4,6 @@ import AppUser from './User/AppUser';
 import "bootstrap/dist/css/bootstrap.min.css";
 
 //FOR ROUTING 
-
 function App(){
   return (
     <BrowserRouter>
