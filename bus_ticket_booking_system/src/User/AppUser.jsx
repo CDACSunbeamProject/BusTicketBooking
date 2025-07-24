@@ -12,6 +12,7 @@ import Ticket from "./pages/Ticket";
 import ViewTicket from "./pages/ViewTicket";
 import Profile from "./pages/Profile";
 import ViewBuses from "./pages/ViewBuses";
+
 function AppUser() {
   const location = useLocation();
   const hideNavbarPaths = [
