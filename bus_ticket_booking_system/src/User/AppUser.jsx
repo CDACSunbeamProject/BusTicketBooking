@@ -10,6 +10,8 @@ import CancelTicket from "./pages/CancelTicket";
 import MyBookings from "./pages/MyBookings";
 import Ticket from "./pages/Ticket";
 import ViewTicket from "./pages/ViewTicket";
+import ViewBuses from "./pages/ViewBuses";
+
 function AppUser() {
   const location = useLocation();
   const hideNavbarPaths = [
@@ -32,6 +34,8 @@ function AppUser() {
         <Route path="mybookings" element={<MyBookings />} />
         <Route path="ticket" element={<Ticket />} />
         <Route path="viewticket" element={<ViewTicket />} />
+        <Route path="viewbuses" element={<ViewBuses />} />
+
       </Routes>
     </div>
   );

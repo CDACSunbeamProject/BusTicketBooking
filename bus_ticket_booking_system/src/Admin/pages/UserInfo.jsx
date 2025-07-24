@@ -4,7 +4,7 @@ import React from 'react';
 const UserInfo = () => {
   return (
     <div className="container mt-5">
-      <h2 className="text-center mb-4">User Booking Info</h2>
+      <h2 className="text-center mb-4">User Booking Information</h2>
 
       <div className="table-responsive">
         <table className="table table-bordered table-hover align-middle text-center">
