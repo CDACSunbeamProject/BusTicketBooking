@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function SeatSelection() {
@@ -7,13 +7,29 @@ function SeatSelection() {
     mobile: "",
     email: "",
   });
+  const [passengerDetails, setPassengerDetails] = useState([]);
+  useEffect(() => {
+    // When seats are selected, create empty records
+    const initialData = selectedSeats.map((seatNo) => ({
+      seatNo,
+      name: "",
+      gender: "",
+      age: "",
+    }));
+    setPassengerDetails(initialData);
+  }, [selectedSeats]);
+  const handleInputChange = (index, field, value) => {
+    const updatedDetails = [...passengerDetails];
+    updatedDetails[index][field] = value;
+    setPassengerDetails(updatedDetails);
+  };
   const bookedSeats = [2, 5, 12, 21, 23]; // Already booked
   const fare = 600;
   const totalFare = selectedSeats.length * fare;
   const navigate = useNavigate();
 
   const busDetails = {
-    sleeper: false, // Change to "true" to test other layout
+    sleeper: true, // Change to "true" to test other layout
     src: "Pune",
     dest: "Bangalore",
     totalSeats: 36,
@@ -154,21 +170,23 @@ function SeatSelection() {
   };
 
   const passangersData = () => {
-    return selectedSeats.map((seatNo, index) => (
-      <tr key={seatNo}>
-        <td>{seatNo}</td>
+    return passengerDetails.map((passenger, index) => (
+      <tr key={passenger.seatNo}>
+        <td>{passenger.seatNo}</td>
         <td className="input-group-sm">
           <input
             type="text"
-            name={`pname-${index}`}
             className="form-control"
+            value={passenger.name}
+            onChange={(e) => handleInputChange(index, "name", e.target.value)}
             required
           />
         </td>
         <td className="input-group-sm">
           <select
             className="form-select form-select-sm text-center"
-            name={`gender-${index}`}
+            value={passenger.gender}
+            onChange={(e) => handleInputChange(index, "gender", e.target.value)}
             required
           >
             <option value="">Select</option>
@@ -178,9 +196,10 @@ function SeatSelection() {
         </td>
         <td className="input-group-sm">
           <input
-            className="form-control"
             type="number"
-            name={`age-${index}`}
+            className="form-control"
+            value={passenger.age}
+            onChange={(e) => handleInputChange(index, "age", e.target.value)}
             required
           />
         </td>
@@ -191,6 +210,9 @@ function SeatSelection() {
   const handleContinue = (e) => {
     e.preventDefault();
     // You can uncomment and implement validation logic here
+    console.log("Selected Seats:", selectedSeats);
+    console.log("Contact Details:", passengersContactDetails);
+    console.log("Passenger Details:", passengerDetails);
     navigate("/user/payment");
   };
   const handleCancel = () => {
@@ -244,7 +266,7 @@ function SeatSelection() {
   return (
     <div className="container bg-light border rounded-4 mt-5 mb-5 pb-4 shadow text-center ">
       <div className="row header-color rounded-top-4 justify-content-center mb-4">
-        <div className="fs-2 m-2 fw-bold">Book Your Seats</div>
+        <div className="fs-3 m-2 fw-bold text-white">Book Your Seats</div>
       </div>
 
       {/* Bus seats Arrangement */}

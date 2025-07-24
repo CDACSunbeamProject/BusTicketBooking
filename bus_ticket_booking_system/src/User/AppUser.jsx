@@ -10,6 +10,8 @@ import CancelTicket from "./pages/CancelTicket";
 import MyBookings from "./pages/MyBookings";
 import Ticket from "./pages/Ticket";
 import ViewTicket from "./pages/ViewTicket";
+import Profile from "./pages/Profile";
+import ViewBuses from "./pages/ViewBuses";
 
 function AppUser() {
   const location = useLocation();
@@ -33,6 +35,8 @@ function AppUser() {
         <Route path="mybookings" element={<MyBookings />} />
         <Route path="ticket" element={<Ticket />} />
         <Route path="viewticket" element={<ViewTicket />} />
+        <Route path="profile" element={<Profile />} />
+        <Route path="viewbuses" element={<ViewBuses />} />
       </Routes>
     </div>
   );

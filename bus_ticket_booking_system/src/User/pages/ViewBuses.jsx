@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { useNavigate } from "react-router-dom";
 const BusInfo = () => {
   return (
     <div className="container mt-5">
@@ -21,7 +21,6 @@ const BusInfo = () => {
               <th>Fare (₹)</th>
               <th>Amenities</th>
               <th>Photo</th>
-              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -40,10 +39,6 @@ const BusInfo = () => {
               <td>
                 {/* Leave blank or use a placeholder image */}
               </td>
-              <td>
-                <button className="btn btn-success btn-sm me-2">Add</button>
-                <button className="btn btn-danger btn-sm">Delete</button>
-              </td>
             </tr>
             <tr>
               <td>2</td>
@@ -58,10 +53,7 @@ const BusInfo = () => {
               <td>350</td>
               <td>Water Bottle</td>
               <td></td>
-              <td>
-                <button className="btn btn-success btn-sm me-2">Add</button>
-                <button className="btn btn-danger btn-sm">Delete</button>
-              </td>
+            
             </tr>
             <tr>
               <td>3</td>
@@ -76,13 +68,7 @@ const BusInfo = () => {
               <td>1200</td>
               <td>Wi-Fi, Charging Point</td>
               <td></td>
-              <td>
-  <div className="d-flex justify-content-center gap-2">
-    <button className="btn btn-success btn-sm">Add</button>
-    <button className="btn btn-danger btn-sm">Delete</button>
-  </div>
-</td>
-
+            
             </tr>
           </tbody>
         </table>

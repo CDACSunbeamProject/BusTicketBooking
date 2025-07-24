@@ -19,7 +19,7 @@ function Dashboard(){
                 <div className="card shadow-sm">
                     <div className="card-body">
                         <h5 className="card-title">View Bus</h5>
-                        <p className="card-text">View buses option</p>
+                        <p className="card-text">View Bus Details</p>
                         <Link to='/Admin/ViewBuses' className='btn btn-primary'>Go</Link>
                     </div>
                 </div>
@@ -29,11 +29,13 @@ function Dashboard(){
                 <div className="card shadow-sm">
                     <div className="card-body">
                         <h5 className="card-title">Bookings</h5>
-                        <p className="card-text">View all bookings.</p>
+                        <p className="card-text">View All Bookings.</p>
                         <Link to='/Admin/Bookings' className='btn btn-primary'>Go</Link>
                     </div>
                 </div>
             </div>
+
+           
 
             </div>
         </div>

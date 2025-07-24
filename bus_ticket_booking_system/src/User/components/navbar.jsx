@@ -49,6 +49,11 @@ function Navbar() {
             </Link>
           </li>
           <li className="nav-item">
+            <Link className="nav-link text-white" to="/user/viewbuses">
+              View Buses
+            </Link>
+          </li>
+          <li className="nav-item">
             <Link className="nav-link text-white" to="/user/profile">
               Profile
             </Link>
