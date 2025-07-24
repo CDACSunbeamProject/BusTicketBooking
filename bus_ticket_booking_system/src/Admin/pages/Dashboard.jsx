@@ -35,6 +35,16 @@ function Dashboard(){
                 </div>
             </div>
 
+            <div className="col-md-4">
+                <div className="card shadow-sm">
+                    <div className="card-body">
+                        <h5 className="card-title">User Information</h5>
+                        <p className="card-text">View User Information</p>
+                        <Link to='/Admin/UserInfo' className='btn btn-primary'>Go</Link>
+                    </div>
+                </div>
+            </div>
+
             </div>
         </div>
     );

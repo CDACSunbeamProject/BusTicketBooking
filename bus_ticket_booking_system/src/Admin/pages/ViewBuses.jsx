@@ -1,59 +1,94 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React from 'react';
 
-function ViewBuses() {
-  const [buses, setBuses] = useState([
-    { id: 1, busNumber: "MH-01-1234", busType: "AC", seatType: "sleeper" },
-    {
-      id: 2,
-      busNumber: "KA-02-5678",
-      busType: "Non-AC",
-      seatType: "sleeper",
-    },
-    { id: 3, busNumber: "MH-03-9101", busType: "AC", seatType: "seater" },
-    {
-      id: 4,
-      busNumber: "MH-04-1121",
-      busType: "AC",
-      seatType: "sleeper",
-    },
-  ]);
-  const navigate = useNavigate();
+const BusInfo = () => {
   return (
-    <div className="container medium-size-page mt-5 bg-light border shadow-sm rounded-4">
-      <div className="row header-color rounded-top-4 p-2 text-white justify-content-center">
-        <div className="fw-semibold fs-3 text-center">All Buses</div>
-      </div>
-      <div className="row shadow m-5 p-0">
-        <div className="p-0 m-0">
-          <table className="table text-center border-primary">
-            <thead className="table-info login-header">
-              <tr className="align-middle">
-                <th>Bus Id</th>
-                <th>Bus Number</th>
-                <th>Bus Type</th>
-                <th>Seat Type</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {buses.map((bus) => (
-                <tr key={bus.id} className="align-middle">
-                  <td>{bus.id}</td>
-                  <td>{bus.busNumber}</td>
-                  <td>{bus.busType}</td>
-                  <td>{bus.seatType}</td>
-                  <td>
-                    <button className="btn btn-danger">Delete</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+    <div className="container mt-5">
+      <h2 className="mb-4 text-center">Bus Details</h2>
+
+      <div className="table-responsive">
+        <table className="table table-bordered table-hover align-middle text-center">
+          <thead className="table-dark">
+            <tr>
+              <th>Sr.No</th>
+              <th>Bus ID</th>
+              <th>Bus Number</th>
+              <th>Route</th>
+              <th>Pickup Point</th>
+              <th>Drop Point</th>
+              <th>Bus Type</th>
+              <th>Departure Date & Time</th>
+              <th>Arrival Date & Time</th>
+              <th>Fare (₹)</th>
+              <th>Amenities</th>
+              <th>Photo</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>B101</td>
+              <td>MH12AB1234</td>
+              <td>Pune → Mumbai</td>
+              <td>Swargate</td>
+              <td>Dadar</td>
+              <td>AC Sleeper</td>
+              <td>2025-07-25, 08:00 AM</td>
+              <td>2025-07-25, 11:30 AM</td>
+              <td>500</td>
+              <td>Wi-Fi, Water Bottle</td>
+              <td>
+                {/* Leave blank or use a placeholder image */}
+              </td>
+              <td>
+                <button className="btn btn-success btn-sm me-2">Add</button>
+                <button className="btn btn-danger btn-sm">Delete</button>
+              </td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>B102</td>
+              <td>MH14CD5678</td>
+              <td>Pune → Nashik</td>
+              <td>Shivajinagar</td>
+              <td>CBS Nashik</td>
+              <td>Non-AC Seater</td>
+              <td>2025-07-25, 06:30 AM</td>
+              <td>2025-07-25, 10:30 AM</td>
+              <td>350</td>
+              <td>Water Bottle</td>
+              <td></td>
+              <td>
+                <button className="btn btn-success btn-sm me-2">Add</button>
+                <button className="btn btn-danger btn-sm">Delete</button>
+              </td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>B103</td>
+              <td>MH20EF9012</td>
+              <td>Pune → Bangalore</td>
+              <td>Katraj</td>
+              <td>Majestic</td>
+              <td>AC Sleeper</td>
+              <td>2025-07-25, 06:00 PM</td>
+              <td>2025-07-26, 07:00 AM</td>
+              <td>1200</td>
+              <td>Wi-Fi, Charging Point</td>
+              <td></td>
+              <td>
+  <div className="d-flex justify-content-center gap-2">
+    <button className="btn btn-success btn-sm">Add</button>
+    <button className="btn btn-danger btn-sm">Delete</button>
+  </div>
+</td>
+
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   );
-}
+};
 
-export default ViewBuses;
+export default BusInfo;
