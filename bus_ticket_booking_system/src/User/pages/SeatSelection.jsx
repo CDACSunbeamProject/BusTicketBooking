@@ -29,7 +29,7 @@ function SeatSelection() {
   const navigate = useNavigate();
 
   const busDetails = {
-    sleeper: true, // Change to "true" to test other layout
+    sleeper: false, // Change to "true" to test other layout
     src: "Pune",
     dest: "Bangalore",
     totalSeats: 36,

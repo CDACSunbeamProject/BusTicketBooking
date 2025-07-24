@@ -13,7 +13,7 @@ function Signin() {
   return (
     <div className="container mt-5 pb-4 rounded-4 shadow small-size-page">
       <div className="row header-color rounded-top-4 justify-content-center align-items-center text-center">
-        <div className="fs-3 fw-medium p-2">User Sign In</div>
+        <div className="fs-3 fw-medium p-2 text-white">User Sign In</div>
       </div>
       <div className="row m-4">
         <div>

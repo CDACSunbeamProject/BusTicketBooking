@@ -4,13 +4,34 @@ import { useNavigate } from "react-router-dom";
 function Ticket() {
   const [ticketDeatils, setTicketDetails] = useState({
     ticketId: "12345",
-    date: "2023-10-01",
-    totalAmount: "1500",
+    busNo: "MH-12-AB-1234",
+    fromDateTime: "2025-07-25, 08:00 AM",
+    toDateTime: "2025-07-25, 11:30 AM",
     mobile: "9876543210",
-    from: "City A",
-    to: "City B",
-    name: "John Doe",
-    seatNo: "12",
+    email: "ram@gmail.com",
+    from: "Pune",
+    to: "Hyderabad",
+    totalFare: 1700,
+    passangers: [
+      {
+        seatNo: 13,
+        name: "Jahn Dao",
+        gender: "male",
+        age: 25,
+      },
+      {
+        seatNo: 14,
+        name: "Anushka",
+        gender: "female",
+        age: 40,
+      },
+      {
+        seatNo: 15,
+        name: "Prabhas",
+        gender: "male",
+        age: 36,
+      },
+    ],
   });
   const navigate=useNavigate()
   const handleDownload =() =>{
@@ -24,34 +45,60 @@ function Ticket() {
           <div className="col fs-2">🎫 BUS TICKET</div>
         </div>
         <div className="row ticket-body-part m-0 p-3">
-          <div className="col text-start mt-2 mb-2">
-            <span className="fw-bold">Ticket Id: </span>{" "}
+          <div className="mt-2 mb-2">
+            <span className="fw-bold">Ticket Id : </span>{" "}
             {ticketDeatils.ticketId}
           </div>
           <div className="mt-2 mb-2">
-            <span className="fw-bold">Date: </span> {ticketDeatils.date}
+            <span className="fw-bold">Bus Number : </span>{" "}
+            {ticketDeatils.busNo}
           </div>
-
           <div className="mt-2 mb-2">
-            <span className="fw-bold">Price: </span> ₹{" "}
-            {ticketDeatils.totalAmount}
+            <span className="fw-bold">Departure Date & Time : </span>{" "}
+            {ticketDeatils.fromDateTime}
+          </div>
+          <div className="mt-2 mb-2">
+            <span className="fw-bold">Arrival Date & Time : </span>{" "}
+            {ticketDeatils.toDateTime}
+          </div>
+          <div className="mt-2 mb-2">
+            <span className="fw-bold">From : </span> {ticketDeatils.from}
+          </div>
+          <div className="mt-2 mb-2">
+            <span className="fw-bold">To : </span> {ticketDeatils.to}
+          </div>
+          <div className="mt-2 mb-2">
+            <span className="fw-bold">Price: </span> ₹ {ticketDeatils.totalFare}
           </div>
         </div>
         <div className="row ticket-end-part rounded-bottom-5 m-0 p-3 ">
-          <div className="">
-            <span className="fw-bold">Name: </span> {ticketDeatils.name}
-          </div>
-          <div className="mt-3">
-            <span className="fw-bold">Seat No: </span> {ticketDeatils.seatNo}
-          </div>
-          <div className="mt-3">
-            <span className="fw-bold">Mobile No: </span> {ticketDeatils.mobile}
-          </div>
-          <div className="pt-3">
-            <span className="fw-bold">From: </span> {ticketDeatils.from}
-          </div>
-          <div className="mt-3 mb-2">
-            <span className="fw-bold">To: </span> {ticketDeatils.to}
+          <div>
+            <div className="fs-6 fw-bold">Passangers Details</div>
+            <div>
+              <table className="table table-bordered text-center mt-2">
+                <thead>
+                  <tr className="table-secondary">
+                    <th>Seat No</th>
+                    <th>Name</th>
+                    <th>Gender</th>
+                    <th>Age</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {ticketDeatils.passangers.map((passanger, index) => (
+                    <tr
+                      key={index}
+                      className="align-middle bg-white table-light"
+                    >
+                      <td className="col">{passanger.seatNo}</td>
+                      <td className="col">{passanger.name}</td>
+                      <td className="col">{passanger.gender}</td>
+                      <td className="col">{passanger.age}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
@@ -67,6 +114,5 @@ function Ticket() {
       </div>
     </div>
   );
-}
-
+}   
 export default Ticket;

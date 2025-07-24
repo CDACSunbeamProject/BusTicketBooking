@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import AppAdmin from './Admin/AppAdmin';
 import AppUser from './User/AppUser';
+import "bootstrap/dist/css/bootstrap.min.css";
 
 //FOR ROUTING 
 

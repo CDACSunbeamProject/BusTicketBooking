@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 function ViewTicket() {
   const [ticketDeatils, setTicketDeatils] = useState({
@@ -64,7 +63,7 @@ function ViewTicket() {
       <div className="row m-4 justify-content-center">
         <div className="d-grid col-4">
           <button
-            className="btn fw-bold text-dark btn-primary p-2"
+            className="btn fw-bold text-dark btn-warning p-2"
             onClick={handleViewTicket}
           >
             View Ticket

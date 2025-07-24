@@ -1,6 +1,11 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const BusInfo = () => {
+  const navigate = useNavigate();
+  const handleAddBus = () => {
+    navigate("/admin/addbus");
+  }
   return (
     <div className="container mt-5">
       <h2 className="mb-4 text-center">Bus Details</h2>
@@ -37,11 +42,13 @@ const BusInfo = () => {
               <td>2025-07-25, 11:30 AM</td>
               <td>500</td>
               <td>Wi-Fi, Water Bottle</td>
+              <td>{/* Leave blank or use a placeholder image */}</td>
               <td>
-                {/* Leave blank or use a placeholder image */}
-              </td>
-              <td>
-                <button className="btn btn-success btn-sm me-2">Add</button>
+                <button
+                  className="btn btn-success btn-sm me-2" onClick={handleAddBus}
+                >
+                  Add
+                </button>
                 <button className="btn btn-danger btn-sm">Delete</button>
               </td>
             </tr>
@@ -59,7 +66,12 @@ const BusInfo = () => {
               <td>Water Bottle</td>
               <td></td>
               <td>
-                <button className="btn btn-success btn-sm me-2">Add</button>
+                <button
+                  className="btn btn-success btn-sm me-2"
+                  onClick={handleAddBus}
+                >
+                  Add
+                </button>
                 <button className="btn btn-danger btn-sm">Delete</button>
               </td>
             </tr>
@@ -77,12 +89,16 @@ const BusInfo = () => {
               <td>Wi-Fi, Charging Point</td>
               <td></td>
               <td>
-  <div className="d-flex justify-content-center gap-2">
-    <button className="btn btn-success btn-sm">Add</button>
-    <button className="btn btn-danger btn-sm">Delete</button>
-  </div>
-</td>
-
+                <div className="d-flex justify-content-center gap-2">
+                  <button
+                    className="btn btn-success btn-sm"
+                    onClick={handleAddBus}
+                  >
+                    Add
+                  </button>
+                  <button className="btn btn-danger btn-sm">Delete</button>
+                </div>
+              </td>
             </tr>
           </tbody>
         </table>

@@ -65,7 +65,7 @@ function CancelTicket() {
       </div>
       <div className="row m-4 justify-content-center">
         <div className="d-grid col-4">
-          <button className="btn fw-bold text-dark btn-primary p-2" onClick={handleCancelTicket}>
+          <button className="btn fw-bold text-dark btn-warning p-2" onClick={handleCancelTicket}>
             Cancel Ticket
           </button>
         </div>

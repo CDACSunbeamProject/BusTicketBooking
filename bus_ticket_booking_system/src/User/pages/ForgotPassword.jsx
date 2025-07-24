@@ -17,7 +17,7 @@ function ForgotPassword() {
   return (
     <div className="container mt-5 pb-4 rounded-4 shadow small-size-page">
       <div className="row header-color rounded-top-4 justify-content-center align-items-center text-center">
-        <div className="fs-3 fw-medium p-2">Forgot Password</div>
+        <div className="fs-3 fw-medium p-2 text-white">Forgot Password</div>
       </div>
       <div className="row m-4 mb-3">
         <div>
@@ -95,7 +95,7 @@ function ForgotPassword() {
           </button>
         </div>
         <div className="d-grid col-3">
-          <button className="btn btn-primary" onClick={handleForgotPassword}>
+          <button className="btn btn-warning" onClick={handleForgotPassword}>
             Confirm
           </button>
         </div>
