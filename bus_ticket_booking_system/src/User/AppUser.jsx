@@ -10,6 +10,7 @@ import CancelTicket from "./pages/CancelTicket";
 import MyBookings from "./pages/MyBookings";
 import Ticket from "./pages/Ticket";
 import ViewTicket from "./pages/ViewTicket";
+
 function AppUser() {
   const location = useLocation();
   const hideNavbarPaths = [
