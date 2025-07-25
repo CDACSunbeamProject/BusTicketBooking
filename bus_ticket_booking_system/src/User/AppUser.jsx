@@ -13,11 +13,9 @@ import ViewTicket from "./pages/ViewTicket";
 import Profile from "./pages/Profile";
 import ViewBuses from "./pages/ViewBuses";
 import Payment from "./pages/payment";
-<<<<<<< HEAD
 import SearchResults from "./pages/searchResults";
-=======
 import Home from "./pages/Home";
->>>>>>> be09f551d14f57de8f76aec021abaa9eab61c0d0
+
 
 function AppUser() {
   const location = useLocation();
@@ -42,11 +40,8 @@ function AppUser() {
         <Route path="profile" element={<Profile />} />
         <Route path="viewbuses" element={<ViewBuses />} />
         <Route path="payment" element={<Payment/>} />
-<<<<<<< HEAD
         <Route path="searchResults" element={<SearchResults/>} />
-=======
         <Route path="home" element={<Home/>} />
->>>>>>> be09f551d14f57de8f76aec021abaa9eab61c0d0
       </Routes>
     </div>
   );
