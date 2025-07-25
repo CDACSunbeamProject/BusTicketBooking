@@ -13,6 +13,7 @@ import ViewTicket from "./pages/ViewTicket";
 import Profile from "./pages/Profile";
 import ViewBuses from "./pages/ViewBuses";
 import Payment from "./pages/payment";
+import Home from "./pages/Home";
 
 function AppUser() {
   const location = useLocation();
@@ -37,6 +38,7 @@ function AppUser() {
         <Route path="profile" element={<Profile />} />
         <Route path="viewbuses" element={<ViewBuses />} />
         <Route path="payment" element={<Payment/>} />
+        <Route path="home" element={<Home/>} />
       </Routes>
     </div>
   );
