@@ -8,7 +8,7 @@ function Signin() {
   const navigate = useNavigate();
   const handleSignIn = () => {
     alert("Sign in successful!");
-    navigate("/user");
+    navigate("/user/dashboard");
   };
   return (
     <div className="container mt-5 pb-4 rounded-4 shadow small-size-page">

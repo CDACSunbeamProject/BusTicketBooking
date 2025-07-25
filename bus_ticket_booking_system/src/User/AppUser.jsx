@@ -17,8 +17,6 @@ import Payment from "./pages/payment";
 function AppUser() {
   const location = useLocation();
   const hideNavbarPaths = [
-    "/user/signin",
-    "/user/signup",
     "/user/forgotpassword",
   ];
   const shouldShowNavbar = !hideNavbarPaths.includes(location.pathname);

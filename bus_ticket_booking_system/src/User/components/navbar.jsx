@@ -1,5 +1,6 @@
 import React, { use } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Signin from "../pages/Signin";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -28,11 +29,11 @@ function Navbar() {
         id="navbarNav"
       >
         <ul className="navbar-nav">
-          <li className="nav-item me-3">
+          {/*<li className="nav-item me-3">
             <Link className="nav-link text-white" to="/user">
               Home
             </Link>
-          </li>
+          </li>*/}
           <li className="nav-item me-3">
             <Link className="nav-link text-white" to="/user/viewticket">
               View Ticket
@@ -59,9 +60,12 @@ function Navbar() {
             </Link>
           </li>
           <li className="nav-item">
-            <button className="btn btn-danger ms-2" onClick={handleLogout}>
-              Logout
-            </button>
+            <Link to='/user/signin' >
+              <button className="btn btn-danger ms-2">
+                Login
+              </button>
+            </Link>
+            
           </li>
         </ul>
       </div>

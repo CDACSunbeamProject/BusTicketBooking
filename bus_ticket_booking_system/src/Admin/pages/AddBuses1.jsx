@@ -137,6 +137,45 @@ function AddBuses1() {
 
             <div className='row mb-3'>
                 <div className='col'>
+                    <label htmlFor=''>Start Location:</label>
+                    <select
+                    //value={selectedRouteId}
+                    //onChange={(e) => setSelectedRouteId(e.target.value)}
+                    required
+                >
+                    <option value="">-- Select start location --</option>
+                    <option value="">Pune</option>
+                    <option value="">Mumbai</option>
+                    {/*routes.map((route) => (
+                    <option key={route.id} value={route.id}>
+                        {route.source} → {route.destination}
+                    </option>
+                    ))*/}
+                    </select>
+                    
+                </div>
+                <div className='col'>
+                    <label htmlFor=''>End Location:</label>
+                    <select
+                    //value={selectedRouteId}
+                    //onChange={(e) => setSelectedRouteId(e.target.value)}
+                    required
+                >
+                    <option value="">-- Select end location --</option>
+                    <option value="">Nashik</option>
+                    <option value="">Bangalore</option>
+                    {/*routes.map((route) => (
+                    <option key={route.id} value={route.id}>
+                        {route.source} → {route.destination}
+                    </option>
+                    ))*/}
+                    </select>
+                    
+                </div>
+            </div>
+
+            <div className='row mb-3'>
+                <div className='col'>
                     <label htmlFor=''>Departure Date and Time</label>
                     <input
                         onChange={(e) => setInfo({ ...info, deptTime: e.target.value })}
@@ -175,7 +214,7 @@ function AddBuses1() {
         </div>
       </div>*/}
 
-            <div className='row mb-3'>
+            {/*<div className='row mb-3'>
                 <label htmlFor=''>Route:</label>
                 <select
                     //value={selectedRouteId}
@@ -189,10 +228,12 @@ function AddBuses1() {
                     <option key={route.id} value={route.id}>
                         {route.source} → {route.destination}
                     </option>
-                ))*/}
+                ))}
                 </select>
                 
-            </div>
+            </div>*/}
+
+            
 
             {/*<div className='row mb-3'>
                 <div className='col'>
