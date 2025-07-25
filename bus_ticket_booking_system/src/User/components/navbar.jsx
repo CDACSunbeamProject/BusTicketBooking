@@ -35,6 +35,11 @@ function Navbar() {
             </Link>
           </li>*/}
           <li className="nav-item me-3">
+            <Link className="nav-link text-white" to="/user/home">
+              Home
+            </Link>
+          </li>
+          <li className="nav-item me-3">
             <Link className="nav-link text-white" to="/user/viewticket">
               View Ticket
             </Link>
