@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom"
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
 function Dashboard({ children }) {
@@ -65,9 +66,12 @@ function Dashboard({ children }) {
 
         {/* SEARCH BUTTON */}
         <div className="col-md-2">
-          <button type="submit" className="btn btn-primary w-100">
+          <Link to="/user/searchresults">
+            <button type="submit" className="btn btn-primary w-100">
             Search
-          </button>
+            </button>
+          </Link>
+          
         </div>
       </form>
 
