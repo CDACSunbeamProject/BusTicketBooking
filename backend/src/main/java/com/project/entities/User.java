@@ -1,0 +1,54 @@
+package com.project.entities;
+
+import java.util.Collection;
+import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+@Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@Table(name = "users")
+@ToString(callSuper = true)
+public class User extends BaseEntity implements UserDetails{
+   
+
+    @Column(unique = true, nullable = false, length = 100)
+    private String email;
+
+    @Column(unique = true, nullable = false, length = 15)
+    private String phone;
+
+    private String name;
+    private String gender;
+    private Integer age;
+
+    @Column(nullable = false, length = 100)
+    private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column
+	private UserRole role;
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+	    String prefixedRole = "ROLE_" + this.role.name(); // Ensure Spring Security format
+	    return List.of(new SimpleGrantedAuthority(prefixedRole));
+	}
+	/*"Return a list containing one role, eg. called 'ROLE_ADMIN', for this user. 
+	 * Spring Security will use it to authorize requests."*/
+
+	@Override
+	public String getUsername() {
+		return this.email;
+	}
+
+}
