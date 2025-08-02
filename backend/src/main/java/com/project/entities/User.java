@@ -1,5 +1,6 @@
 package com.project.entities;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -7,6 +8,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,7 +20,7 @@ import lombok.*;
 @Getter
 @Setter
 @Table(name = "users")
-@ToString(callSuper = true)
+@ToString(callSuper = true,  exclude = "bookings")
 public class User extends BaseEntity implements UserDetails{
    
 
@@ -50,5 +53,10 @@ public class User extends BaseEntity implements UserDetails{
 	public String getUsername() {
 		return this.email;
 	}
+	
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	@JsonIgnore
+	private List<Ticket> bookings=new ArrayList();
+	
 
 }

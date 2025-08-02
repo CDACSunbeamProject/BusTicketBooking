@@ -11,7 +11,7 @@ function SeatSelection() {
   useEffect(() => {
     // When seats are selected, create empty records
     const initialData = selectedSeats.map((seatNo) => ({
-      seatNo,
+      seatNo:'',
       name: "",
       gender: "",
       age: "",
@@ -29,7 +29,7 @@ function SeatSelection() {
   const navigate = useNavigate();
 
   const busDetails = {
-    sleeper: flase, // Change to "true" to test other layout
+    sleeper: false, // Change to "true" to test other layout
     src: "Pune",
     dest: "Bangalore",
     totalSeats: 36,

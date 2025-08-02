@@ -9,10 +9,14 @@ import org.springframework.web.bind.annotation.*;
 
 import com.project.dto.AuthRequest;
 import com.project.dto.AuthResp;
+import com.project.dto.TicketRequestDTO;
 import com.project.dto.UserRequestDTO;
 import com.project.security.JwtUtils;
+import com.project.services.BusService;
+import com.project.services.TicketService;
 import com.project.services.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
@@ -25,6 +29,8 @@ public class UserController {
 		private final UserService userService;//still needed for signup
 		private AuthenticationManager authenticationManager;
 		private JwtUtils jwtUtils;
+		private final TicketService ticketService;
+		private final BusService busService;
 	
 		/*
 		 * User sign up
@@ -71,4 +77,17 @@ public class UserController {
 					new AuthResp("auth successful"
 							,jwtUtils.generateJwtToken(validAuthentication)));
 		}
+		
+		@PostMapping("/book")
+		@Operation(description = "Ticket is Generated")
+		public ResponseEntity<?> bookingTicket(@RequestBody TicketRequestDTO dto) {
+			// call service method
+			return ResponseEntity.status(HttpStatus.CREATED).body(ticketService.bookTicket(dto));
+		}
+		
+//		@GetMapping("/ticket/{ticketId}")
+//		@Operation(description = "Getting Ticket")
+//		public ResponseEntity<?> gettingTicket(@PathVariable Long ticketId) {
+//			return ResponseEntity.ok(ticketService.getTicket(ticketId));
+//		}
 }

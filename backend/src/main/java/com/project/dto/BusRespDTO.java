@@ -1,6 +1,7 @@
 package com.project.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import lombok.*;
@@ -22,11 +23,12 @@ public class BusRespDTO extends BaseDTO{
     private double price; 
     private Float rating; 
     private String amenities; // store JSON array like ["WiFi", "Blanket"]
+    private List<String> bookedSeats;
     
     
 	public BusRespDTO(Long routeId, String busName, String busNo, String busType, String operatorName, int noOfSeats,
 			LocalDateTime departure, LocalDateTime arrival, double duration, double price, Float rating,
-			String amenities) {
+			String amenities,List<String> bookedSeats) {
 		super();
 		this.routeId = routeId;
 		this.busName = busName;
@@ -40,6 +42,7 @@ public class BusRespDTO extends BaseDTO{
 		this.price = price;
 		this.rating = rating;
 		this.amenities = amenities;
+		this.bookedSeats=bookedSeats;
 	}
 
 }

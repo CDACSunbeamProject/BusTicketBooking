@@ -1,5 +1,8 @@
 package com.project.dto;
 
+import java.util.List;
+
+import com.project.entities.Ticket;
 import com.project.entities.UserRole;
 
 import jakarta.validation.constraints.Email;
@@ -10,6 +13,8 @@ import lombok.*;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserRespDTO extends BaseDTO{
 	private String name;
 	private String email;
@@ -17,4 +22,5 @@ public class UserRespDTO extends BaseDTO{
 	private String gender;
 	private String phone;
 	private UserRole role;
+	private List<Ticket> bookings;
 }
