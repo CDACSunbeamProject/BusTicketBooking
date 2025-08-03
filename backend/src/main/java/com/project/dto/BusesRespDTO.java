@@ -16,8 +16,8 @@ public class BusesRespDTO {
     private String operatorName;   
     private int noOfSeats;  
   
-	private LocalTime arrival_time;  
-    private LocalTime departure_time;
+	private LocalTime arrivalTime;  
+    private LocalTime departureTime;
     
     private double price; 
     private Float rating;
@@ -30,8 +30,8 @@ public class BusesRespDTO {
  		this.busType = busType;
  		this.operatorName = operatorName;
  		this.noOfSeats = noOfSeats;
- 		this.arrival_time = arrival_time;
- 		this.departure_time = departure_time;
+ 		this.arrivalTime = arrival_time;
+ 		this.departureTime = departure_time;
  		this.price = price;
  		this.rating = rating;
  		this.bookedSeats = bookedSeats;

@@ -1,7 +1,9 @@
 package com.project.controllers;
 
+import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.dto.AddBusDTO;
@@ -57,8 +60,10 @@ public class BusController {
 	 * o.w SC 200 + list of restaurants -> JSON []
 	 */
 	@GetMapping("/{routeId}")
-	public  ResponseEntity<?> listBusesbyRoute(@PathVariable int routeId) {
-		return ResponseEntity.ok(busService.getAllBusesByRoute(routeId));
+	public  ResponseEntity<?> listBusesbyRouteAndDate(@PathVariable int routeId, 
+			@RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate jDate) {
+		
+		return ResponseEntity.ok(busService.getAllBusesByRouteAndDate(routeId,jDate));
 	}
 	
 	/*

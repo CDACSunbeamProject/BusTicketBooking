@@ -32,16 +32,16 @@ public class BusRespDTO {
 	private String endLocation;
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-	private LocalDate departure_date;
+	private LocalDate departureDate;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
-	private LocalTime departure_time;
+	private LocalTime departureTime;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-	private LocalDate arrival_date;
+	private LocalDate arrivalDate;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
-	private LocalTime arrival_time;
+	private LocalTime arrivalTime;
 
 	private double duration; // in hours or minutes
 	private double price;

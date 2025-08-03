@@ -49,19 +49,19 @@ public class Bus extends BaseEntity {
 
 	@Column(name = "departure_date")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-	private LocalDate departure_date;
+	private LocalDate departureDate;
 
 	@Column(name = "departure_time")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
-	private LocalTime departure_time;
+	private LocalTime departureTime;
 
 	@Column(name = "arrival_date")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-	private LocalDate arrival_date;
+	private LocalDate arrivalDate;
 
 	@Column(name = "arrival_time")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
-	private LocalTime arrival_time;
+	private LocalTime arrivalTime;
 
 	@Column(name = "duration")
 	private double duration; // in hours or minutes
@@ -75,6 +75,7 @@ public class Bus extends BaseEntity {
 	@Column(name = "amenities", columnDefinition = "TEXT")
 	private String amenities; // store JSON array like ["WiFi", "Blanket"]
 
+	
 	// relationships
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "route_id")
@@ -93,13 +94,13 @@ public class Bus extends BaseEntity {
 		this.amenities = objectMapper.writeValueAsString(amenitiesList);
 	}
 
-	private Set<String> bookedSeats = new HashSet<>();
+	//private Set<String> bookedSeats = new HashSet<>();
 
 	@OneToMany(mappedBy = "bus", cascade = CascadeType.ALL)
 	@JsonIgnore
 	private List<Ticket> tickets = new ArrayList<>();
 
-	public ApiResponse bookSeat(String seatNo) throws Exception{
+	/*public ApiResponse bookSeat(String seatNo) throws Exception{
 		if (this.bookedSeats.contains(seatNo)) {
 			throw new ApiException("Seat " + seatNo + " is already booked");
 		}
@@ -110,5 +111,6 @@ public class Bus extends BaseEntity {
 	public boolean cancelSeat(String seatNo) {
 		return bookedSeats.remove(seatNo);
 	}
+	*/
 
 }

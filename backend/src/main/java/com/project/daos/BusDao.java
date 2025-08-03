@@ -1,5 +1,6 @@
 package com.project.daos;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,7 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import com.project.entities.Bus;
 
 public interface BusDao extends JpaRepository<Bus, Long> {
-	List<Bus> findByBusRouteId(int id);
+	List<Bus> findByBusRouteIdAndDepartureDate(int id, LocalDate jDate);
 
 	Optional<Bus> findByBusNo(String busNo);
 

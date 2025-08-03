@@ -1,5 +1,6 @@
 package com.project.services;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,6 +34,9 @@ public class BusServiceImpl implements BusService {
 	
 	@Override
 	public ApiResponse addNewBus(AddBusDTO transientBus) {
+		//print
+		System.out.println("date: "+transientBus.getDepartureDate());
+		
 		//check for same bus name
 		if(busDao.existsByBusName(transientBus.getBusName()))
 			throw new ApiException("duplicate bus name!!");
@@ -73,8 +77,8 @@ public class BusServiceImpl implements BusService {
 	}
 
 	@Override
-	public List<BusesRespDTO> getAllBusesByRoute(int Routeid) {
-		return busDao.findByBusRouteId(Routeid)
+	public List<BusesRespDTO> getAllBusesByRouteAndDate(int Routeid, LocalDate jDate) {
+		return busDao.findByBusRouteIdAndDepartureDate(Routeid,jDate)
 				.stream()
 				.map(bus -> 
 				modelMapper.map(bus,  BusesRespDTO.class))

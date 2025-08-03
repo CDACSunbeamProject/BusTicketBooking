@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -18,7 +21,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Passenger extends BaseEntity{
+public class Passenger {
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 	
 	@Column(nullable = false)
 	private String name;
@@ -30,7 +36,11 @@ public class Passenger extends BaseEntity{
 	private String gender;
 	
 	@Column(nullable = false)
-	private String seatNo;
+	private String seatNumber;
+	
+	@ManyToOne
+	@JoinColumn(name = "booking_id")
+    private Booking booking;
 	
 	@ManyToOne
 	@JoinColumn(name = "ticket_id")
