@@ -1,7 +1,11 @@
 package com.project.dto;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Column;
 import lombok.*;
@@ -9,40 +13,42 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
-public class BusRespDTO extends BaseDTO{
-	private Long routeId;
-    private String busName;
-    private String busNo;
-    private String busType;
-    private String operatorName;   
-    private int noOfSeats;   
-    private LocalDateTime departure;   
-    private LocalDateTime arrival;  
-    private double duration;  // in hours or minutes  
-    private double price; 
-    private Float rating; 
-    private String amenities; // store JSON array like ["WiFi", "Blanket"]
-    private List<String> bookedSeats;
-    
-    
-	public BusRespDTO(Long routeId, String busName, String busNo, String busType, String operatorName, int noOfSeats,
-			LocalDateTime departure, LocalDateTime arrival, double duration, double price, Float rating,
-			String amenities,List<String> bookedSeats) {
-		super();
-		this.routeId = routeId;
-		this.busName = busName;
-		this.busNo = busNo;
-		this.busType = busType;
-		this.operatorName = operatorName;
-		this.noOfSeats = noOfSeats;
-		this.departure = departure;
-		this.arrival = arrival;
-		this.duration = duration;
-		this.price = price;
-		this.rating = rating;
-		this.amenities = amenities;
-		this.bookedSeats=bookedSeats;
-	}
+@AllArgsConstructor
+@ToString(callSuper = false)
+public class BusRespDTO {
+	private String busName;
+	private String busNo;
+
+	private String busType;
+	private String operatorName;
+	private int noOfSeats;
+	
+	/*ModelMapper, which by default doesn't map nested 
+	fields (like busRoute.startLocation) into flat 
+	fields (startLocation) unless explicitly configured(set in method).
+	(while getting complete bus details) */
+	
+	private String startLocation;
+	private String endLocation;
+	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+	private LocalDate departure_date;
+
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
+	private LocalTime departure_time;
+
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+	private LocalDate arrival_date;
+
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
+	private LocalTime arrival_time;
+
+	private double duration; // in hours or minutes
+	private double price;
+	private Float rating;
+	
+	private List<String> amenities; // store JSON array like ["WiFi", "Blanket"]
+
+	
 
 }

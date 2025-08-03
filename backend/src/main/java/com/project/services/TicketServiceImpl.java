@@ -48,7 +48,7 @@ public class TicketServiceImpl implements TicketService {
 		ticket.setEmail(dto.getEmail());
 		ticket.setPhone(dto.getPhone());
 
-		ticket.setPassengers(dto.getPassengers().stream().map(p -> {
+		/*ticket.setPassengers(dto.getPassengers().stream().map(p -> {
 			if (bus.getBookedSeats().contains(p.getSeatNo()))
 				throw new ApiException("seatNo: " + p.getSeatNo() + " is Already booked for busNo:" + bus.getBusNo());
 			Passenger passenger = new Passenger();
@@ -58,7 +58,7 @@ public class TicketServiceImpl implements TicketService {
 			passenger.setSeatNo(p.getSeatNo());
 			passenger.setTicket(ticket);
 			return passenger;
-		}).collect(Collectors.toList()));
+		}).collect(Collectors.toList()));*/
 		System.out.println("successfully passangers added for ticket");
 
 		Ticket persistentTicket = ticketDao.save(ticket);

@@ -54,9 +54,9 @@ public class User extends BaseEntity implements UserDetails{
 		return this.email;
 	}
 	
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	/*@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	@JsonIgnore
-	private List<Ticket> bookings=new ArrayList();
+	private List<Ticket> bookings=new ArrayList();*/
 	
 
 }

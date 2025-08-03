@@ -5,15 +5,18 @@ import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.custom_exceptions.ApiException;
+import com.project.custom_exceptions.ResourceNotFoundException;
 import com.project.daos.BusDao;
 import com.project.daos.RouteDao;
 import com.project.dto.AddBusDTO;
 import com.project.dto.ApiResponse;
 import com.project.dto.BusRespDTO;
+import com.project.dto.BusesRespDTO;
 import com.project.entities.Bus;
 import com.project.entities.Route;
 
@@ -28,12 +31,6 @@ public class BusServiceImpl implements BusService {
 	private final RouteDao routeDao;
 	private final ModelMapper modelMapper;
 	
-	@Override
-	public List<BusRespDTO> getAllBuses() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	@Override
 	public ApiResponse addNewBus(AddBusDTO transientBus) {
 		//check for same bus name
@@ -73,6 +70,38 @@ public class BusServiceImpl implements BusService {
 		//save
 		Bus persistentBus = busDao.save(entity);
 		return new ApiResponse("new bus added with id= "+persistentBus.getId());
+	}
+
+	@Override
+	public List<BusesRespDTO> getAllBusesByRoute(int Routeid) {
+		return busDao.findByBusRouteId(Routeid)
+				.stream()
+				.map(bus -> 
+				modelMapper.map(bus,  BusesRespDTO.class))
+				.toList();
+				
+				
+	}
+
+	@Override
+	public BusRespDTO getBusDetails(int busId) {
+		// invoke dao's method
+		Bus entity = busDao.fetchCompleteDetails(busId);
+		
+		BusRespDTO dto = modelMapper.map(entity, BusRespDTO.class);
+		
+		if(entity.getBusRoute() != null) {
+			dto.setStartLocation(entity.getBusRoute().getStartLocation());
+			dto.setEndLocation(entity.getBusRoute().getEndLocation());
+		}
+
+		try {
+			dto.setAmenities(entity.getAmenitiesList());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return dto;
 	}
 
 }

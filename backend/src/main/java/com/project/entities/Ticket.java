@@ -51,7 +51,7 @@ public class Ticket extends BaseEntity {
 	@Column(nullable = false, length = 100)
 	private String email;
 
-	@OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
-	private List<Passenger> passengers = new ArrayList<>();
+	/*@OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
+	private List<Passenger> passengers = new ArrayList<>();*/
 
 }

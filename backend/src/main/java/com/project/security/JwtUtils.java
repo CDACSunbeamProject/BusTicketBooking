@@ -58,6 +58,7 @@ public class JwtUtils {
 					.expiration(new Date((new Date()).getTime() + jwtExpirationMs))// Sets the JWT Claims exp
 																					// (expiration) value.						// (expiration) value.
 					// setting a custom claim , to add granted authorities
+					//You're simply storing the role string(s) from GrantedAuthority::getAuthority() directly in the token:
 					.claim("authorities", 
 							getAuthoritiesInString(userPrincipal.getAuthorities()))
 				
