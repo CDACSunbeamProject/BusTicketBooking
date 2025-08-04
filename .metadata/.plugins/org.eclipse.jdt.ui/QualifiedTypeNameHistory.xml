@@ -30,4 +30,6 @@
     <fullyQualifiedTypeName name="lombok.AllArgsConstructor"/>
     <fullyQualifiedTypeName name="lombok.NoArgsConstructor"/>
     <fullyQualifiedTypeName name="com.project.dto.PassengerDTO"/>
+    <fullyQualifiedTypeName name="com.project.dto.SeatSelectionRequestDTO"/>
+    <fullyQualifiedTypeName name="com.project.dto.SeatSelectionResponseDTO"/>
 </qualifiedTypeNameHistroy>

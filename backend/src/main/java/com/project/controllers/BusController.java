@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.dto.AddBusDTO;
 import com.project.dto.BusRespDTO;
+import com.project.dto.SeatSelectionRequestDTO;
 import com.project.entities.Bus;
 import com.project.services.BusService;
 
@@ -82,6 +83,12 @@ public class BusController {
 		return ResponseEntity.ok(busService.getBusDetails(busId));
 		
 		}
+	
+	@PostMapping("/seatselection")
+	public ResponseEntity<?> getBusSeatLayout(@RequestBody SeatSelectionRequestDTO dto) {
+
+	    return ResponseEntity.ok().body(busService.getSeatSelectinInfo(dto.getId()));
+	}
 }
 	
 
