@@ -1,8 +1,5 @@
 package com.project.dto;
 
-import java.time.LocalDate;
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,11 +10,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TicketRequestDTO {
-	private Long userId;
-	private String busNo;
-	private String email;
-	private String phone;
-	private LocalDate travelDate;
-	private Double totalAmount;
-	private List<PassengerRequestDTO> passengers;
+	private Long bookingId;
+	private String transactionId;
 }

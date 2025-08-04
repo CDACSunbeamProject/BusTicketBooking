@@ -15,7 +15,9 @@ import com.project.dto.ApiResponse;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -29,7 +31,7 @@ import lombok.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = "tickets")
+@ToString
 public class Bus extends BaseEntity {
 
 	@Column(name = "bus_name", length = 50)
@@ -96,10 +98,6 @@ public class Bus extends BaseEntity {
 
 	//private Set<String> bookedSeats = new HashSet<>();
 
-	@OneToMany(mappedBy = "bus", cascade = CascadeType.ALL)
-	@JsonIgnore
-	private List<Ticket> tickets = new ArrayList<>();
-
 	/*public ApiResponse bookSeat(String seatNo) throws Exception{
 		if (this.bookedSeats.contains(seatNo)) {
 			throw new ApiException("Seat " + seatNo + " is already booked");
@@ -112,5 +110,15 @@ public class Bus extends BaseEntity {
 		return bookedSeats.remove(seatNo);
 	}
 	*/
+	
+	
+	@Column(name = "seat_type", length = 30)
+	private String seatType;
+	
+	@OneToMany(mappedBy = "bus", cascade = CascadeType.ALL)
+	private List<Booking> bookings;
+	
+	@ElementCollection(fetch = FetchType.EAGER)
+    private Set<String> bookedSeats = new HashSet<>();
 
 }

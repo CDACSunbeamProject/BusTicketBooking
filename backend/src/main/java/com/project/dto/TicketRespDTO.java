@@ -1,25 +1,48 @@
 package com.project.dto;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import com.project.entities.Bus;
 import com.project.entities.Passenger;
+import com.project.entities.TicketStatus;
 import com.project.entities.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TicketRespDTO extends BaseDTO{
-	private User user;
-	private Bus bus;
-	private LocalDate travelDate;
-	private Double totalPrice;
-	private String phone;
-	private String email;
-	private List<Passenger> passengers;
+@ToString
+public class TicketRespDTO {
+	//Ticket info
+	private Long ticketId;
+    private String ticketNumber;
+    private LocalDateTime generatedAt;
+    private TicketStatus status;
+
+    // Booking Info
+    private Long bookingId;
+	private Long userId;
+    private LocalDate travelDate;
+    private double totalAmount;
+
+    // Bus Info
+    private String busName;
+    private String busNumber;
+    private String operatorName;
+    private LocalDate departureDate;
+    private LocalDate arrivalDate;
+    private String departureTime;
+    private String arrivalTime;
+    private String busType;
+    private String seatType;
+    private String route;
+
+    // Passenger Info
+    private List<PassengerDTO> passengers;
 }

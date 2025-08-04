@@ -1,0 +1,60 @@
+package com.project.services;
+
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
+
+import com.project.custom_exceptions.ApiException;
+import com.project.daos.BusDao;
+import com.project.daos.TicketDao;
+import com.project.daos.UserDao;
+import com.project.dto.TicketRequestDTO;
+import com.project.dto.TicketRespDTO;
+import com.project.entities.Bus;
+import com.project.entities.Passenger;
+import com.project.entities.Ticket;
+import com.project.entities.User;
+
+import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
+
+@Service
+@Transactional
+@AllArgsConstructor
+public class TicketServiceImpl implements TicketService {
+
+	private final TicketDao ticketDao;
+	private final BusDao busDao;
+	private final UserDao userDao;
+	private final ModelMapper modelMapper;
+
+	@Override
+	public Long generateTicketAfterPayment(TicketRequestDTO dto) {
+		System.out.println("in ticket generation");
+		Booking booking = bookingDao.findById(request.getBookingId())
+			    .orElseThrow(() -> new ResourceNotFoundException("Booking is not found with id: " + request.getBookingId()));
+		if(!"CONFIRMED".equals(booking.getStatus())) {
+			throw new ApiException("Booking is not confirmed yet");
+		}
+		Ticket ticket = new Ticket();
+		ticket.setTicketNumber(generateTicketNumber(booking.getId()));
+		ticket.setBooking(booking);
+		ticket.setStatus(TicketStatus.ACTIVE);
+		ticket = ticketDao.save(ticket);
+		
+		return toRespDTO(ticket);
+	}
+	
+//	// Testing is pending
+//	@Override
+//	public TicketRespDTO getTicket(Long ticketId) {
+//		if (!ticketDao.existsById(ticketId))
+//			throw new ApiException("Ticket not with id " + ticketId);
+//
+//		Optional<Ticket> ticket = ticketDao.findById(ticketId);
+//		TicketRespDTO persistentTicket = modelMapper.map(ticket, TicketRespDTO.class);
+//		return persistentTicket;
+//	}
+}

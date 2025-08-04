@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="com.project.custom_exceptions.ApiException"/>
+    <fullyQualifiedTypeName name="com.project.dto.ApiResponse"/>
+    <fullyQualifiedTypeName name="com.fasterxml.jackson.annotation.JsonIgnore"/>
+    <fullyQualifiedTypeName name="java.util.ArrayList"/>
+    <fullyQualifiedTypeName name="com.project.entities.User"/>
+    <fullyQualifiedTypeName name="com.project.entities.Bus"/>
+    <fullyQualifiedTypeName name="com.project.entities.Passenger"/>
+    <fullyQualifiedTypeName name="java.util.List"/>
+    <fullyQualifiedTypeName name="com.project.entities.Ticket"/>
+    <fullyQualifiedTypeName name="com.project.services.TicketService"/>
+    <fullyQualifiedTypeName name="com.project.services.BusService"/>
+    <fullyQualifiedTypeName name="jakarta.persistence.ElementCollection"/>
+    <fullyQualifiedTypeName name="jakarta.persistence.FetchType"/>
+    <fullyQualifiedTypeName name="jakarta.persistence.OneToOne"/>
+    <fullyQualifiedTypeName name="jakarta.persistence.Enumerated"/>
+    <fullyQualifiedTypeName name="jakarta.persistence.EnumType"/>
+    <fullyQualifiedTypeName name="java.time.LocalDateTime"/>
+    <fullyQualifiedTypeName name="lombok.ToString"/>
+    <fullyQualifiedTypeName name="com.project.entities.Booking"/>
+    <fullyQualifiedTypeName name="com.project.daos.BookingDao"/>
+    <fullyQualifiedTypeName name="com.project.custom_exceptions.ResourceNotFoundException"/>
+    <fullyQualifiedTypeName name="com.project.dto.TicketRespDTO"/>
+    <fullyQualifiedTypeName name="com.project.entities.TicketStatus"/>
+    <fullyQualifiedTypeName name="java.time.LocalDate"/>
+    <fullyQualifiedTypeName name="java.time.format.DateTimeFormatter"/>
+    <fullyQualifiedTypeName name="lombok.Setter"/>
+    <fullyQualifiedTypeName name="lombok.Getter"/>
+    <fullyQualifiedTypeName name="lombok.AllArgsConstructor"/>
+    <fullyQualifiedTypeName name="lombok.NoArgsConstructor"/>
+    <fullyQualifiedTypeName name="com.project.dto.PassengerDTO"/>
+</qualifiedTypeNameHistroy>

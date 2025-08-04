@@ -1,5 +1,7 @@
 package com.project.services;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -7,14 +9,19 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import com.project.custom_exceptions.ApiException;
+import com.project.custom_exceptions.ResourceNotFoundException;
+import com.project.daos.BookingDao;
 import com.project.daos.BusDao;
 import com.project.daos.TicketDao;
 import com.project.daos.UserDao;
+import com.project.dto.PassengerDTO;
 import com.project.dto.TicketRequestDTO;
 import com.project.dto.TicketRespDTO;
+import com.project.entities.Booking;
 import com.project.entities.Bus;
 import com.project.entities.Passenger;
 import com.project.entities.Ticket;
+import com.project.entities.TicketStatus;
 import com.project.entities.User;
 
 import jakarta.transaction.Transactional;
@@ -29,41 +36,23 @@ public class TicketServiceImpl implements TicketService {
 	private final BusDao busDao;
 	private final UserDao userDao;
 	private final ModelMapper modelMapper;
+	private final BookingDao bookingDao;
 
 	@Override
-	public Long bookTicket(TicketRequestDTO dto) {
-		User user = userDao.findById(dto.getUserId())
-				.orElseThrow(() -> new ApiException("User not found with id: " + dto.getUserId()));
-		System.out.println("User ID: " + dto.getUserId());
-
-		Bus bus = busDao.findByBusNo(dto.getBusNo())
-				.orElseThrow(() -> new ApiException("Bus not found with number: " + dto.getBusNo()));
-		System.out.println("Bus No: " + dto.getBusNo());
-
+	public TicketRespDTO generateTicketAfterPayment(TicketRequestDTO request) {
+		System.out.println("in ticket generation");
+		Booking booking = bookingDao.findById(request.getBookingId())
+			    .orElseThrow(() -> new ResourceNotFoundException("Booking is not found with id: " + request.getBookingId()));
+		if(!"CONFIRMED".equals(booking.getStatus())) {
+			throw new ApiException("Booking is not confirmed yet");
+		}
 		Ticket ticket = new Ticket();
-		ticket.setBus(bus);
-		ticket.setUser(user);
-		ticket.setTravelDate(dto.getTravelDate());
-		ticket.setTotalPrice(dto.getTotalAmount());
-		ticket.setEmail(dto.getEmail());
-		ticket.setPhone(dto.getPhone());
-
-		/*ticket.setPassengers(dto.getPassengers().stream().map(p -> {
-			if (bus.getBookedSeats().contains(p.getSeatNo()))
-				throw new ApiException("seatNo: " + p.getSeatNo() + " is Already booked for busNo:" + bus.getBusNo());
-			Passenger passenger = new Passenger();
-			passenger.setName(p.getName());
-			passenger.setAge(p.getAge());
-			passenger.setGender(p.getGender());
-			passenger.setSeatNo(p.getSeatNo());
-			passenger.setTicket(ticket);
-			return passenger;
-		}).collect(Collectors.toList()));*/
-		System.out.println("successfully passangers added for ticket");
-
-		Ticket persistentTicket = ticketDao.save(ticket);
-		System.out.println("Successfullly Ticket is Generated");
-		return persistentTicket.getId();
+		ticket.setTicketNumber(generateTicketNumber(booking.getId()));
+		ticket.setBooking(booking);
+		ticket.setStatus(TicketStatus.ACTIVE);
+		ticket = ticketDao.save(ticket);
+		
+		return toRespDTO(ticket);
 	}
 	
 //	// Testing is pending
@@ -76,4 +65,40 @@ public class TicketServiceImpl implements TicketService {
 //		TicketRespDTO persistentTicket = modelMapper.map(ticket, TicketRespDTO.class);
 //		return persistentTicket;
 //	}
+	
+	public static String generateTicketNumber(Long bookingId) {
+	    String datePart = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+	    String paddedId = String.format("%05d", bookingId); // 00001, 00123, etc.
+	    return "TICK-" + datePart + "-" + paddedId;
+	}
+	public static TicketRespDTO toRespDTO(Ticket ticket) {
+        // Tikcet info
+		TicketRespDTO dto = new TicketRespDTO();
+        dto.setTicketNumber(ticket.getTicketNumber());
+        dto.setGeneratedAt(ticket.getCreationDateTime());
+        dto.setTotalAmount(ticket.getBooking().getTotalFare());
+        dto.setStatus(ticket.getStatus());
+        
+        // Bus info
+        dto.setBusNumber(ticket.getBooking().getBus().getBusNo());
+        dto.setBusName(ticket.getBooking().getBus().getBusName());
+        dto.setOperatorName(ticket.getBooking().getBus().getOperatorName());
+        dto.setDepartureDate(ticket.getBooking().getBus().getDepartureDate());
+        dto.setDepartureTime(ticket.getBooking().getBus().getDepartureTime().toString());
+        dto.setArrivalDate(ticket.getBooking().getBus().getArrivalDate());
+        dto.setArrivalTime(ticket.getBooking().getBus().getArrivalTime().toString());
+        dto.setBusType(ticket.getBooking().getBus().getBusType());
+        dto.setSeatType(ticket.getBooking().getBus().getSeatType());
+        dto.setRoute(ticket.getBooking().getBus().getBusRoute().getStartLocation() + " → " +
+                     ticket.getBooking().getBus().getBusRoute().getEndLocation());
+        
+        // passenger info
+        dto.setPassengers(
+        		  ticket.getBooking().getPassengers().stream()
+        		    .map(passenger -> new PassengerDTO(passenger.getName(),passenger.getAge(), passenger.getGender(), passenger.getSeatNumber()))
+        		    .collect(Collectors.toList())
+        		);
+        
+        return dto;
+    }
 }

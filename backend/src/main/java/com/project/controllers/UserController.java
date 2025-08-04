@@ -78,11 +78,11 @@ public class UserController {
 							,jwtUtils.generateJwtToken(validAuthentication)));
 		}
 		
-		@PostMapping("/book")
+		@PostMapping("/ticket")
 		@Operation(description = "Ticket is Generated")
-		public ResponseEntity<?> bookingTicket(@RequestBody TicketRequestDTO dto) {
+		public ResponseEntity<?> generateTicket(@RequestBody TicketRequestDTO dto) {
 			// call service method
-			return ResponseEntity.status(HttpStatus.CREATED).body(ticketService.bookTicket(dto));
+			return ResponseEntity.status(HttpStatus.CREATED).body(ticketService.generateTicketAfterPayment(dto));
 		}
 		
 //		@GetMapping("/ticket/{ticketId}")

@@ -20,6 +20,7 @@ public class BusRespDTO {
 	private String busNo;
 
 	private String busType;
+	private String seatType;
 	private String operatorName;
 	private int noOfSeats;
 	

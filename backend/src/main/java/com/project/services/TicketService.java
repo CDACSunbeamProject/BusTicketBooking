@@ -5,5 +5,5 @@ import com.project.dto.TicketRespDTO;
 
 public interface TicketService {
 //	TicketRespDTO getTicket(Long ticketId);
-	Long bookTicket(TicketRequestDTO dto);
+	TicketRespDTO generateTicketAfterPayment(TicketRequestDTO dto);
 }

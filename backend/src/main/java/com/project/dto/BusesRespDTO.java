@@ -13,6 +13,7 @@ public class BusesRespDTO {
     private String busName;
 
     private String busType;
+    private String seatType;
     private String operatorName;   
     private int noOfSeats;  
   
@@ -23,11 +24,12 @@ public class BusesRespDTO {
     private Float rating;
     private List<String> bookedSeats;
   
-    public BusesRespDTO(String busName, String busType, String operatorName, int noOfSeats, LocalTime arrival_time,
+    public BusesRespDTO(String busName, String busType, String seatType, String operatorName, int noOfSeats, LocalTime arrival_time,
  			LocalTime departure_time, double price, Float rating, List<String> bookedSeats) {
  		
  		this.busName = busName;
  		this.busType = busType;
+ 		this.seatType=seatType;
  		this.operatorName = operatorName;
  		this.noOfSeats = noOfSeats;
  		this.arrivalTime = arrival_time;

@@ -1,0 +1,5 @@
+package com.project.entities;
+
+public class TicketStatus {
+
+}

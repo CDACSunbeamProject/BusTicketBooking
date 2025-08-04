@@ -11,11 +11,13 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,21 +39,15 @@ public class Ticket extends BaseEntity {
 	@JoinColumn(name = "bus_no")
 	private Bus bus;
 
-	@DateTimeFormat(pattern = "dd-MM-yyyy")
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-	private LocalDate travelDate;
-
-	@Column(nullable = false)
-	private Double totalPrice;
-
-	@Column(name = "phone_number", nullable = false, length = 15)
-	private String phone;
-
-	@Email
-	@Column(nullable = false, length = 100)
-	private String email;
-
-	/*@OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
-	private List<Passenger> passengers = new ArrayList<>();*/
+	@Column(name = "ticket_number")
+	private String ticketNumber;
+	
+	@OneToOne
+	@JoinColumn(name = "booking_id")
+	private Booking booking;
+	
+	@Column(name = "ticket_status")
+	@Enumerated(EnumType.STRING)
+	private TicketStatus status;
 
 }
