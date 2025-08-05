@@ -53,7 +53,6 @@ public class User extends BaseEntity implements UserDetails{
 	public String getUsername() {
 		return this.email;
 	}
-	
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Booking> bookings = new ArrayList<>();

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.project.custom_exceptions.ApiException;
 import com.project.daos.UserDao;
+import com.project.dto.UserProfileRespDTO;
 import com.project.dto.UserRequestDTO;
 import com.project.dto.UserRespDTO;
 import com.project.entities.User;
@@ -26,6 +27,7 @@ public class UserServiceImpl implements UserService{
 		private final UserDao userDao;
 		private ModelMapper mapper;
 		private PasswordEncoder passwordEncoder;
+		private ModelMapper modelMapper;
 		
 	
 	@Override
@@ -40,6 +42,21 @@ public class UserServiceImpl implements UserService{
 		entity.setPassword(passwordEncoder.encode(entity.getPassword()));
 		//4. save the entity n map persistent entity -> resp dto
 		return mapper.map(userDao.save(entity), UserRespDTO.class);
+	}
+
+
+	@Override
+	public UserProfileRespDTO getUserProfileDetails(String email) {
+		User user= userDao.findByEmail(email).orElseThrow(()->new ApiException("User Not Found with email:"+email));
+		
+		UserProfileRespDTO userProfile=new UserProfileRespDTO();
+		userProfile.setId(user.getId());
+		userProfile.setName(user.getName());
+		userProfile.setEmail(user.getEmail());
+		userProfile.setAge(user.getAge());
+		userProfile.setGender(user.getGender());
+		userProfile.setPhone(user.getPhone());
+		return userProfile;
 	}
 	
 }

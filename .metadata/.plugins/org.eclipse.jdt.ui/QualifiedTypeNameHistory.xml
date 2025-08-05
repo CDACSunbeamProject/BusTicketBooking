@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-    <fullyQualifiedTypeName name="com.project.custom_exceptions.ApiException"/>
     <fullyQualifiedTypeName name="com.project.dto.ApiResponse"/>
     <fullyQualifiedTypeName name="com.fasterxml.jackson.annotation.JsonIgnore"/>
     <fullyQualifiedTypeName name="java.util.ArrayList"/>
-    <fullyQualifiedTypeName name="com.project.entities.User"/>
     <fullyQualifiedTypeName name="com.project.entities.Bus"/>
     <fullyQualifiedTypeName name="com.project.entities.Passenger"/>
     <fullyQualifiedTypeName name="java.util.List"/>
@@ -25,11 +23,18 @@
     <fullyQualifiedTypeName name="com.project.entities.TicketStatus"/>
     <fullyQualifiedTypeName name="java.time.LocalDate"/>
     <fullyQualifiedTypeName name="java.time.format.DateTimeFormatter"/>
-    <fullyQualifiedTypeName name="lombok.Setter"/>
-    <fullyQualifiedTypeName name="lombok.Getter"/>
-    <fullyQualifiedTypeName name="lombok.AllArgsConstructor"/>
-    <fullyQualifiedTypeName name="lombok.NoArgsConstructor"/>
     <fullyQualifiedTypeName name="com.project.dto.PassengerDTO"/>
     <fullyQualifiedTypeName name="com.project.dto.SeatSelectionRequestDTO"/>
     <fullyQualifiedTypeName name="com.project.dto.SeatSelectionResponseDTO"/>
+    <fullyQualifiedTypeName name="java.lang.Long"/>
+    <fullyQualifiedTypeName name="org.springframework.security.core.annotation.AuthenticationPrincipal"/>
+    <fullyQualifiedTypeName name="com.project.entities.User"/>
+    <fullyQualifiedTypeName name="com.project.custom_exceptions.ApiException"/>
+    <fullyQualifiedTypeName name="com.fasterxml.jackson.annotation.JsonCreator.Mode"/>
+    <fullyQualifiedTypeName name="org.modelmapper.ModelMapper"/>
+    <fullyQualifiedTypeName name="lombok.Getter"/>
+    <fullyQualifiedTypeName name="lombok.Setter"/>
+    <fullyQualifiedTypeName name="lombok.NoArgsConstructor"/>
+    <fullyQualifiedTypeName name="lombok.AllArgsConstructor"/>
+    <fullyQualifiedTypeName name="com.project.dto.UserProfileRespDTO"/>
 </qualifiedTypeNameHistroy>

@@ -5,12 +5,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import com.project.dto.AuthRequest;
 import com.project.dto.AuthResp;
 import com.project.dto.TicketRequestDTO;
+import com.project.dto.UserProfileRespDTO;
 import com.project.dto.UserRequestDTO;
+import com.project.entities.User;
 import com.project.security.JwtUtils;
 import com.project.services.BusService;
 import com.project.services.TicketService;
@@ -69,9 +72,9 @@ public class UserController {
 			//2.  Invoke authenticate method of AuthenticationManager
 			Authentication validAuthentication = 
 					authenticationManager.authenticate(authentication);
-			System.out.println(validAuthentication.getPrincipal().getClass());
+//			System.out.println(validAuthentication.getPrincipal().getClass());
 			System.out.println(validAuthentication.getPrincipal());//UserEntity
-			System.out.println("after "+validAuthentication.isAuthenticated());//tru
+//			System.out.println("after "+validAuthentication.isAuthenticated());//tru
 			//3. In case of success , generate JWT n send it to REST client
 			return ResponseEntity.ok(
 					new AuthResp("auth successful"
@@ -83,6 +86,17 @@ public class UserController {
 		public ResponseEntity<?> generateTicket(@RequestBody TicketRequestDTO dto) {
 			// call service method
 			return ResponseEntity.status(HttpStatus.CREATED).body(ticketService.generateTicketAfterPayment(dto));
+		}
+		
+		@GetMapping("/profile")
+		public ResponseEntity<?> getProfile(Authentication authentication) {
+		    String email = (String) authentication.getPrincipal(); // you stored email in JWT
+		    UserProfileRespDTO user = userService.getUserProfileDetails(email); // fetch User from DB
+		    if (user == null) {
+		        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+		    }
+
+		    return ResponseEntity.ok().body(user);
 		}
 		
 //		@GetMapping("/ticket/{ticketId}")
