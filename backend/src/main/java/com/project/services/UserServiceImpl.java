@@ -1,5 +1,8 @@
 package com.project.services;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,10 +12,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.project.custom_exceptions.ApiException;
+import com.project.daos.BookingDao;
 import com.project.daos.UserDao;
+import com.project.dto.BookingRespDTO;
+import com.project.dto.BusRespDTO;
 import com.project.dto.UserProfileRespDTO;
 import com.project.dto.UserRequestDTO;
 import com.project.dto.UserRespDTO;
+import com.project.entities.Booking;
 import com.project.entities.User;
 
 import jakarta.transaction.Transactional;
@@ -28,6 +35,7 @@ public class UserServiceImpl implements UserService{
 		private ModelMapper mapper;
 		private PasswordEncoder passwordEncoder;
 		private ModelMapper modelMapper;
+		private BookingDao bookingDao;
 		
 	
 	@Override
@@ -57,6 +65,49 @@ public class UserServiceImpl implements UserService{
 		userProfile.setGender(user.getGender());
 		userProfile.setPhone(user.getPhone());
 		return userProfile;
+	}
+	
+	@Override
+	public List<BookingRespDTO> getMyBookings(String email) {
+		User user= userDao.findByEmail(email).orElseThrow(()->new ApiException("User Not Found with email:"+email));
+		
+		List<Booking> bookings=user.getBookings();
+		List<BookingRespDTO> allBookings=new ArrayList<>();
+		for(Booking myBooking:bookings) {
+			
+			BookingRespDTO b=new BookingRespDTO();
+			b.setBookingId(myBooking.getId());
+			b.setBookingTime(myBooking.getCreationDateTime().toString());
+			b.setBookingStatus(myBooking.getStatus());
+			b.setTotalAmount(myBooking.getTotalFare());
+			b.setPaymentStatus(myBooking.getPayment().getStatus());
+			
+			BusRespDTO bus= new BusRespDTO();
+			bus.setBusNo(myBooking.getBus().getBusNo());
+			bus.setBusName(myBooking.getBus().getBusName());
+			bus.setBusType(myBooking.getBus().getBusType());
+			bus.setSeatType(myBooking.getBus().getSeatType());
+			bus.setOperatorName(myBooking.getBus().getOperatorName());
+			bus.setNoOfSeats(myBooking.getBus().getNoOfSeats());
+			bus.setStartLocation(myBooking.getBus().getBusRoute().getStartLocation());
+			bus.setEndLocation(myBooking.getBus().getBusRoute().getEndLocation());
+			bus.setDepartureDate(myBooking.getBus().getDepartureDate());
+			bus.setDepartureTime(myBooking.getBus().getDepartureTime());
+			bus.setArrivalDate(myBooking.getBus().getArrivalDate());
+			bus.setArrivalTime(myBooking.getBus().getArrivalTime());
+			bus.setDuration(myBooking.getBus().getDuration());
+			bus.setPrice(myBooking.getBus().getPrice());
+			bus.setRating(myBooking.getBus().getRating());
+			try {
+				bus.setAmenities(myBooking.getBus().getAmenitiesList());
+			} catch (Exception e) {
+				bus.setAmenities(new ArrayList<String>());
+				e.printStackTrace();
+			}
+			b.setBus(bus);
+			allBookings.add(b);
+		}
+		return allBookings;
 	}
 	
 }

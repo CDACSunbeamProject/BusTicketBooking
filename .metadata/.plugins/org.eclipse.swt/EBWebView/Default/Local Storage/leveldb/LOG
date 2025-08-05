@@ -1,3 +1,2 @@
-2025/08/05-13:25:20.868 a98 Reusing MANIFEST D:\Projects\Project\Bus_Ticket_Booking_System\BusTicketBooking\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Local Storage\leveldb/MANIFEST-000001
-2025/08/05-13:25:20.876 a98 Recovering log #3
-2025/08/05-13:25:20.877 a98 Reusing old log D:\Projects\Project\Bus_Ticket_Booking_System\BusTicketBooking\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Local Storage\leveldb/000003.log 
+2025/08/05-19:55:25.051 27a8 Creating DB F:\DAC_PROJECT\BusTicketBooking\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Local Storage\leveldb since it was missing.
+2025/08/05-19:55:25.074 27a8 Reusing MANIFEST F:\DAC_PROJECT\BusTicketBooking\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Local Storage\leveldb/MANIFEST-000001

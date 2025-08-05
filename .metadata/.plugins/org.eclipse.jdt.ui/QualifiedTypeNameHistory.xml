@@ -2,10 +2,8 @@
 <qualifiedTypeNameHistroy>
     <fullyQualifiedTypeName name="com.project.dto.ApiResponse"/>
     <fullyQualifiedTypeName name="com.fasterxml.jackson.annotation.JsonIgnore"/>
-    <fullyQualifiedTypeName name="java.util.ArrayList"/>
     <fullyQualifiedTypeName name="com.project.entities.Bus"/>
     <fullyQualifiedTypeName name="com.project.entities.Passenger"/>
-    <fullyQualifiedTypeName name="java.util.List"/>
     <fullyQualifiedTypeName name="com.project.entities.Ticket"/>
     <fullyQualifiedTypeName name="com.project.services.TicketService"/>
     <fullyQualifiedTypeName name="com.project.services.BusService"/>
@@ -16,8 +14,6 @@
     <fullyQualifiedTypeName name="jakarta.persistence.EnumType"/>
     <fullyQualifiedTypeName name="java.time.LocalDateTime"/>
     <fullyQualifiedTypeName name="lombok.ToString"/>
-    <fullyQualifiedTypeName name="com.project.entities.Booking"/>
-    <fullyQualifiedTypeName name="com.project.daos.BookingDao"/>
     <fullyQualifiedTypeName name="com.project.custom_exceptions.ResourceNotFoundException"/>
     <fullyQualifiedTypeName name="com.project.dto.TicketRespDTO"/>
     <fullyQualifiedTypeName name="com.project.entities.TicketStatus"/>
@@ -32,9 +28,15 @@
     <fullyQualifiedTypeName name="com.project.custom_exceptions.ApiException"/>
     <fullyQualifiedTypeName name="com.fasterxml.jackson.annotation.JsonCreator.Mode"/>
     <fullyQualifiedTypeName name="org.modelmapper.ModelMapper"/>
+    <fullyQualifiedTypeName name="com.project.dto.UserProfileRespDTO"/>
+    <fullyQualifiedTypeName name="com.project.daos.BookingDao"/>
+    <fullyQualifiedTypeName name="java.util.List"/>
+    <fullyQualifiedTypeName name="java.util.ArrayList"/>
+    <fullyQualifiedTypeName name="com.project.entities.Booking"/>
+    <fullyQualifiedTypeName name="com.project.dto.BookingRespDTO"/>
+    <fullyQualifiedTypeName name="com.project.dto.BusRespDTO"/>
     <fullyQualifiedTypeName name="lombok.Getter"/>
     <fullyQualifiedTypeName name="lombok.Setter"/>
     <fullyQualifiedTypeName name="lombok.NoArgsConstructor"/>
     <fullyQualifiedTypeName name="lombok.AllArgsConstructor"/>
-    <fullyQualifiedTypeName name="com.project.dto.UserProfileRespDTO"/>
 </qualifiedTypeNameHistroy>
