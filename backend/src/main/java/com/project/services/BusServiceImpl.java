@@ -14,6 +14,7 @@ import com.project.custom_exceptions.ApiException;
 import com.project.custom_exceptions.ResourceNotFoundException;
 import com.project.daos.BusDao;
 import com.project.daos.RouteDao;
+import com.project.daos.SeatAvailabilityDao;
 import com.project.dto.AddBusDTO;
 import com.project.dto.ApiResponse;
 import com.project.dto.BusRespDTO;
@@ -31,7 +32,10 @@ import lombok.AllArgsConstructor;
 public class BusServiceImpl implements BusService {
 	private final BusDao busDao;
 	private final RouteDao routeDao;
+	private final SeatAvailabilityDao seatDao;
 	private final ModelMapper modelMapper;
+	
+	public final SeatService seatService;
 	
 	@Override
 	public ApiResponse addNewBus(AddBusDTO transientBus) {
@@ -74,6 +78,10 @@ public class BusServiceImpl implements BusService {
 	    
 		//save
 		Bus persistentBus = busDao.save(entity);
+		
+		// Generate seats for this bus
+	    seatService.generateSeatsForBus(persistentBus, transientBus.getNoOfSeats());
+	    
 		return new ApiResponse("new bus added with id= "+persistentBus.getId());
 	}
 
@@ -83,8 +91,7 @@ public class BusServiceImpl implements BusService {
 				.stream()
 				.map(bus -> 
 				modelMapper.map(bus,  BusesRespDTO.class))
-				.toList();
-				
+				.toList();	
 				
 	}
 

@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -30,6 +31,7 @@ public class SecurityConfiguration {
 			// HttpSecurity - spring sec supplied class
 			// to customize n build filter chain
 			// 1. disable CSRF protection
+			http.cors(Customizer.withDefaults());
 			http.csrf(csrf -> csrf.disable());
 			// 2. any request - has to be authenticated
 			http.authorizeHttpRequests(
@@ -41,7 +43,7 @@ public class SecurityConfiguration {
 							.permitAll()
 							//only for react apps - permit in flight requests - otherwise CORS error
 							.requestMatchers(HttpMethod.OPTIONS).permitAll()
-							.requestMatchers(HttpMethod.GET, "/buses").permitAll()
+							.requestMatchers(HttpMethod.GET, "/buses/*").permitAll()
 							//.requestMatchers(HttpMethod.POST, "/buses").permitAll()
 							.requestMatchers(HttpMethod.POST, "/buses").hasRole("ADMIN").anyRequest()
 							.authenticated()
@@ -49,6 +51,7 @@ public class SecurityConfiguration {
 			// 3. disable HttpSession tracking - stateless
 			http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 			// 4. To support REST APIs , disable form login
+			
 			http.formLogin(form -> form.disable());
 			// 5. Disable Basic auth support
 			http.httpBasic(basic->basic.disable());

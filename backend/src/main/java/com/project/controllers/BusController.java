@@ -7,6 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,20 +18,26 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.dto.AddBusDTO;
 import com.project.dto.BusRespDTO;
+import com.project.dto.SeatAvailabilityDTO;
 import com.project.dto.SeatSelectionRequestDTO;
 import com.project.entities.Bus;
+import com.project.entities.Route;
 import com.project.services.BusService;
+import com.project.services.RouteService;
+import com.project.services.SeatService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 
 @RestController
 @RequestMapping("/buses")
+@CrossOrigin(origins = "http://localhost:3001")
 @AllArgsConstructor
 @Validated
 public class BusController {
 	
 	private final BusService busService;
+	private final RouteService routeService;
 	
 	/*
 	 * Request handling method (REST API end point) 
@@ -67,6 +74,12 @@ public class BusController {
 		return ResponseEntity.ok(busService.getAllBusesByRouteAndDate(routeId,jDate));
 	}
 	
+	@GetMapping("/routes")
+	public Route getRouteId(@RequestParam String startLocation, @RequestParam String endLocation) {
+	    return routeService.getRouteByFromAndTo(startLocation, endLocation);  // You must write logic in service and repo
+	}
+
+	
 	/*
 	 * REST API end point - desc -get bus details by id 
 	 * URL
@@ -89,6 +102,16 @@ public class BusController {
 
 	    return ResponseEntity.ok().body(busService.getSeatSelectinInfo(dto.getId()));
 	}
+	
+	private final SeatService seatAvail;
+	
+	@GetMapping("/{busId}/seats")
+	public ResponseEntity<?> getSeatAvailability(
+            @PathVariable int busId) {
+
+        List<SeatAvailabilityDTO> seatList = seatAvail.getSeatAvailability(busId);
+        return ResponseEntity.ok(seatList);
+    }
 }
 	
 

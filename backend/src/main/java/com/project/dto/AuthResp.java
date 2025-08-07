@@ -8,4 +8,5 @@ import lombok.*;
 public class AuthResp {
 	private String message;
 	private String jwt;
+	
 }
