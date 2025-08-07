@@ -79,7 +79,6 @@ public class BusController {
 	    return routeService.getRouteByFromAndTo(startLocation, endLocation);  // You must write logic in service and repo
 	}
 
-	
 	/*
 	 * REST API end point - desc -get bus details by id 
 	 * URL

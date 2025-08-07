@@ -57,6 +57,7 @@ public class UserController {
 	 */
 	@PostMapping("/signin")
 	public ResponseEntity<?> userSignIn(@RequestBody AuthRequest dto) {
+		System.out.print("inside login");
 		// 1. Create Authentication Token
 		// (UsernamePasswordAuthToken - principal , crendential)
 		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(dto.getEmail(),
@@ -65,10 +66,11 @@ public class UserController {
 		// 2. Invoke authenticate method of AuthenticationManager
 		Authentication validAuthentication = authenticationManager.authenticate(authentication);
 //			System.out.println(validAuthentication.getPrincipal().getClass());
-		System.out.println(validAuthentication.getPrincipal());// UserEntity
+		User user = (User) validAuthentication.getPrincipal();
+		System.out.println(user);// UserEntity
 //			System.out.println("after "+validAuthentication.isAuthenticated());//tru
 		// 3. In case of success , generate JWT n send it to REST client
-		return ResponseEntity.ok(new AuthResp("auth successful", jwtUtils.generateJwtToken(validAuthentication)));
+		return ResponseEntity.ok(new AuthResp("auth successful", jwtUtils.generateJwtToken(validAuthentication), user.getEmail(), user.getRole().name()));
 	}
 
 	@PostMapping("/ticket")

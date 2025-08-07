@@ -8,5 +8,6 @@ import lombok.*;
 public class AuthResp {
 	private String message;
 	private String jwt;
-	
+	private String email;
+	private String role;
 }
