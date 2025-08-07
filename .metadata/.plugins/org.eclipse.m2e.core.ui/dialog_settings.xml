@@ -2,6 +2,7 @@
 <section name="Workbench">
 	<section name="MavenProjectImportWizardPage">
 		<list key="rootDirectory">
+			<item value="D:\Sunbeam final project\BusTicketBooking\backend"/>
 			<item value="F:\DAC_PROJECT\BusTicketBooking\backend"/>
 			<item value="D:\Projects\Project\Bus_Ticket_Booking_System\BusTicketBooking\backend"/>
 		</list>
@@ -13,5 +14,9 @@
 			<item value="[groupId].[artifactId]-[version]"/>
 			<item value="[name]"/>
 		</list>
+	</section>
+	<section name="org.eclipse.m2e.core.pom.overview">
+	</section>
+	<section name="org.eclipse.m2e.core.pom.dependencies">
 	</section>
 </section>

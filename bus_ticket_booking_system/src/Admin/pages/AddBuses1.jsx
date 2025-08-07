@@ -1,96 +1,80 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import { addNewBus } from '../services/BusService';
+import dayjs from "dayjs";
+import { useAuth } from '../../AuthContext';
 //import { addProperty } from '../services/property'
 
 function AddBuses1() {
-    /*// create the state
+    const [departureTime, setDepartureTime] = useState("");
+    const formattedDepartureTime = departureTime + ":00";
+    const [arrivalTime, setArrivalTime] = useState(""); // e.g. "22:03"
+    const formattedArrivalTime = arrivalTime + ":00";   // becomes "22:03:00"
+
+    const [departureDate, setDepartureDate] = useState(""); // e.g., "2025-08-10"
+    const formattedDepartureDate = dayjs(departureDate).format("DD-MM-YYYY");
+
+
     const [info, setInfo] = useState({
-      categoryId: '',
-      title: '',
-      details: '',
-      address: '',
-      contactNo: '',
-      ownerName: '',
-      isLakeView: 0,
-      isTV: 0,
-      isAC: 0,
-      isWifi: 0,
-      isMiniBar: 0,
-      isBreakfast: 0,
-      isParking: 0,
-      guests: '',
-      bedrooms: '',
-      beds: '',
-      bathrooms: '',
-      rent: '',
-    })
-    const [photo, setPhoto] = useState(null)
-  
-    // get navigate function reference
-    const navigate = useNavigate()
-  
-    const onCancel = () => {
-      // go one step back in back stack
-      navigate(-1)
-    }
-  
-    const onAdd = async () => {
-      const {
-        title,
-        details,
-        address,
-        contactNo,
-        ownerName,
-        isLakeView,
-        isTV,
-        isAC,
-        isWifi,
-        isMiniBar,
-        isBreakfast,
-        isParking,
-        guests,
-        bedrooms,
-        beds,
-        bathrooms,
-        rent,
-      } = info
-      if (title.length == 0) {
-        toast.warn('Please enter title')
-      } else {
-        const result = await addProperty(
-          1,
-          title,
-          details,
-          address,
-          contactNo,
-          ownerName,
-          isLakeView,
-          isTV,
-          isAC,
-          isWifi,
-          isMiniBar,
-          isBreakfast,
-          isParking,
-          guests,
-          bedrooms,
-          beds,
-          bathrooms,
-          rent,
-          photo
-        )
-  
-        if (result['status'] == 'success') {
-          toast.success('Successfully added a property')
-  
-          // go back
-          navigate(-1)
-        } else {
-          toast.error(result['error'])
-        }
-      }
-      
-    }*/
+        busName: '',
+        busNo: '',
+        busType: '',
+        operatorName: '',
+        startLocation: '',
+        endLocation: '',
+        departureDate: '',
+        departureTime: '',
+        arrivalDate: '',
+        arrivalTime: '',
+        fare: '',
+        totalSeats: '',
+        isAC: false,
+        busCategory: '',
+        amenities: [],
+    });
+    const { token } = useAuth();
+
+    const navigate = useNavigate();
+
+    const handleSave = (e) => {
+        e.preventDefault();
+
+        const formattedDepartureDate = dayjs(info.departureDate).format("DD-MM-YYYY");
+        const formattedArrivalDate = dayjs(info.arrivalDate).format("DD-MM-YYYY");
+
+        const formattedDepartureTime = info.departureTime + ":00";
+        const formattedArrivalTime = info.arrivalTime + ":00";
+
+        const newBus = {
+            busName: info.busName,
+            busNo: info.busNo,
+            busType: info.busType,
+            operatorName: info.operatorName,
+            startLocation: info.startLocation,
+            endLocation: info.endLocation,
+            departure_date: formattedDepartureDate,
+            departure_time: formattedDepartureTime,
+            arrival_date: formattedArrivalDate,
+            arrival_time: formattedArrivalTime,
+            fare: Number(info.fare),
+            noOfSeats: Number(info.totalSeats),
+            isAC: info.isAC,
+            busCategory: info.busCategory,
+            amenities: info.amenities,
+        };
+        console.log("Token being sent:", token);
+        console.log(newBus)
+        addNewBus(newBus, token)
+            .then((response) => {
+                toast.success('Bus added successfully!');
+                navigate('/buses');
+            })
+            .catch((error) => {
+                console.error('Error adding bus:', error);
+                toast.error('Failed to add bus.');
+            });
+    };
 
     return (
         <div className='container'>
@@ -99,7 +83,8 @@ function AddBuses1() {
                 <div className='col'>
                     <label htmlFor=''>Name</label>
                     <input
-                        onChange={(e) => setInfo({ ...info, name: e.target.value })}
+                        value={info.busName}
+                        onChange={(e) => setInfo({ ...info, busName: e.target.value })}
                         type='text'
                         placeholder='Enter bus name'
                         className='form-control'
@@ -108,6 +93,7 @@ function AddBuses1() {
                 <div className='col'>
                     <label htmlFor=''>Type</label>
                     <input
+                        value={info.busType}
                         onChange={(e) => setInfo({ ...info, busType: e.target.value })}
                         type='text'
                         placeholder='Enter bus type(Volvo,Benz...)'
@@ -118,17 +104,19 @@ function AddBuses1() {
 
             <div className='row mb-3'>
                 <div className='col'>
-                    <label htmlFor=''>Travel Date:</label>
+                    <label htmlFor=''>operatorName:</label>
                     <input
-                        onChange={(e) => setInfo({ ...info, travelDate: e.target.value })}
-                        type='date'
+                        value={info.operatorName}
+                        onChange={(e) => setInfo({ ...info, operatorName: e.target.value })}
+                        type='text'
                         className='form-control'
                     />
                 </div>
                 <div className='col'>
-                    <label htmlFor=''>Operator Name</label>
+                    <label htmlFor=''>totalSeats:</label>
                     <input
-                        onChange={(e) => setInfo({ ...info, opName: e.target.value })}
+                        value={info.totalSeats}
+                        onChange={(e) => setInfo({ ...info, totalSeats: e.target.value })}
                         type='text'
                         className='form-control'
                     />
@@ -138,39 +126,23 @@ function AddBuses1() {
             <div className='row mb-3'>
                 <div className='col'>
                     <label htmlFor=''>Start Location:</label>
-                    <select
-                    //value={selectedRouteId}
-                    //onChange={(e) => setSelectedRouteId(e.target.value)}
-                    required
-                >
-                    <option value="">-- Select start location --</option>
-                    <option value="">Pune</option>
-                    <option value="">Mumbai</option>
-                    {/*routes.map((route) => (
-                    <option key={route.id} value={route.id}>
-                        {route.source} → {route.destination}
-                    </option>
-                    ))*/}
-                    </select>
-                    
+                    <input
+                        value={info.startLocation}
+                        onChange={(e) => setInfo({ ...info, startLocation: e.target.value })}
+                        required
+                        className='form-control'
+                    />
+
                 </div>
                 <div className='col'>
                     <label htmlFor=''>End Location:</label>
-                    <select
-                    //value={selectedRouteId}
-                    //onChange={(e) => setSelectedRouteId(e.target.value)}
-                    required
-                >
-                    <option value="">-- Select end location --</option>
-                    <option value="">Nashik</option>
-                    <option value="">Bangalore</option>
-                    {/*routes.map((route) => (
-                    <option key={route.id} value={route.id}>
-                        {route.source} → {route.destination}
-                    </option>
-                    ))*/}
-                    </select>
-                    
+                    <input
+                        value={info.endLocation}
+                        onChange={(e) => setInfo({ ...info, endLocation: e.target.value })}
+                        required
+                        className='form-control'
+                    />
+
                 </div>
             </div>
 
@@ -178,12 +150,14 @@ function AddBuses1() {
                 <div className='col'>
                     <label htmlFor=''>Departure Date and Time</label>
                     <input
-                        onChange={(e) => setInfo({ ...info, deptTime: e.target.value })}
+                        value={info.departureDate}
+                        onChange={(e) => setInfo({ ...info, departureDate: e.target.value })}
                         type='date'
                         className='form-control'
                     />
                     <input
-                        onChange={(e) => setInfo({ ...info, deptTime: e.target.value })}
+                        value={info.departureTime?.slice(0, 5)}
+                        onChange={(e) => setInfo({ ...info, departureTime: e.target.value })}
                         type='time'
                         className='form-control'
                     />
@@ -191,12 +165,14 @@ function AddBuses1() {
                 <div className='col'>
                     <label htmlFor=''>Arrival Date and Time</label>
                     <input
-                        onChange={(e) => setInfo({ ...info, deptTime: e.target.value })}
+                        value={info.arrivalDate}
+                        onChange={(e) => setInfo({ ...info, arrivalDate: e.target.value })}
                         type='date'
                         className='form-control'
                     />
                     <input
-                        onChange={(e) => setInfo({ ...info, deptTime: e.target.value })}
+                        value={info.arrivalTime?.slice(0, 5)}
+                        onChange={(e) => setInfo({ ...info, arrivalTime: e.target.value })}
                         type='time'
                         className='form-control'
                     />
@@ -233,7 +209,7 @@ function AddBuses1() {
                 
             </div>*/}
 
-            
+
 
             {/*<div className='row mb-3'>
                 <div className='col'>
@@ -266,19 +242,13 @@ function AddBuses1() {
                 <div className='col'>
                     <label htmlFor=''>Fare</label>
                     <input
-                        onChange={(e) => setInfo({ ...info, bathrooms: e.target.value })}
+                        value={info.fare}
+                        onChange={(e) => setInfo({ ...info, fare: e.target.value })}
                         type='number'
                         className='form-control'
                     />
                 </div>
-                <div className='col'>
-                    <label htmlFor=''>Total seats</label>
-                    <input
-                        onChange={(e) => setInfo({ ...info, rent: e.target.value })}
-                        type='number'
-                        className='form-control'
-                    />
-                </div>
+
                 <div className='col'>
                     <label htmlFor=''>Photo</label>
                     <input
@@ -310,7 +280,7 @@ function AddBuses1() {
                     />{' '}
                     <span>Sleeper</span>
                 </div>
-                
+
             </div>
 
             <div className='mb-3 row'>
@@ -334,9 +304,9 @@ function AddBuses1() {
                     />{' '}
                     <span>non-AC</span>
                 </div>
-                
+
             </div>
-            
+
             <div className='mb-3 row'>
                 <label>Amenities:</label>
                 <div>
@@ -375,13 +345,13 @@ function AddBuses1() {
                     />{' '}
                     <span>Reading Light</span>
                 </div>
-                
+
             </div>
 
             <div className='row'>
                 <div className='col'>
                     <button
-                        //onClick={onAdd}
+                        onClick={handleSave}
                         className='btn btn-success'
                     >
                         Save
@@ -402,121 +372,6 @@ function AddBuses1() {
 
 export default AddBuses1
 /**
- * function BusCard({ bus, onBook }) {
-  return (
-    <div className="bus-card">
-      <h3>{bus.operatorName}</h3>
-      <p>{bus.source} → {bus.destination}</p>
-      <p>Departure: {bus.departureTime}</p>
-      <p>Arrival: {bus.arrivalTime}</p>
-      <p>Seats Available: {bus.availableSeats}</p>
-      <p>Fare: ₹{bus.fare}</p>
-      <button onClick={() => onBook(bus)}>Book Now</button>
-    </div>
-  );
-}
-  //additional
-  function BusCard({ bus }) {
-  return (
-    <div className="bus-card">
-      <h3>{bus.operatorName}</h3>
-      <p>{bus.route.source} → {bus.route.destination}</p>
-      <p>Fare: ₹{bus.fare}</p>
-
-      { 🔸 Show Amenities }
-      <div className="amenities">
-        <strong>Amenities:</strong>
-        <ul>
-          {bus.amenities.map((item, index) => (
-            <li key={index}>{item}</li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  );
-}
-
-npm install react-icons
-Then use like this:
-
-jsx
-Copy code
-import { FaWifi, FaPlug, FaBottleWater } from "react-icons/fa6";
-
-const iconMap = {
-  "WiFi": <FaWifi />,
-  "Charging": <FaPlug />,
-  "Water Bottle": <FaBottleWater />
-};
-
-{bus.amenities.map((item, index) => (
-  <li key={index}>
-    {iconMap[item] || "•"} {item}
-  </li>
-))}
-🎨 Example Output:
-makefile
-Copy code
-VRL Travels
-Pune → Mumbai
-Fare: ₹750
-Amenities:
-✔️ WiFi
-✔️ Charging
-✔️ Water Bottle
-✏️ Optional: Editable Amenity Form for Admin
-If you’re building an admin form to add/update amenities, you can use checkboxes:
-
-jsx
-Copy code
-const amenitiesList = ["WiFi", "Charging", "Water Bottle"];
-const [selectedAmenities, setSelectedAmenities] = useState([]);
-
-const toggleAmenity = (amenity) => {
-  setSelectedAmenities(prev =>
-    prev.includes(amenity)
-      ? prev.filter(a => a !== amenity)
-      : [...prev, amenity]
-  );
-};
-jsx
-Copy code
-{amenitiesList.map((amenity, index) => (
-  <label key={index}>
-    <input
-      type="checkbox"
-      checked={selectedAmenities.includes(amenity)}
-      onChange={() => toggleAmenity(amenity)}
-    />
-    {amenity}
-  </label>
-))}
-
-
-Bus Object (JSON from backend)
-{
-  "id": 1,
-  "operatorName": "VRL Travels",
-  "source": "Pune",
-  "destination": "Mumbai",
-  "departureTime": "2025-06-20T08:00:00",
-  "arrivalTime": "2025-06-20T13:00:00",
-  "fare": 750,
-  "totalSeats": 30,
-  "availableSeats": 12,
-  "isAC": true,
-  "busType": "Sleeper",  // or "Seater"
-  "amenities": ["WiFi", "Charging", "Water Bottle"]
-}
-
-Route (1) --- (M) Bus
-
-Great! If your backend sends amenities like:
-
-json
-Copy code
-"amenities": ["WiFi", "Charging", "Water Bottle"]
-Then in your React frontend, you can display them cleanly with icons or text using a .map() loop.
-
+ *
 
  */

@@ -1,59 +1,69 @@
-import React from 'react';
-import SeatSelection from './SeatSelection';
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import axios from 'axios';
+import moment from 'moment';
 
 function SearchResults() {
-  // Example static data — replace with fetched data later
-  const buses = [
-    {
-      id: 1,
-      operator: 'Nakoda Travels',
-      type: 'Volvo A/C (2+2)',
-      startloc:'pune',
-      endloc:'kolhapur',
-      traveldate:'25-07-2025',
-      rating: 3.8,
-      reviews: 211,
-      departure: '15:35',
-      arrival: '21:20',
-      duration: '5h 45m',
-      seats: 24,
-      price: 476
-    },
-    // Add more buses here
-  ];
+  
+  const [buses, setBuses] = useState([]);
+  const location = useLocation();
+
+  // Retrieve routeId and jDate from location or localStorage
+  const routeId = location?.state?.routeId || localStorage.getItem("routeId");
+  const jDate = location?.state?.jDate || localStorage.getItem("searchDate");
+
+  useEffect(() => {
+  console.log("Inside useEffect");
+  console.log("routeId:", routeId);
+  console.log("jDate:", jDate);
+
+  if (routeId && jDate) {
+    axios.get(`http://localhost:9090/buses/${routeId}?jDate=${jDate}`)
+      .then(response => {
+        console.log("Fetched buses:", response.data); // 🔴 THIS MUST SHOW
+        setBuses(response.data);
+        localStorage.setItem("searchResults", JSON.stringify(response.data));
+      })
+      .catch(error => {
+        console.error("Error fetching buses:", error); // 🔴 If this shows, the API call failed
+      });
+  } else {
+    console.warn("Missing routeId or jDate, skipping fetch.");
+  }
+}, [routeId, jDate]);
+ // Add routeId and jDate as dependencies
 
   return (
     <div className="container my-4">
       <h2>Search Results</h2>
 
-      {buses.map(bus => (
-        <div key={bus.id} className="card mb-3">
-          <div className="card-body d-flex justify-content-between align-items-center">
-            <div>
-              <h5>{bus.operator}</h5>
-              <p>{bus.type}</p>
-              <p>
-                ⭐ {bus.rating} ({bus.reviews} reviews)
-              </p>
-            </div>
-            <div>
-              <p><strong>{bus.startloc}</strong> → <strong>{bus.endloc}</strong></p>
-              <p>{bus.duration} • {bus.seats} Seats</p>
-            </div>
-            <div>
-              <p><strong>{bus.departure}</strong> → <strong>{bus.arrival}</strong></p>
-              <p>{bus.traveldate}</p>
-            </div>
-            <div className="text-end">
-              <h5>₹{bus.price}</h5>
-              <Link to="/user/seatselection">
-                <button className="btn btn-primary">Select Seats</button>
-              </Link>
+      {buses.length === 0 ? (
+        <p>No buses available.</p>
+      ) : (
+        buses.map((bus, index) => (
+          <div key={index} className="card mb-3">
+            <div className="card-body d-flex justify-content-between align-items-center">
+              <div>
+                <h5>{bus.operatorName}</h5>
+                <p>{bus.busType}</p>
+                <p>⭐ {bus.rating}</p>
+              </div>
+              <div>
+                <p>No. of Seats: {bus.noOfSeats}</p>
+              </div>
+              <div>
+                <p><strong>{bus.departureTime}</strong> → <strong>{bus.arrivalTime}</strong></p>
+              </div>
+              <div className="text-end">
+                <h5>₹{bus.price}</h5>
+                <Link to="/user/seatselection" state={{ busName: bus.busName }}>
+                  <button className="btn btn-primary">Select Seats</button>
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        ))
+      )}
     </div>
   );
 }

@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
 function SeatSelection() {
+  
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [passengersContactDetails, setPassengersContactDetails] = useState({
     mobile: "",
