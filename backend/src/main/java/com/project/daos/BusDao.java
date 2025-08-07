@@ -21,4 +21,6 @@ public interface BusDao extends JpaRepository<Bus, Long> {
 	@Query("select b from Bus b left join fetch b.busRoute where b.id=:busId")
 	Bus fetchCompleteDetails(int busId);
 
+	boolean existsByBusNo(String busNo);
+
 }

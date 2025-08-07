@@ -46,6 +46,15 @@ public class Bus extends BaseEntity {
 	@Column(name = "operator_name", length = 50)
 	private String operatorName;
 
+	@Column(name = "ac_type", length = 10)
+	private String acType;
+	
+	@Column(name = "seat_type", length = 30)
+	private String seatType;
+
+	@Column(name = "price")
+	private double price;
+	
 	@Column(name = "no_of_seats")
 	private int noOfSeats;
 
@@ -67,9 +76,6 @@ public class Bus extends BaseEntity {
 
 	@Column(name = "duration")
 	private double duration; // in hours or minutes
-
-	@Column(name = "price")
-	private double price;
 
 	@Column(name = "rating")
 	private Float rating;
@@ -110,10 +116,6 @@ public class Bus extends BaseEntity {
 		return bookedSeats.remove(seatNo);
 	}
 	*/
-	
-	
-	@Column(name = "seat_type", length = 30)
-	private String seatType;
 	
 	@OneToMany(mappedBy = "bus", cascade = CascadeType.ALL)
 	private List<Booking> bookings;

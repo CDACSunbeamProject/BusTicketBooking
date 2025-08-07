@@ -1,185 +1,273 @@
-import React, { useState, useContext } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { toast } from 'react-toastify'
-import { addNewBus } from '../services/BusService';
+import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { addNewBus } from "../services/BusService";
 import dayjs from "dayjs";
-import { useAuth } from '../../AuthContext';
-//import { addProperty } from '../services/property'
+import { useAuth } from "../../AuthContext";
 
 function AddBuses1() {
-    const [departureTime, setDepartureTime] = useState("");
-    const formattedDepartureTime = departureTime + ":00";
-    const [arrivalTime, setArrivalTime] = useState(""); // e.g. "22:03"
-    const formattedArrivalTime = arrivalTime + ":00";   // becomes "22:03:00"
+  const [info, setInfo] = useState({
+    busName: "",
+    busNo: "",
+    busType: "",
+    operatorName: "",
+    acType: "",
+    seatType: "",
+    fare: "",
+    totalSeats: "",
+    startLocation: "",
+    endLocation: "",
+    departureDate: "",
+    departureTime: "",
+    arrivalDate: "",
+    arrivalTime: "",
+    duration: "",
+    rating:"",
+    amenities: [],
+  });
+  const handleAmenityChange = (e) => {
+    const { value, checked } = e.target;
+    if (checked) {
+      setInfo((prev) => ({
+        ...prev,
+        amenities: [...prev.amenities, value],
+      }));
+    } else {
+      setInfo((prev) => ({
+        ...prev,
+        amenities: prev.amenities.filter((item) => item !== value),
+      }));
+    }
+  };
+  const { token } = useAuth();
 
-    const [departureDate, setDepartureDate] = useState(""); // e.g., "2025-08-10"
-    const formattedDepartureDate = dayjs(departureDate).format("DD-MM-YYYY");
+  const navigate = useNavigate();
 
+  const handleSave = (e) => {
+    if (
+      !info.busName ||
+      !info.busNo ||
+      !info.busType ||
+      !info.operatorName ||
+      !info.acType ||
+      !info.seatType ||
+      !info.fare ||
+      !info.totalSeats ||
+      !info.startLocation ||
+      !info.endLocation ||
+      !info.departureDate ||
+      !info.departureTime ||
+      !info.arrivalDate ||
+      !info.arrivalTime ||
+      !info.duration ||
+      !info.rating
+    ) {
+      toast.error("Please fill in all required fields.");
+      return;
+    }
 
-    const [info, setInfo] = useState({
-        busName: '',
-        busNo: '',
-        busType: '',
-        operatorName: '',
-        startLocation: '',
-        endLocation: '',
-        departureDate: '',
-        departureTime: '',
-        arrivalDate: '',
-        arrivalTime: '',
-        fare: '',
-        totalSeats: '',
-        isAC: false,
-        busCategory: '',
-        amenities: [],
-    });
-    const { token } = useAuth();
+    const formattedDepartureDate = dayjs(info.departureDate).format(
+      "DD-MM-YYYY"
+    );
+    const formattedArrivalDate = dayjs(info.arrivalDate).format("DD-MM-YYYY");
 
-    const navigate = useNavigate();
+    const formattedDepartureTime = info.departureTime + ":00";
+    const formattedArrivalTime = info.arrivalTime + ":00";
 
-    const handleSave = (e) => {
-        e.preventDefault();
-
-        const formattedDepartureDate = dayjs(info.departureDate).format("DD-MM-YYYY");
-        const formattedArrivalDate = dayjs(info.arrivalDate).format("DD-MM-YYYY");
-
-        const formattedDepartureTime = info.departureTime + ":00";
-        const formattedArrivalTime = info.arrivalTime + ":00";
-
-        const newBus = {
-            busName: info.busName,
-            busNo: info.busNo,
-            busType: info.busType,
-            operatorName: info.operatorName,
-            startLocation: info.startLocation,
-            endLocation: info.endLocation,
-            departure_date: formattedDepartureDate,
-            departure_time: formattedDepartureTime,
-            arrival_date: formattedArrivalDate,
-            arrival_time: formattedArrivalTime,
-            fare: Number(info.fare),
-            noOfSeats: Number(info.totalSeats),
-            isAC: info.isAC,
-            busCategory: info.busCategory,
-            amenities: info.amenities,
-        };
-        console.log("Token being sent:", token);
-        console.log(newBus)
-        addNewBus(newBus, token)
-            .then((response) => {
-                toast.success('Bus added successfully!');
-                navigate('/buses');
-            })
-            .catch((error) => {
-                console.error('Error adding bus:', error);
-                toast.error('Failed to add bus.');
-            });
+    const newBus = {
+      busName: info.busName,
+      busNo: info.busNo,
+      busType: info.busType,
+      operatorName: info.operatorName,
+      acType: info.acType,
+      seatType: info.seatType,
+      price: Number(info.fare),
+      noOfSeats: Number(info.totalSeats),
+      startLocation: info.startLocation,
+      endLocation: info.endLocation,
+      departureDate: formattedDepartureDate,
+      departureTime: formattedDepartureTime,
+      arrivalDate: formattedArrivalDate,
+      arrivalTime: formattedArrivalTime,
+      duration: Number(info.duration),
+      rating:Number(info.rating),
+      amenities: info.amenities,
     };
+    console.log("Token being sent:", token);
+    console.log(newBus);
+    addNewBus(newBus, token)
+      .then((response) => {
+        toast.success("Bus added successfully!");
+        navigate("/buses");
+      })
+      .catch((error) => {
+        // if (err.response && err.response.data) 
+        //   toast.error(err.response.data); // This will be "duplicate bus name!!"
+        console.error("Error adding bus:", error);
+        toast.error("Failed to add bus.");
+      });
+      
+  };
 
-    return (
-        <div className='container'>
-            <h2 className='page-header'>Add Bus</h2>
-            <div className='row mb-3'>
-                <div className='col'>
-                    <label htmlFor=''>Name</label>
-                    <input
-                        value={info.busName}
-                        onChange={(e) => setInfo({ ...info, busName: e.target.value })}
-                        type='text'
-                        placeholder='Enter bus name'
-                        className='form-control'
-                    />
-                </div>
-                <div className='col'>
-                    <label htmlFor=''>Type</label>
-                    <input
-                        value={info.busType}
-                        onChange={(e) => setInfo({ ...info, busType: e.target.value })}
-                        type='text'
-                        placeholder='Enter bus type(Volvo,Benz...)'
-                        className='form-control'
-                    />
-                </div>
-            </div>
+  return (
+    <div className="container">
+      <h2 className="page-header">Add Bus</h2>
+      <div className="row mb-3">
+        <div className="col">
+          <label htmlFor="">Name</label>
+          <input
+            value={info.busName}
+            onChange={(e) => setInfo({ ...info, busName: e.target.value })}
+            type="text"
+            placeholder="Enter bus name"
+            className="form-control"
+          />
+        </div>
+        <div className="col">
+          <label htmlFor="">Number</label>
+          <input
+            value={info.busNo}
+            onChange={(e) => setInfo({ ...info, busNo: e.target.value })}
+            type="text"
+            placeholder="Enter bus number"
+            className="form-control"
+          />
+        </div>
+      </div>
+      <div className="row mb-3">
+        <div className="col">
+          <label htmlFor="">Type</label>
+          <input
+            value={info.busType}
+            onChange={(e) => setInfo({ ...info, busType: e.target.value })}
+            type="text"
+            placeholder="Enter bus type(Volvo,Benz...)"
+            className="form-control"
+          />
+        </div>
+        <div className="col">
+          <label htmlFor="">Operator Name</label>
+          <input
+            value={info.operatorName}
+            placeholder="Enter operator name"
+            onChange={(e) => setInfo({ ...info, operatorName: e.target.value })}
+            type="text"
+            className="form-control"
+          />
+        </div>
+      </div>
+      <div className="row mb-3">
+        <div className="col">
+          <label htmlFor="">AC Type</label>
+          <select
+            value={info.acType}
+            onChange={(e) => setInfo({ ...info, acType: e.target.value })}
+            className="form-select"
+          >
+            <option value=""> Select AC Type </option>
+            <option value="AC">AC</option>
+            <option value="NON-AC">NON-AC</option>
+          </select>
+        </div>
+        <div className="col">
+          <label htmlFor="">Seat Type</label>
+          <select
+            name="seatType"
+            value={info.seatType}
+            onChange={(e) => setInfo({ ...info, seatType: e.target.value })}
+            className="form-select"
+          >
+            <option value="">Select Seat Type</option>
+            <option value="Sleeper">Sleeper</option>
+            <option value="seater">Seater</option>
+          </select>
+        </div>
+      </div>
 
-            <div className='row mb-3'>
-                <div className='col'>
-                    <label htmlFor=''>operatorName:</label>
-                    <input
-                        value={info.operatorName}
-                        onChange={(e) => setInfo({ ...info, operatorName: e.target.value })}
-                        type='text'
-                        className='form-control'
-                    />
-                </div>
-                <div className='col'>
-                    <label htmlFor=''>totalSeats:</label>
-                    <input
-                        value={info.totalSeats}
-                        onChange={(e) => setInfo({ ...info, totalSeats: e.target.value })}
-                        type='text'
-                        className='form-control'
-                    />
-                </div>
-            </div>
+      <div className="row mb-3">
+        <div className="col">
+          <label htmlFor="">Fare</label>
+          <input
+            value={info.fare}
+            placeholder="Enter seat price"
+            onChange={(e) => setInfo({ ...info, fare: e.target.value })}
+            type="number"
+            className="form-control"
+          />
+        </div>
+        <div className="col">
+          <label htmlFor="">Total Seats</label>
+          <input
+            value={info.totalSeats}
+            placeholder="Enter total seats"
+            onChange={(e) => setInfo({ ...info, totalSeats: e.target.value })}
+            type="number"
+            className="form-control"
+          />
+        </div>
+      </div>
 
-            <div className='row mb-3'>
-                <div className='col'>
-                    <label htmlFor=''>Start Location:</label>
-                    <input
-                        value={info.startLocation}
-                        onChange={(e) => setInfo({ ...info, startLocation: e.target.value })}
-                        required
-                        className='form-control'
-                    />
+      <div className="row mb-3">
+        <div className="col">
+          <label htmlFor="">Start Location</label>
+          <input
+            value={info.startLocation}
+            placeholder="Enter start location"
+            onChange={(e) =>
+              setInfo({ ...info, startLocation: e.target.value })
+            }
+            className="form-control"
+          />
+        </div>
+        <div className="col">
+          <label htmlFor="">End Location</label>
+          <input
+            value={info.endLocation}
+            placeholder="Enter end location"
+            onChange={(e) => setInfo({ ...info, endLocation: e.target.value })}
+            className="form-control"
+          />
+        </div>
+      </div>
 
-                </div>
-                <div className='col'>
-                    <label htmlFor=''>End Location:</label>
-                    <input
-                        value={info.endLocation}
-                        onChange={(e) => setInfo({ ...info, endLocation: e.target.value })}
-                        required
-                        className='form-control'
-                    />
+      <div className="row mb-3">
+        <div className="col">
+          <label htmlFor="">Departure Date and Time</label>
+          <input
+            value={info.departureDate}
+            onChange={(e) =>
+              setInfo({ ...info, departureDate: e.target.value })
+            }
+            type="date"
+            className="form-control"
+          />
+          <input
+            value={info.departureTime?.slice(0, 5)}
+            onChange={(e) =>
+              setInfo({ ...info, departureTime: e.target.value })
+            }
+            type="time"
+            className="form-control"
+          />
+        </div>
+        <div className="col">
+          <label htmlFor="">Arrival Date and Time</label>
+          <input
+            value={info.arrivalDate}
+            onChange={(e) => setInfo({ ...info, arrivalDate: e.target.value })}
+            type="date"
+            className="form-control"
+          />
+          <input
+            value={info.arrivalTime?.slice(0, 5)}
+            onChange={(e) => setInfo({ ...info, arrivalTime: e.target.value })}
+            type="time"
+            className="form-control"
+          />
+        </div>
+      </div>
 
-                </div>
-            </div>
-
-            <div className='row mb-3'>
-                <div className='col'>
-                    <label htmlFor=''>Departure Date and Time</label>
-                    <input
-                        value={info.departureDate}
-                        onChange={(e) => setInfo({ ...info, departureDate: e.target.value })}
-                        type='date'
-                        className='form-control'
-                    />
-                    <input
-                        value={info.departureTime?.slice(0, 5)}
-                        onChange={(e) => setInfo({ ...info, departureTime: e.target.value })}
-                        type='time'
-                        className='form-control'
-                    />
-                </div>
-                <div className='col'>
-                    <label htmlFor=''>Arrival Date and Time</label>
-                    <input
-                        value={info.arrivalDate}
-                        onChange={(e) => setInfo({ ...info, arrivalDate: e.target.value })}
-                        type='date'
-                        className='form-control'
-                    />
-                    <input
-                        value={info.arrivalTime?.slice(0, 5)}
-                        onChange={(e) => setInfo({ ...info, arrivalTime: e.target.value })}
-                        type='time'
-                        className='form-control'
-                    />
-                </div>
-            </div>
-
-            {/*<div className='row mb-3'>
+      {/*<div className='row mb-3'>
         <div className='col'>
           <label htmlFor=''>Bus Details</label>
           <textarea
@@ -190,7 +278,7 @@ function AddBuses1() {
         </div>
       </div>*/}
 
-            {/*<div className='row mb-3'>
+      {/*<div className='row mb-3'>
                 <label htmlFor=''>Route:</label>
                 <select
                     //value={selectedRouteId}
@@ -209,9 +297,7 @@ function AddBuses1() {
                 
             </div>*/}
 
-
-
-            {/*<div className='row mb-3'>
+      {/*<div className='row mb-3'>
                 <div className='col'>
                     <label htmlFor=''>#Guests</label>
                     <input
@@ -237,140 +323,123 @@ function AddBuses1() {
                     />
                 </div>
             </div>*/}
-
-            <div className='row mb-3'>
-                <div className='col'>
-                    <label htmlFor=''>Fare</label>
-                    <input
-                        value={info.fare}
-                        onChange={(e) => setInfo({ ...info, fare: e.target.value })}
-                        type='number'
-                        className='form-control'
-                    />
-                </div>
-
-                <div className='col'>
-                    <label htmlFor=''>Photo</label>
-                    <input
-                        onChange={(e) => setPhoto(e.target.files[0])}
-                        type='file'
-                        className='form-control'
-                    />
-                </div>
-            </div>
-
-            <div className='mb-3 row'>
-                <div>
-                    <input
-                        onChange={(e) =>
-                            setInfo({ ...info, isLakeView: e.target.checked ? 1 : 0 })
-                        }
-                        type='radio'
-                        name='seatType'
-                    />{' '}
-                    <span>Seater</span>
-                </div>
-                <div>
-                    <input
-                        onChange={(e) =>
-                            setInfo({ ...info, isTV: e.target.checked ? 1 : 0 })
-                        }
-                        type='radio'
-                        name='seatType'
-                    />{' '}
-                    <span>Sleeper</span>
-                </div>
-
-            </div>
-
-            <div className='mb-3 row'>
-                <div>
-                    <input
-                        onChange={(e) =>
-                            setInfo({ ...info, isLakeView: e.target.checked ? 1 : 0 })
-                        }
-                        type='radio'
-                        name='isAC'
-                    />{' '}
-                    <span>AC</span>
-                </div>
-                <div>
-                    <input
-                        onChange={(e) =>
-                            setInfo({ ...info, isTV: e.target.checked ? 1 : 0 })
-                        }
-                        type='radio'
-                        name='isAC'
-                    />{' '}
-                    <span>non-AC</span>
-                </div>
-
-            </div>
-
-            <div className='mb-3 row'>
-                <label>Amenities:</label>
-                <div>
-                    <input
-                        onChange={(e) =>
-                            setInfo({ ...info, isLakeView: e.target.checked ? 1 : 0 })
-                        }
-                        type='checkbox'
-                    />{' '}
-                    <span>Wifi</span>
-                </div>
-                <div>
-                    <input
-                        onChange={(e) =>
-                            setInfo({ ...info, isTV: e.target.checked ? 1 : 0 })
-                        }
-                        type='checkbox'
-                    />{' '}
-                    <span>Charging</span>
-                </div>
-                <div>
-                    <input
-                        onChange={(e) =>
-                            setInfo({ ...info, isAC: e.target.checked ? 1 : 0 })
-                        }
-                        type='checkbox'
-                    />{' '}
-                    <span>Water Bottle</span>
-                </div>
-                <div>
-                    <input
-                        onChange={(e) =>
-                            setInfo({ ...info, isWifi: e.target.checked ? 1 : 0 })
-                        }
-                        type='checkbox'
-                    />{' '}
-                    <span>Reading Light</span>
-                </div>
-
-            </div>
-
-            <div className='row'>
-                <div className='col'>
-                    <button
-                        onClick={handleSave}
-                        className='btn btn-success'
-                    >
-                        Save
-                    </button>
-                    <button
-                        //onClick={onCancel}
-                        className='btn btn-danger ms-2'
-                    >
-                        Cancel
-                    </button>
-                </div>
-            </div>
+      <div className="row mb-3">
+        <div className="col">
+          <label htmlFor="">Duration</label>
+          <input
+            value={info.duration}
+            placeholder="Enter journey duration"
+            onChange={(e) => setInfo({ ...info, duration: e.target.value })}
+            type="number"
+            className="form-control"
+          />
         </div>
+        <div className="col">
+          <label htmlFor="">Rating</label>
+          <input
+            value={info.rating}
+            placeholder="Enter bus rating"
+            onChange={(e) => setInfo({ ...info, rating: e.target.value })}
+            type="number"
+            className="form-control"
+          />
+        </div>
+      </div>
 
-    )
+      <div className="mb-3 row">
+        <label>Amenities:</label>
+        <div>
+          <input
+            type="checkbox"
+            value="Water Bottle"
+            onChange={handleAmenityChange}
+            checked={info.amenities.includes("Water Bottle")}
+          />
+          <span> Water Bottle</span>
+        </div>
+        <div>
+          <input
+            type="checkbox"
+            value="WiFi"
+            onChange={handleAmenityChange}
+            checked={info.amenities.includes("WiFi")}
+          />
+          <span> WiFi</span>
+        </div>
+        <div>
+          <input
+            type="checkbox"
+            value="Charging Point"
+            onChange={handleAmenityChange}
+            checked={info.amenities.includes("Charging Point")}
+          />
+          <span> Charging Point</span>
+        </div>
+        <div>
+          <input
+            type="checkbox"
+            value="Reading Light"
+            onChange={handleAmenityChange}
+            checked={info.amenities.includes("Reading Light")}
+          />
+          <span> Reading Light</span>
+        </div>
+        <div>
+          <input
+            type="checkbox"
+            value="TV"
+            onChange={handleAmenityChange}
+            checked={info.amenities.includes("TV")}
+          />
+          <span> TV</span>
+        </div>
+        <div>
+          <input
+            type="checkbox"
+            value="CCTV"
+            onChange={handleAmenityChange}
+            checked={info.amenities.includes("CCTV")}
+          />
+          <span> CCTV</span>
+        </div>
+        <div>
+          <input
+            type="checkbox"
+            value="First Aid Box"
+            onChange={handleAmenityChange}
+            checked={info.amenities.includes("First Aid Box")}
+          />
+          <span> First Aid Box</span>
+        </div>
+        <div>
+          <input
+            type="checkbox"
+            value="Emergency Exit"
+            onChange={handleAmenityChange}
+            checked={info.amenities.includes("Emergency Exit")}
+          />
+          <span> Emergency Exit</span>
+        </div>
+      </div>
 
+      <div className="row">
+        <div className="col">
+          <button onClick={handleSave} className="btn btn-success">
+            Save
+          </button>
+          <button
+            //onClick={onCancel}
+            className="btn btn-danger ms-2"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 }
 
-export default AddBuses1
+export default AddBuses1;
 /**
  *
 

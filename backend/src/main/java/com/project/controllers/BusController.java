@@ -50,9 +50,10 @@ public class BusController {
 	 *  success - SC 201 + ApiResp - success mesg
 	 */
 	
-	@PostMapping
+	@PostMapping("/addbus")
 	@Operation(description = "Add new bus")
 	public ResponseEntity<?> addNewBus(@RequestBody AddBusDTO dto){
+		System.out.println("inside add bud controller");
 		
 		//call service method
 		return ResponseEntity.status(HttpStatus.CREATED)

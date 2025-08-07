@@ -45,6 +45,8 @@ public class BusServiceImpl implements BusService {
 		//check for same bus name
 		if(busDao.existsByBusName(transientBus.getBusName()))
 			throw new ApiException("duplicate bus name!!");
+		if(busDao.existsByBusNo(transientBus.getBusNo()))
+			throw new ApiException("duplicate bus number");
 		
 		//find the existing route in the database
 		Optional<Route> optionalRoute = routeDao.findByStartLocationAndEndLocation(
