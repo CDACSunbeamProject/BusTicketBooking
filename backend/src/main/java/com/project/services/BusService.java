@@ -15,4 +15,5 @@ public interface BusService {
 	ApiResponse addNewBus(AddBusDTO transientBus);
 	BusRespDTO getBusDetails(int busId);
 	SeatSelectionResponseDTO fetchBusDetailsByName(String busName);
+	List<BusesRespDTO> getAllBuses();
 }

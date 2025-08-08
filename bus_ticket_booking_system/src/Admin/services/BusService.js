@@ -9,3 +9,14 @@ export const addNewBus = (bus,token) => {
     },
   });
 };
+
+
+export const fetchAllBuses = async (token) => {
+  const response = await axios.get(BASE_URL+"/getall")
+  return response.data;
+};
+
+export const deleteBusById = async (busId,token) => {
+  const response = await axios.get(BASE_URL + "/getall");
+  return response.data;
+};

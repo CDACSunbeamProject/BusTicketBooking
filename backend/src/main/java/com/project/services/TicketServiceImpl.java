@@ -18,8 +18,10 @@ import com.project.dto.PassengerDTO;
 import com.project.dto.TicketRequestDTO;
 import com.project.dto.TicketRespDTO;
 import com.project.entities.Booking;
+import com.project.entities.BookingStatus;
 import com.project.entities.Bus;
 import com.project.entities.Passenger;
+import com.project.entities.PaymentStatus;
 import com.project.entities.Ticket;
 import com.project.entities.TicketStatus;
 import com.project.entities.User;
@@ -43,11 +45,15 @@ public class TicketServiceImpl implements TicketService {
 		System.out.println("in ticket generation");
 		Booking booking = bookingDao.findById(request.getBookingId())
 			    .orElseThrow(() -> new ResourceNotFoundException("Booking is not found with id: " + request.getBookingId()));
-		if(!"CONFIRMED".equals(booking.getStatus())) {
-			throw new ApiException("Booking is not confirmed yet");
+		if(!PaymentStatus.SUCCESS.equals(booking.getPayment().getStatus())) {
+			throw new ApiException("Booking is not completed");
 		}
 		Ticket ticket = new Ticket();
-		ticket.setTicketNumber(generateTicketNumber(booking.getId()));
+		String ticketNumber=generateTicketNumber(booking.getId());
+//		while(ticketDao.existsByTicketNumber(ticketNumber)) {
+//		ticketNumber=generateTicketNumber(booking.getId());
+//		}
+		ticket.setTicketNumber(ticketNumber);
 		ticket.setBooking(booking);
 		ticket.setStatus(TicketStatus.ACTIVE);
 		ticket = ticketDao.save(ticket);
@@ -56,15 +62,11 @@ public class TicketServiceImpl implements TicketService {
 	}
 	
 //	// Testing is pending
-//	@Override
-//	public TicketRespDTO getTicket(Long ticketId) {
-//		if (!ticketDao.existsById(ticketId))
-//			throw new ApiException("Ticket not with id " + ticketId);
-//
-//		Optional<Ticket> ticket = ticketDao.findById(ticketId);
-//		TicketRespDTO persistentTicket = modelMapper.map(ticket, TicketRespDTO.class);
-//		return persistentTicket;
-//	}
+	@Override
+	public TicketRespDTO getTicket(String ticketNumber) {
+		Ticket ticket = ticketDao.findByTicketNumber(ticketNumber).orElseThrow();
+		return modelMapper.map(ticket, TicketRespDTO.class);
+	}
 	
 	public static String generateTicketNumber(Long bookingId) {
 	    String datePart = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));

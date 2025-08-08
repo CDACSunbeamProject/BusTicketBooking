@@ -6,18 +6,23 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class AddBusDTO {
-	private Long routeId;
     private String busName;
     private String busNo;
     private String busType;
+    private String operatorName; 
+    private String acType;
     private String seatType;
-    private String operatorName;   
+    private double price;
     private int noOfSeats;  
     
     private String startLocation;
@@ -33,7 +38,6 @@ public class AddBusDTO {
     @JsonFormat(pattern = "HH:mm:ss")
     private LocalTime arrivalTime; 
     private double duration;  // in hours or minutes  
-    private double price; 
     private Float rating; 
     private List<String> amenities;
 }

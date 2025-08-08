@@ -147,11 +147,11 @@ function SeatSelection() {
         <div className="row p-4 justify-content-center align-items-center">
           <div className="col shadow-sm border border-1 border-dark pt-3 pb-3 me-4 bg-white rounded-5">
             <div className="pb-3 fs-5 fw-bold">Lower Deck</div>
-            {renderSeatsSection(1, totalSeats / 2)}
+            {renderSeatsSection(1, Math.floor(totalSeats / 2))}
           </div>
           <div className="ms-4 pt-3 border border-1 border-dark shadow-sm pb-3 col bg-white rounded-5">
             <div className="pb-3 fs-5 fw-bold">Upper Deck</div>
-            {renderSeatsSection(totalSeats / 2 + 1, totalSeats)}
+            {renderSeatsSection(Math.floor(totalSeats / 2) + 1, totalSeats)}
           </div>
         </div>
       </div>
@@ -448,7 +448,7 @@ const renderBusInfo = () => {
               </button>
             </div>
           </div>
-        </>
+        </> 
       )}
     </div>
   );

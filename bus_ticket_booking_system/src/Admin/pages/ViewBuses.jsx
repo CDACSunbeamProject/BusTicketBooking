@@ -1,110 +1,171 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { fetchAllBuses, deleteBusById } from "../services/busService";
+import {
+  FaBus,
+  FaChair,
+  FaClock,
+  FaMoneyBillWave,
+  FaStar,
+  FaUserTie,
+  FaCalendarAlt,
+} from "react-icons/fa";
+import { useAuth } from "../../AuthContext";
+import { useNavigate } from "react-router-dom";
 
-const BusInfo = () => {
+function ViewBuses() {
+  const [buses, setBuses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const { token } = useAuth();
   const navigate = useNavigate();
-  const handleAddBus = () => {
-    navigate("/admin/addbus");
-  }
-  return (
-    <div className="container mt-5">
-      <h2 className="mb-4 text-center">Bus Details</h2>
 
-      <div className="table-responsive">
-        <table className="table table-bordered table-hover align-middle text-center">
-          <thead className="table-dark">
-            <tr>
-              <th>Sr.No</th>
-              <th>Bus ID</th>
-              <th>Bus Number</th>
-              <th>Route</th>
-              <th>Pickup Point</th>
-              <th>Drop Point</th>
-              <th>Bus Type</th>
-              <th>Departure Date & Time</th>
-              <th>Arrival Date & Time</th>
-              <th>Fare (₹)</th>
-              <th>Amenities</th>
-              <th>Photo</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td>B101</td>
-              <td>MH12AB1234</td>
-              <td>Pune → Mumbai</td>
-              <td>Swargate</td>
-              <td>Dadar</td>
-              <td>AC Sleeper</td>
-              <td>2025-07-25, 08:00 AM</td>
-              <td>2025-07-25, 11:30 AM</td>
-              <td>500</td>
-              <td>Wi-Fi, Water Bottle</td>
-              <td>{/* Leave blank or use a placeholder image */}</td>
-              <td>
-                <button
-                  className="btn btn-success btn-sm me-2" onClick={handleAddBus}
-                >
-                  Add
-                </button>
-                <button className="btn btn-danger btn-sm">Delete</button>
-              </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>B102</td>
-              <td>MH14CD5678</td>
-              <td>Pune → Nashik</td>
-              <td>Shivajinagar</td>
-              <td>CBS Nashik</td>
-              <td>Non-AC Seater</td>
-              <td>2025-07-25, 06:30 AM</td>
-              <td>2025-07-25, 10:30 AM</td>
-              <td>350</td>
-              <td>Water Bottle</td>
-              <td></td>
-              <td>
-                <button
-                  className="btn btn-success btn-sm me-2"
-                  onClick={handleAddBus}
-                >
-                  Add
-                </button>
-                <button className="btn btn-danger btn-sm">Delete</button>
-              </td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td>B103</td>
-              <td>MH20EF9012</td>
-              <td>Pune → Bangalore</td>
-              <td>Katraj</td>
-              <td>Majestic</td>
-              <td>AC Sleeper</td>
-              <td>2025-07-25, 06:00 PM</td>
-              <td>2025-07-26, 07:00 AM</td>
-              <td>1200</td>
-              <td>Wi-Fi, Charging Point</td>
-              <td></td>
-              <td>
-                <div className="d-flex justify-content-center gap-2">
-                  <button
-                    className="btn btn-success btn-sm"
-                    onClick={handleAddBus}
-                  >
-                    Add
-                  </button>
-                  <button className="btn btn-danger btn-sm">Delete</button>
+  useEffect(() => {
+    const loadBuses = async () => {
+      try {
+        const data = await fetchAllBuses(token);
+        setBuses(data);
+      } catch (err) {
+        setError("Failed to load buses");
+        console.error("Error loading buses:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadBuses();
+  }, [token]);
+
+  const handleDelete = async (busId,token) => {
+    if (!window.confirm(`Are you sure you want to delete bus "${busId}"?`)) {
+      return;
+    }
+    setLoading(true);
+    try {
+      await deleteBusById(busId, token);
+      setBuses(buses.filter((bus) => bus.busId !== busId));
+    } catch (err) {
+      setError("Failed to delete bus");
+      console.error("Delete bus error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleView = (busId) => {
+    navigate(`/buses/getbus/${busId}`);
+  };
+
+  if (loading) return <div className="text-center my-5">Loading buses...</div>;
+  if (error)
+    return <div className="alert alert-danger text-center my-5">{error}</div>;
+
+  return (
+    <div className="container mt-4">
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h2 className="text-primary">
+          <FaBus className="me-2" />
+          Available Buses
+        </h2>
+      </div>
+
+      <div className="row g-4">
+        {buses.map((bus) => (
+          <div key={bus.busName} className="col-md-6 col-lg-4">
+            <div className="card h-100 shadow-sm">
+              <div className="card-header bg-primary text-white">
+                <h5 className="mb-0">{bus.busName}</h5>
+              </div>
+              <div className="card-body">
+                <div className="d-flex align-items-center mb-3">
+                  <FaUserTie className="text-muted me-2" />
+                  <span>{bus.operatorName}</span>
                 </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+
+                <div className="row mb-3">
+                  <div className="col-6">
+                    <div className="d-flex align-items-center">
+                      <FaBus className="text-muted me-2" />
+                      <span>{bus.busType}</span>
+                    </div>
+                  </div>
+                  <div className="col-6">
+                    <div className="d-flex align-items-center">
+                      <FaChair className="text-muted me-2" />
+                      <span>{bus.seatType}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Departure Date and Time */}
+                <div className="row mb-3">
+                  {/* <div className="col-6 d-flex align-items-center">
+                    <FaCalendarAlt className="text-muted me-2" />
+                    <strong>Departure Date:</strong>&nbsp;
+                    <span>{bus.departureDate || "N/A"}</span>
+                  </div> */}
+                  <div className="col-6 d-flex align-items-center">
+                    <FaClock className="text-muted me-2" />
+                    <strong>Departure Time:</strong>&nbsp;
+                    <span>{bus.departureTime || "N/A"}</span>
+                  </div>
+                </div>
+
+                {/* Arrival Date and Time */}
+                <div className="row mb-3">
+                  {/* <div className="col-6 d-flex align-items-center">
+                    <FaCalendarAlt className="text-muted me-2" />
+                    <strong>Arrival Date:</strong>&nbsp;
+                    <span>{bus.arrivalDate || "N/A"}</span>
+                  </div> */}
+                  <div className="col-6 d-flex align-items-center">
+                    <FaClock className="text-muted me-2" />
+                    <strong>Arrival Time:</strong>&nbsp;
+                    <span>{bus.arrivalTime || "N/A"}</span>
+                  </div>
+                </div>
+
+                <div className="row mb-3">
+                  <div className="col-6 d-flex align-items-center">
+                    <FaMoneyBillWave className="text-muted me-2" />
+                    <span>₹{bus.price}</span>
+                  </div>
+                  <div className="col-6 d-flex justify-content-end align-items-center">
+                    <div className="badge bg-light text-dark">
+                      {bus.noOfSeats - (bus.bookedSeats?.length || 0)}/
+                      {bus.noOfSeats} seats available
+                    </div>
+                  </div>
+                </div>
+
+                <div className="d-flex justify-content-between align-items-center">
+                  <div className="d-flex align-items-center">
+                    <FaStar className="text-warning me-2" />
+                    <span>{bus.rating || "N/A"}</span>
+                  </div>
+
+                  {/* Buttons at bottom */}
+                  <div>
+                    <button
+                      className="btn btn-sm btn-info me-2"
+                      onClick={() => handleView(bus.busId)}
+                    >
+                      View
+                    </button>
+                    <button
+                      className="btn btn-sm btn-danger"
+                      onClick={() => handleDelete(bus.busId)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
-};
+}
 
-export default BusInfo;
+export default ViewBuses;

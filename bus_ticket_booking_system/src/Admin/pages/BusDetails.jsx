@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getBusDetailsById } from "../services/busService";
+import { getBusDetailsById } from "../../User/services/busService";
 
 function BusDetails() {
-  const { busId } = useParams();
+  const { busId } = useParams() || 0;
   const navigate = useNavigate();
   const [bus, setBus] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -65,9 +65,198 @@ function BusDetails() {
         </button>
       </div>
     );
+    const getSleeperSeats = () => {
+      if (!bus) return null;
 
+      const totalSeats = bus.noOfSeats;
+      return (
+        <div className="container">
+          <div className="row p-4 justify-content-center align-items-center">
+            <div className="col shadow-sm border border-1 border-dark pt-3 pb-3 me-4 bg-white rounded-5">
+              <div className="pb-3 fs-5 fw-bold text-center">Lower Deck</div>
+              {renderSeatsSection(1, Math.floor(totalSeats / 2))}
+            </div>
+            <div className="ms-4 pt-3 border border-1 border-dark shadow-sm pb-3 col bg-white rounded-5">
+              <div className="pb-3 fs-5 fw-bold text-center">Upper Deck</div>
+              {renderSeatsSection(Math.floor(totalSeats / 2) + 1, totalSeats)}
+            </div>
+          </div>
+        </div>
+      );
+    };
+      const getSeaterSeats = () => {
+        if (!bus) return null;
+
+        const seatsPerRow = 4;
+        const rows = [];
+
+        for (let i = 1; i <= bus.noOfSeats; i += seatsPerRow) {
+          const rowSeats = [];
+
+          // Left 2 seats
+          for (let j = 0; j < 2; j++) {
+            const seatNo = i + j;
+            if (seatNo <= bus.noOfSeats) {
+              rowSeats.push(getSeatBox(seatNo));
+            }
+          }
+
+          // Walkway gap
+          rowSeats.push(
+            <div
+              key={`gap-${i}`}
+              className="m-1"
+              style={{ width: "30px", height: "35px", visibility: "hidden" }}
+            />
+          );
+
+          // Right 2 seats
+          for (let j = 2; j < 4; j++) {
+            const seatNo = i + j;
+            if (seatNo <= bus.noOfSeats) {
+              rowSeats.push(getSeatBox(seatNo));
+            }
+          }
+
+          rows.push(
+            <div key={`row-${i}`} className="d-flex justify-content-center">
+              {rowSeats}
+            </div>
+          );
+        }
+
+        return <div className="border rounded-3 bg-white p-4">{rows}</div>;
+      };
+      const renderSeatsSection = (start, end) => {
+        const seatsPerRow = 3;
+        const rows = [];
+
+        for (let i = start; i <= end; i += seatsPerRow) {
+          const rowSeats = [];
+
+          // Left seat
+          for (let j = 0; j < 1; j++) {
+            const seatNo = i + j;
+            if (seatNo <= end) {
+              rowSeats.push(getSeatBox(seatNo));
+            }
+          }
+
+          // Walkway gap
+          rowSeats.push(
+            <div
+              key={`gap-${i}`}
+              className=""
+              style={{ width: "30px", height: "35px", visibility: "hidden" }}
+            />
+          );
+
+          // Right 2 seats
+          for (let j = 1; j < 3; j++) {
+            const seatNo = i + j;
+            if (seatNo <= end) {
+              rowSeats.push(getSeatBox(seatNo));
+            }
+          }
+
+          rows.push(
+            <div key={`row-${i}`} className="d-flex justify-content-center">
+              {rowSeats}
+            </div>
+          );
+        }
+
+        return <div className="bg-white round-5">{rows}</div>;
+      };
+      
+    const renderSeats = () => {
+      if (!bus) return <div>Loading bus details...</div>;
+      return bus.seatType === "Sleeper"
+        ? getSleeperSeats()
+        : getSeaterSeats();
+    };
+      const getSeatBox = (seatNo) => {
+        if (!bus) return null;
+
+        const isBooked =
+          Array.isArray(bus.bookedSeats) && bus.bookedSeats.includes(seatNo);;
+
+        const seatClass = [
+          isBooked
+            ? "bg-danger text-white"
+            : "bg-light",
+          bus.seatType === "Sleeper" ? "pt-4 pb-4" : "",
+        ].join(" ");
+
+        return (
+          <div
+            key={seatNo}
+            className={`border rounded text-center p-2 m-2 seat-box ${seatClass}`}
+            style={{
+              width: "35px",
+              // cursor: isBooked ? "not-allowed" : "",
+            }}
+            onClick={() => !isBooked && handleSeatClick(seatNo)}
+          >
+            {seatNo}
+          </div>
+        );
+      };
+const renderBodyData = () => {
+  if (!bus) return <div>Loading bus layout...</div>;
+
+  const seatsDesign = bus.seatType === "Sleeper" ? "col-6" : "col-3";
   return (
-    <div className="container my-4">
+    <div className="container">
+      <div className="row justify-content-center align-items-center">
+        <div
+          className={`${seatsDesign} justify-content-center align-items-center`}
+        >
+          {renderSeats()}
+        </div>
+        <div className="col-5 ms-0">
+          <div className="container">
+            <div className="row fs-4 bg-white align-items-center  border rounded p-5">
+              <div className="col-12 text-start">
+                <strong>Seat Type: {bus.seatType}</strong>
+              </div>
+              <div className="col-12 text-start">
+                <strong>Total No of Seats: {bus.noOfSeats}</strong>
+              </div>
+              <div className="col-12 text-start">
+                <strong className="text-danger">
+                  Total Booked Seats:{" "}
+                  {Array.isArray(bus.bookedSeats) ? bus.bookedSeats.length : 0}
+                </strong>
+              </div>
+              <div className="col-12 text-start">
+                <strong
+                  className="text-success"
+                >
+                  Total Available Seats:{" "}
+                  {bus.noOfSeats -
+                    (Array.isArray(bus.bookedSeats)
+                      ? bus.bookedSeats.length
+                      : 0)}
+                </strong>
+              </div>
+              <div className="row text-center mt-3">
+                <div className="col border m-2 bg-danger rounded p-2">
+                  <span>Booked</span>
+                </div>
+                <div className="col border m-2 bg-light rounded p-2">
+                  <span>Available</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+  return (
+    <div className="container m-4 p-5 my-4">
       {/* Hero Section */}
       <div className="card border-0 shadow-lg overflow-hidden mb-4">
         <div className="row g-0">
@@ -154,6 +343,14 @@ function BusDetails() {
             onClick={() => setActiveTab("amenities")}
           >
             <i className="bi bi-list-check me-1"></i> Amenities
+          </button>
+        </li>
+        <li className="nav-item">
+          <button
+            className={`nav-link ${activeTab === "seats" ? "active" : ""}`}
+            onClick={() => setActiveTab("seats")}
+          >
+            <i className="bi bi-grid-3x3-gap me-1"></i> Seat Layout
           </button>
         </li>
         <li className="nav-item">
@@ -277,6 +474,11 @@ function BusDetails() {
             </div>
           )}
 
+          {activeTab === "seats" && (
+            <div className="row justify-content-center align-items-center rounded">
+              {renderBodyData()}
+            </div>
+          )}
         </div>
       </div>
 
@@ -299,19 +501,19 @@ function BusDetails() {
 // Helper function to get icons for amenities
 function getAmenityIcon(amenity) {
   const iconMap = {
-    'Water Bottle': 'cup',
-    'WiFi': 'wifi',
-    'Charging Point': 'lightning-charge',
-    'Reading Light': 'lamp',
-    'TV': 'tv',
-    'CCTV': 'camera-video',
-    'First Aid Box': 'first-aid',
-    'Emergency Exit': 'door-open'
+    "Water Bottle": "cup",
+    WiFi: "wifi",
+    "Charging Point": "lightning-charge",
+    "Reading Light": "lamp",
+    TV: "tv",
+    CCTV: "camera-video",
+    "First Aid Box": "first-aid",
+    "Emergency Exit": "door-open",
   };
 
-  const defaultIcon = 'check-circle';
+  const defaultIcon = "check-circle";
   const iconName = iconMap[amenity] || defaultIcon;
-  
+
   return <i className={`bi bi-${iconName}`}></i>;
 }
 

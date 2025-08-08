@@ -25,6 +25,18 @@ function AddBuses1() {
     rating:"",
     amenities: [],
   });
+
+  const amenitiesList = [
+    "Water Bottle",
+    "WiFi",
+    "Charging Point",
+    "Reading Light",
+    "TV",
+    "CCTV",
+    "First Aid Box",
+    "Emergency Exit",
+  ];
+
   const handleAmenityChange = (e) => {
     const { value, checked } = e.target;
     if (checked) {
@@ -107,6 +119,9 @@ function AddBuses1() {
         toast.error("Failed to add bus.");
       });
       
+  };
+  const handleCancel=()=>{
+    navigate("../dashboard")
   };
 
   return (
@@ -348,78 +363,17 @@ function AddBuses1() {
 
       <div className="mb-3 row">
         <label>Amenities:</label>
-        <div>
-          <input
-            type="checkbox"
-            value="Water Bottle"
-            onChange={handleAmenityChange}
-            checked={info.amenities.includes("Water Bottle")}
-          />
-          <span> Water Bottle</span>
-        </div>
-        <div>
-          <input
-            type="checkbox"
-            value="WiFi"
-            onChange={handleAmenityChange}
-            checked={info.amenities.includes("WiFi")}
-          />
-          <span> WiFi</span>
-        </div>
-        <div>
-          <input
-            type="checkbox"
-            value="Charging Point"
-            onChange={handleAmenityChange}
-            checked={info.amenities.includes("Charging Point")}
-          />
-          <span> Charging Point</span>
-        </div>
-        <div>
-          <input
-            type="checkbox"
-            value="Reading Light"
-            onChange={handleAmenityChange}
-            checked={info.amenities.includes("Reading Light")}
-          />
-          <span> Reading Light</span>
-        </div>
-        <div>
-          <input
-            type="checkbox"
-            value="TV"
-            onChange={handleAmenityChange}
-            checked={info.amenities.includes("TV")}
-          />
-          <span> TV</span>
-        </div>
-        <div>
-          <input
-            type="checkbox"
-            value="CCTV"
-            onChange={handleAmenityChange}
-            checked={info.amenities.includes("CCTV")}
-          />
-          <span> CCTV</span>
-        </div>
-        <div>
-          <input
-            type="checkbox"
-            value="First Aid Box"
-            onChange={handleAmenityChange}
-            checked={info.amenities.includes("First Aid Box")}
-          />
-          <span> First Aid Box</span>
-        </div>
-        <div>
-          <input
-            type="checkbox"
-            value="Emergency Exit"
-            onChange={handleAmenityChange}
-            checked={info.amenities.includes("Emergency Exit")}
-          />
-          <span> Emergency Exit</span>
-        </div>
+        {amenitiesList.map((amenity) => (
+          <div key={amenity}>
+            <input
+              type="checkbox"
+              value={amenity}
+              onChange={handleAmenityChange}
+              checked={info.amenities.includes(amenity)}
+            />
+            <span> {amenity}</span>
+          </div>
+        ))}
       </div>
 
       <div className="row">
@@ -428,7 +382,7 @@ function AddBuses1() {
             Save
           </button>
           <button
-            //onClick={onCancel}
+            onClick={handleCancel}
             className="btn btn-danger ms-2"
           >
             Cancel

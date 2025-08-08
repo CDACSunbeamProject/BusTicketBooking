@@ -14,4 +14,6 @@ public interface UserService {
 	UserProfileRespDTO getUserProfileDetails(String email);
 
 	List<BookingRespDTO> getMyBookings(String email);
+
+	List<UserRespDTO> getAllUsers();
 }

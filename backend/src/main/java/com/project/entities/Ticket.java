@@ -39,7 +39,7 @@ public class Ticket extends BaseEntity {
 	@JoinColumn(name = "bus_no")
 	private Bus bus;
 
-	@Column(name = "ticket_number")
+	@Column(name = "ticket_number",unique=true)
 	private String ticketNumber;
 	
 	@OneToOne

@@ -1,5 +1,6 @@
 package com.project.controllers;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import com.project.dto.BookingRespDTO;
 import com.project.dto.TicketRequestDTO;
 import com.project.dto.UserProfileRespDTO;
 import com.project.dto.UserRequestDTO;
+import com.project.dto.UserRespDTO;
 import com.project.entities.User;
 import com.project.security.JwtUtils;
 import com.project.services.BusService;
@@ -98,9 +100,11 @@ public class UserController {
 		return ResponseEntity.ok().body(bookings);
 	}
 
-//		@GetMapping("/ticket/{ticketId}")
-//		@Operation(description = "Getting Ticket")
-//		public ResponseEntity<?> gettingTicket(@PathVariable Long ticketId) {
-//			return ResponseEntity.ok(ticketService.getTicket(ticketId));
-//		}
+	
+		@GetMapping("/ticket/{ticketNumber}")
+		@Operation(description = "Getting Ticket")
+		public ResponseEntity<?> gettingTicket(@PathVariable String ticketNumber) {
+			return ResponseEntity.ok(ticketService.getTicket(ticketNumber));
+		}
+
 }

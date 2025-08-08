@@ -8,7 +8,7 @@ function Navbar() {
 
   const handleLogout = () => {
     logout(); // ✅ Clears token & state
-    navigate("/user/signin"); // ✅ Redirect to login
+    navigate("/user/login"); // ✅ Redirect to login
   };
 
   return (
@@ -58,7 +58,7 @@ function Navbar() {
           {/* ✅ Conditionally show Login / Logout */}
           {!isLoggedIn ? (
             <li className="nav-item">
-              <Link to="/user/signin">
+              <Link to="/user/login">
                 <button className="btn btn-danger ms-2">Login</button>
               </Link>
             </li>

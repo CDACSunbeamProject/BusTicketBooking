@@ -2,6 +2,7 @@ package com.project.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,36 +29,35 @@ import lombok.AllArgsConstructor;
 @Service
 @Transactional
 @AllArgsConstructor
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
 	// depcy
-		private final UserDao userDao;
-		private ModelMapper mapper;
-		private PasswordEncoder passwordEncoder;
-		private ModelMapper modelMapper;
-		private BookingDao bookingDao;
-		
-	
+	private final UserDao userDao;
+	private ModelMapper mapper;
+	private PasswordEncoder passwordEncoder;
+	private ModelMapper modelMapper;
+	private BookingDao bookingDao;
+
 	@Override
 	public UserRespDTO signUp(UserRequestDTO dto) {
 		// 1. check for dup email
 		if (userDao.existsByEmail(dto.getEmail()))
-					throw new ApiException("Dup Email detected - User exists already!!!!");
-				// 2. dto -> entity
+			throw new ApiException("Dup Email detected - User exists already!!!!");
+		// 2. dto -> entity
 
 		User entity = mapper.map(dto, User.class);
-		//3. encrypt password
+		// 3. encrypt password
 		entity.setPassword(passwordEncoder.encode(entity.getPassword()));
-		//4. save the entity n map persistent entity -> resp dto
+		// 4. save the entity n map persistent entity -> resp dto
 		return mapper.map(userDao.save(entity), UserRespDTO.class);
 	}
 
-
 	@Override
 	public UserProfileRespDTO getUserProfileDetails(String email) {
-		User user= userDao.findByEmail(email).orElseThrow(()->new ApiException("User Not Found with email:"+email));
-		
-		UserProfileRespDTO userProfile=new UserProfileRespDTO();
+		User user = userDao.findByEmail(email)
+				.orElseThrow(() -> new ApiException("User Not Found with email:" + email));
+
+		UserProfileRespDTO userProfile = new UserProfileRespDTO();
 		userProfile.setId(user.getId());
 		userProfile.setName(user.getName());
 		userProfile.setEmail(user.getEmail());
@@ -66,23 +66,24 @@ public class UserServiceImpl implements UserService{
 		userProfile.setPhone(user.getPhone());
 		return userProfile;
 	}
-	
+
 	@Override
 	public List<BookingRespDTO> getMyBookings(String email) {
-		User user= userDao.findByEmail(email).orElseThrow(()->new ApiException("User Not Found with email:"+email));
-		
-		List<Booking> bookings=user.getBookings();
-		List<BookingRespDTO> allBookings=new ArrayList<>();
-		for(Booking myBooking:bookings) {
-			
-			BookingRespDTO b=new BookingRespDTO();
+		User user = userDao.findByEmail(email)
+				.orElseThrow(() -> new ApiException("User Not Found with email:" + email));
+
+		List<Booking> bookings = user.getBookings();
+		List<BookingRespDTO> allBookings = new ArrayList<>();
+		for (Booking myBooking : bookings) {
+
+			BookingRespDTO b = new BookingRespDTO();
 			b.setBookingId(myBooking.getId());
 			b.setBookingTime(myBooking.getCreationDateTime().toString());
 			b.setBookingStatus(myBooking.getStatus());
 			b.setTotalAmount(myBooking.getTotalFare());
 			b.setPaymentStatus(myBooking.getPayment().getStatus());
-			
-			BusRespDTO bus= new BusRespDTO();
+
+			BusRespDTO bus = new BusRespDTO();
 			bus.setBusNo(myBooking.getBus().getBusNo());
 			bus.setBusName(myBooking.getBus().getBusName());
 			bus.setBusType(myBooking.getBus().getBusType());
@@ -109,5 +110,10 @@ public class UserServiceImpl implements UserService{
 		}
 		return allBookings;
 	}
-	
+
+	@Override
+	public List<UserRespDTO> getAllUsers() {
+		return userDao.findAll().stream().map(user -> modelMapper.map(user, UserRespDTO.class)).toList();
+	}
+
 }

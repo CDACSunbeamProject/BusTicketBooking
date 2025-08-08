@@ -23,3 +23,14 @@ export const signupUser = async (data) => {
     throw error.response?.data || new Error("Login failed");
   }
 };
+
+export const fetchAllUsers = async (data) => {
+  console.log("inside all users");
+  try {
+    const response = await axiosInstance.get("/admin/users");
+
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || new Error("Login failed");
+  }
+};

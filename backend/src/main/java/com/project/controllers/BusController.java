@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
+import com.project.daos.BusDao;
 import com.project.dto.AddBusDTO;
 import com.project.dto.BusRespDTO;
 import com.project.dto.SeatAvailabilityDTO;
@@ -35,10 +35,12 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 @Validated
 public class BusController {
+
+    private final BusDao busDao;
 	
 	private final BusService busService;
 	private final RouteService routeService;
-	
+
 	/*
 	 * Request handling method (REST API end point) 
 	 * - desc - Add new restaurant 
@@ -112,7 +114,15 @@ public class BusController {
         List<SeatAvailabilityDTO> seatList = seatAvail.getSeatAvailability(busId);
         return ResponseEntity.ok(seatList);
     }
+	
+	@GetMapping("/getall")
+	public ResponseEntity<?> getAllBuses(){
+		System.out.println("inside get all buses");
+		return ResponseEntity.ok(busService.getAllBuses());
+	}
 }
+
+
 	
 
 

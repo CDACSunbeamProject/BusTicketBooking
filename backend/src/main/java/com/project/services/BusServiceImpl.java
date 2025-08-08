@@ -149,6 +149,13 @@ public class BusServiceImpl implements BusService {
 		respDto.setBookedSeats(bus.getBookedSeats());
 		return respDto;
 	}
+
+	@Override
+	public List<BusesRespDTO> getAllBuses() {
+		return busDao.findAll().stream().map(bus->{
+		return modelMapper.map(bus, BusesRespDTO.class);
+		}).toList();
+	}
 	
 	
 }
