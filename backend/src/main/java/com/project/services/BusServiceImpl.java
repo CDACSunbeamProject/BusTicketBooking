@@ -1,6 +1,8 @@
 package com.project.services;
 
+import java.lang.reflect.Array;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -120,25 +122,30 @@ public class BusServiceImpl implements BusService {
 
 	
 	@Override
-	public SeatSelectionResponseDTO getSeatSelectinInfo(Long id) {
-		System.out.println("inside getSeatSelectinInfo ...");
-		Bus bus = busDao.findById(id).orElseThrow(() -> new ResourceNotFoundException("Bus is Not found with id:" + id));
+	public SeatSelectionResponseDTO fetchBusDetailsByName(String busName) {
+		System.out.println("inside service layer ...");
+		List<Bus> buses=busDao.findByBusName(busName);
+		if(buses.isEmpty()) throw new ResourceNotFoundException("Bus is Not found with id:" + busName);
+		Bus bus=buses.getFirst();
 		System.out.println("bus is found with id: " + bus.getId());
 		
 		SeatSelectionResponseDTO respDto=new SeatSelectionResponseDTO();
-		respDto.setId(bus.getId());
 		respDto.setBusName(bus.getBusName());
-		respDto.setBusNumber(bus.getBusNo());
+		respDto.setBusNo(bus.getBusNo());
 		respDto.setOperatorName(bus.getOperatorName());
 		respDto.setBusType(bus.getBusType());
 		respDto.setSeatType(bus.getSeatType());
+		respDto.setAcType(bus.getAcType());
 		respDto.setDepartureDate(bus.getDepartureDate()!=null ? bus.getDepartureDate().toString(): "");
 		respDto.setDepartureTime(bus.getDepartureTime()!=null ? bus.getDepartureTime().toString(): "");
 		respDto.setArrivalDate(bus.getArrivalDate()!=null ? bus.getArrivalDate().toString(): "");
 		respDto.setArrivalTime(bus.getArrivalTime()!=null ? bus.getArrivalTime().toString(): "");
-		respDto.setSource(bus.getBusRoute().getStartLocation());
-		respDto.setDestination(bus.getBusRoute().getEndLocation());
-		respDto.setFare(bus.getPrice());
+		respDto.setStartLocation(bus.getBusRoute().getStartLocation());
+		respDto.setEndLocation(bus.getBusRoute().getEndLocation());
+		respDto.setPrice(bus.getPrice());
+		respDto.setDuration(bus.getDuration());
+		respDto.setNoOfSeats(bus.getNoOfSeats());
+		respDto.setRating(bus.getRating());
 		respDto.setBookedSeats(bus.getBookedSeats());
 		return respDto;
 	}

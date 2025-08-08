@@ -14,5 +14,5 @@ public interface BusService {
 	List<BusesRespDTO> getAllBusesByRouteAndDate(int id,LocalDate jDate);
 	ApiResponse addNewBus(AddBusDTO transientBus);
 	BusRespDTO getBusDetails(int busId);
-	SeatSelectionResponseDTO getSeatSelectinInfo(Long id);
+	SeatSelectionResponseDTO fetchBusDetailsByName(String busName);
 }

@@ -2,6 +2,8 @@ package com.project.dto;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,19 +17,22 @@ import lombok.ToString;
 @ToString
 public class SeatSelectionResponseDTO {
 
-	private Long Id;
-    private String busName;
-    private String busNumber;
-    private String operatorName;
+	private String busName;
+    private String busNo;
     private String busType;
+    private String operatorName; 
+    private String acType;
     private String seatType;
+    private double price;
+    private int noOfSeats; 
+    private String startLocation;
+    private String endLocation;
     private String departureDate;
     private String departureTime;
     private String arrivalDate;
     private String arrivalTime;
-    private String source;
-    private String destination;
-    private double fare;
-    private int totalSeats;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "#.##")
+    private Float rating;
+    private double duration;
     private Set<String> bookedSeats;
 }

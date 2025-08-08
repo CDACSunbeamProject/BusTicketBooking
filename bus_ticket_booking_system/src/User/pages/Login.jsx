@@ -1,75 +1,100 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../AuthContext';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../AuthContext";
+import { loginUser } from "../services/userService";
+import { toast } from "react-toastify";
 
 function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [loginDetails, setLoginDetails] = useState({
+    email: "",
+    password: "",
+  });
+  const [error, setError] = useState("");
   const navigate = useNavigate();
-  const [error, setError] = useState('');
   const { login } = useAuth();
 
-  console.log("login function");
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log("in handle submit function");
-  
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setLoginDetails((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleLogin = async () => {
+    const requiredFields = ["email", "password"];
+    const firstEmpty = requiredFields.find((field) => !loginDetails[field]);
+
+    if (firstEmpty) {
+      toast.error(`${firstEmpty} is required`);
+      document.querySelector(`[name="${firstEmpty}"]`)?.focus();
+      return;
+    }
+
+    setError("");
+
     try {
-      console.log("inside try");
-      axios.post('http://localhost:9090/test-signin', { email, password });
+      const data = await loginUser(loginDetails.email, loginDetails.password);
 
-      const response = await axios.post(`http://localhost:9090/users/signin`, {
-        email,
-        password
-      });
-      console.log("Full response from backend:", response.data);
+      console.log("Full response from backend:", data);
+      const { jwt, email: userEmail, role } = data;
 
-      const { jwt, email: userEmail, role } = response.data;
-      console.log(userEmail)
+      login(jwt, userEmail, role);
 
-      login(jwt,userEmail,role)
-
-      // Redirect based on role
-      if (role === 'ADMIN') {
-        navigate('/admin/dashboard');
-      } else if (role === 'USER') {
-        navigate('/user/dashboard');
+      if (role === "ADMIN") {
+        toast.success("admin login successful");
+        navigate("/admin/dashboard");
+      } else if (role === "USER") {
+        toast.success("user login successful")
+        navigate("/user/dashboard");
       } else {
-        setError('Unknown user role');
+        toast.error("Unknown user role");
       }
-    } catch (errorr) {
-      setError('Invalid credentials');
-      console.error("Login error response:", errorr.response?.data || errorr.message);
-
+    } catch (err) {
+      console.error("Login error response:", err);
+      toast.error("Invalid credentials");
     }
   };
 
   return (
-    
-    <form onSubmit={handleSubmit}>
-      <h2>Login</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <div>
-        <label>Email:</label>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required />
+    <div className="container mt-5 mb-5 pb-4 rounded-4 shadow small-size-page">
+      <div className="row header-color rounded-top-4 justify-content-center align-items-center text-center">
+        <div className="fs-3 fw-medium p-2 text-white">Login</div>
       </div>
-      <div>
-        <label>Password:</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required />
+
+      <div className="m-4">
+        <div className="mb-3">
+          <label>Email Address</label>
+          <input
+            type="email"
+            name="email"
+            className="form-control"
+            placeholder="Enter Email Address"
+            value={loginDetails.email}
+            onChange={handleInputChange}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label>Password</label>
+          <input
+            type="password"
+            name="password"
+            className="form-control"
+            placeholder="Enter Password"
+            value={loginDetails.password}
+            onChange={handleInputChange}
+          />
+        </div>
+
+        <div className="d-grid col-3 mx-auto m-4 mb-3">
+          <button className="btn btn-primary" onClick={handleLogin}>
+            LOGIN
+          </button>
+        </div>
+
+        <div className="text-center">
+          Don't have an account? <a href="/user/signup">Sign Up</a>
+        </div>
       </div>
-      <button 
-      onClick={() => console.log("Button clicked")}
-      type="submit">Login</button>
-    </form>
+    </div>
   );
 }
 

@@ -99,8 +99,8 @@ public class BusController {
 	
 	@PostMapping("/seatselection")
 	public ResponseEntity<?> getBusSeatLayout(@RequestBody SeatSelectionRequestDTO dto) {
-
-	    return ResponseEntity.ok().body(busService.getSeatSelectinInfo(dto.getId()));
+		System.out.println("inside bus controller");
+	    return ResponseEntity.ok().body(busService.fetchBusDetailsByName(dto.getBusName()));
 	}
 	
 	private final SeatService seatAvail;

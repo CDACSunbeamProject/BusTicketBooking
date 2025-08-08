@@ -1,213 +1,147 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import {signupUser} from "../services/userService"
 function Signup() {
-  const [signupDetails, setSignupDetails] = useState({
-    firstname: "",
-    lastName: "",
+  const [info, setInfo] = useState({
+    name: "",
     email: "",
     password: "",
     age: "",
     gender: "",
-    mobile: "",
-    address: "",
+    phone: "",
   });
+
+  const [error, setError] = useState("");
   const navigate = useNavigate();
-  const handleSignUp = () => {
-    alert("Sign up successful!");
-    navigate("/user/signin");
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setInfo((prev) => ({ ...prev, [name]: value }));
   };
+
+  const handleSignup = async (e) => {
+    const requiredFields = [
+      "name",
+      "email",
+      "password",
+      "age",
+      "gender",
+      "phone",
+    ];
+    const firstEmpty = requiredFields.find((field) => !info[field]);
+
+    if (firstEmpty) {
+      toast.error(`${firstEmpty} is required`);
+      document.querySelector(`[name="${firstEmpty}"]`)?.focus();
+      return;
+    }
+    setError("");
+    info.age=Number(info.age)
+    try {
+      const data = await signupUser(info);
+      console.log("Full response from backend:", data);
+      toast.success("Registration successful!");
+      navigate("/user/login");
+    } catch (err) {
+      setError(
+        err.response?.data?.message || "Registration failed. Please try again."
+      );
+      console.error("Signup error:", err);
+      toast.error("Registration failed. Please try again.");
+    }
+  };
+
   return (
-    <div className="container mt-5 mb-5 pb-4 rounded-4 shadow small-size-page">
+    <div className="container mt-4 mb-4 pb-1 rounded-4 shadow small-size-page">
       <div className="row header-color rounded-top-4 justify-content-center align-items-center text-center">
-        <div className="fs-3 fw-medium p-2 text-white">User Sign Up</div>
+        <div className="fw-medium p-2 fs-4 text-white">Sign Up</div>
       </div>
-      <div className="row m-4 mt-3 mb-3">
-        <div>
-          <label htmlFor="firstName" className="form-label fw-medium fs-6">
-            First Name
-          </label>
+      <div className="m-4">
+        <div className="mt-2 mb-3">
+          <label>Full Name</label>
           <input
             type="text"
+            name="name"
             className="form-control"
-            name="firstName"
-            id="firstName"
-            placeholder="Enter First Name"
+            placeholder="Enter full name"
+            value={info.name}
+            onChange={handleInputChange}
             required
-            value={signupDetails.firstname}
-            onChange={(e) =>
-              setSignupDetails({
-                ...signupDetails,
-                firstname: e.target.value,
-              })
-            }
           />
         </div>
-      </div>
-      <div className="row m-4 mt-3 mb-3">
-        <div>
-          <label htmlFor="lastName" className="form-label fw-medium fs-6">
-            Last Name
-          </label>
+
+        <div className="mb-3">
+          <label>Email Address</label>
           <input
             type="text"
-            className="form-control"
-            id="lastName"
-            name="lastName"
-            placeholder="Enter Last Name"
-            required
-            value={signupDetails.lastName}
-            onChange={(e) =>
-              setSignupDetails({
-                ...signupDetails,
-                lastName: e.target.value,
-              })
-            }
-          />
-        </div>
-      </div>
-      <div className="row m-4 mt-3 mb-3">
-        <div>
-          <label htmlFor="email" className="form-label fw-medium fs-6">
-            Email Address
-          </label>
-          <input
-            type="email"
-            className="form-control"
-            id="email"
             name="email"
-            placeholder="Enter Email Address"
+            className="form-control"
+            placeholder="Enter email address"
+            value={info.email}
+            onChange={handleInputChange}
             required
-            value={signupDetails.email}
-            onChange={(e) =>
-              setSignupDetails({
-                ...signupDetails,
-                email: e.target.value,
-              })
-            }
           />
         </div>
-      </div>
-      <div className="row m-4 mt-3 mb-3">
-        <div>
-          <label htmlFor="password" className="form-label fw-medium fs-6">
-            Password
-          </label>
+
+        <div className="mb-3">
+          <label>Password</label>
           <input
             type="password"
+            name="password"
             className="form-control"
-            id="password"
-            placeholder="Enter Password"
-            required
-            value={signupDetails.password}
-            onChange={(e) =>
-              setSignupDetails({
-                ...signupDetails,
-                password: e.target.value,
-              })
-            }
+            placeholder="Enter password"
+            value={info.password}
+            onChange={handleInputChange}
           />
         </div>
-      </div>
-      <div className="row m-4 mt-3 mb-3">
-        <div>
-          <label className="form-label fw-medium fs-6">Gender</label>
-        </div>
-        <div>
+
+        <div className="mb-3">
+          <label>Age</label>
           <input
-            type="radio"
-            className="form-check-input"
-            id="male"
-            name="gender"
-            onChange={(e) =>
-              setSignupDetails({
-                ...signupDetails,
-                gender: e.target.value,
-              })
-            }
-          />
-          <label htmlFor="male" className="ms-2 me-4">
-            Male
-          </label>
-          <input
-            type="radio"
-            className="form-check-input"
-            id="female"
-            name="gender"
-            onChange={(e) =>
-              setSignupDetails({
-                ...signupDetails,
-                gender: e.target.value,
-              })
-            }
-          />
-          <label htmlFor="female" className="ms-2 me-4">
-            Female
-          </label>
-        </div>
-      </div>
-      <div className="row m-4 mt-3 mb-3">
-        <div>
-          <label htmlFor="mobile" className="form-label fw-medium fs-6">
-            Mobile No
-          </label>
-          <input
-            type="tel"
-            maxLength={10}
-            minLength={10}
+            type="number"
+            name="age"
             className="form-control"
-            name="mobile"
-            id="mobile"
-            placeholder="Enter Mobile No"
-            required
-            value={signupDetails.mobile}
-            onChange={(e) =>
-              setSignupDetails({
-                ...signupDetails,
-                mobile: e.target.value,
-              })
-            }
+            placeholder="Enter age"
+            value={info.age}
+            onChange={handleInputChange}
           />
         </div>
-      </div>
-      <div className="row m-4 mt-3 mb-3">
-        <div>
-          <label htmlFor="address" className="form-label fw-medium fs-6">
-            Last Address
-          </label>
+
+        <div className="mb-3">
+          <label htmlFor="">Gender</label>
+          <select
+            value={info.gender}
+            name="gender"
+            onChange={(e) => setInfo({ ...info, gender: e.target.value })}
+            className="form-select"
+          >
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+        </div>
+
+        <div className="mt-3 mb-3">
+          <label>Phone Number</label>
           <input
             type="text"
+            name="phone"
             className="form-control"
-            id="address"
-            name="address"
-            placeholder="Enter Address"
-            required
-            value={signupDetails.address}
-            onChange={(e) =>
-              setSignupDetails({
-                ...signupDetails,
-                address: e.target.value,
-              })
-            }
+            placeholder="Enter phone number"
+            value={info.phone}
+            onChange={handleInputChange}
           />
         </div>
-      </div>
-      <div className="row m-4 justify-content-center">
-        <div className="d-grid gap-2 col-3 mx-auto">
-          <button className="btn btn-primary" onClick={handleSignUp}>
+
+        <div className="d-grid col-3 mx-auto m-2">
+          <button className="btn btn-primary" onClick={handleSignup}>
             SIGN UP
           </button>
         </div>
-      </div>
-      <div className="row justify-content-center m-4">
-        <div className="col align-items-evenly text-center">
-          Already Registered?{" "}
-          <a
-            href="/user/signin"
-            className="link-offset-2 link-underline link-underline-opacity-0"
-          >
-            {" "}
-            Sign In
-          </a>
+
+        <div className="text-center">
+          Already have an account? <a href="/user/login">Login</a>
         </div>
       </div>
     </div>

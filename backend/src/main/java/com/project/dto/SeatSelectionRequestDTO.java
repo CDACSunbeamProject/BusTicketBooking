@@ -13,6 +13,6 @@ import lombok.ToString;
 @ToString
 public class SeatSelectionRequestDTO {
 	
-	private Long Id;
+	private String busName;
 
 }

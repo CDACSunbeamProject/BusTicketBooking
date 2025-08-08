@@ -22,5 +22,7 @@ public interface BusDao extends JpaRepository<Bus, Long> {
 	Bus fetchCompleteDetails(int busId);
 
 	boolean existsByBusNo(String busNo);
+	
+	List<Bus> findByBusName(String busName);
 
 }
