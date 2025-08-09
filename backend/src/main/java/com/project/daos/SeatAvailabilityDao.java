@@ -24,4 +24,7 @@ public interface SeatAvailabilityDao extends JpaRepository<Seat, Long>{
 
 	List<Seat> findAllByStatusAndLockTimeBefore(String status, LocalDateTime time);
 
+	@Query("SELECT s FROM Seat s WHERE s.status = 'LOCKED' AND s.lockExpiryTime <= :now")
+	List<Seat> findExpiredLocks(@Param("now") LocalDateTime now);
+
 }

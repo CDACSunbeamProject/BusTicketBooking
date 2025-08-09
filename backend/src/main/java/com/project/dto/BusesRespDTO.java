@@ -11,7 +11,7 @@ import lombok.*;
 @ToString(callSuper = false)
 public class BusesRespDTO {
     private String busName;
-
+    private Long id;
     private String busType;
     private String seatType;
     private String operatorName;   

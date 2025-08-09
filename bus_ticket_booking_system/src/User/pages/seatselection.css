@@ -1,0 +1,106 @@
+/* SeatSelection.css
+   Put this file beside SeatSelection.jsx (same folder) because you import "./SeatSelection.css".
+   Basic, clean layout + seat grid + legend + booking summary styles.
+*/
+
+:root{
+  --accent: #0d6efd;
+  --muted: #6c757d;
+  --bg-card: #ffffff;
+  --seat-size: 44px;
+  --gap: 10px;
+}
+
+/* Container tweaks */
+.bus-details-header {
+  background: linear-gradient(90deg, rgba(13,110,253,0.06), rgba(13,110,253,0.02));
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.bus-details-header h3 { margin: 0 0 6px 0; }
+.route-info { font-weight: 600; color: var(--muted); display:flex; gap:8px; align-items:center; }
+.route-info .arrow { margin:0 6px; }
+
+/* badges & meta */
+.bus-meta .badge { font-size: 0.8rem; padding: .45rem .6rem; border-radius: 6px; }
+
+/* Main layout */
+.seat-selection-container {
+  background: var(--bg-card);
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+
+/* Legend */
+.seat-legend { display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
+.legend-item { display:flex; gap:8px; align-items:center; font-size:0.9rem; color:var(--muted); }
+.seat-demo { width:20px; height:20px; border-radius:4px; border: 1px solid rgba(0,0,0,0.06); }
+
+/* Seat states */
+.seat-available { background: #f8f9fa; border: 1px solid #dfe3ea; }
+.seat-selected  { background: linear-gradient(180deg,#cfe8ff,#9fcfff); border:1px solid rgba(13,110,253,0.6); box-shadow: 0 2px 6px rgba(13,110,253,0.12); }
+.seat-booked    { background: linear-gradient(180deg,#f8d7da,#f1b0b7); border:1px solid #f5c2c7; }
+.seat-locked    { background: linear-gradient(180deg,#fff3cd,#ffe8a6); border:1px solid #ffe8a6; }
+
+/* Grid */
+.seat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--seat-size), 1fr));
+  gap: var(--gap);
+  justify-items: center;
+}
+
+/* Individual seat box */
+.seat {
+  width: var(--seat-size);
+  height: var(--seat-size);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:6px;
+  cursor: pointer;
+  user-select: none;
+  font-weight: 600;
+  transition: transform .08s ease, box-shadow .08s ease;
+}
+
+/* click / hover */
+.seat:hover { transform: translateY(-3px); }
+.seat-selected:hover,
+.seat-available:hover { box-shadow: 0 6px 18px rgba(0,0,0,0.06); }
+
+/* For non-interactive seats */
+.seat-booked, .seat-locked {
+  cursor: not-allowed;
+  opacity: 0.95;
+}
+
+/* Booking summary card */
+.booking-summary {
+  background: var(--bg-card);
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+.booking-summary h5 { margin-bottom:12px; }
+.summary-item { display:flex; justify-content:space-between; margin-bottom:8px; color:var(--muted); }
+.summary-item.total { font-weight:700; color:#222; font-size:1.05rem; }
+
+/* Passenger form */
+.passenger-form-container { background: var(--bg-card); padding: 16px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
+.passenger-form-card { border:1px solid rgba(0,0,0,0.04); padding:12px; border-radius:8px; margin-bottom:12px; }
+.passenger-form-card h6 { margin-bottom:8px; }
+
+/* Responsive */
+@media (max-width: 992px) {
+  .seat-grid { grid-template-columns: repeat(6, minmax(var(--seat-size), 1fr)); }
+}
+@media (max-width: 640px) {
+  .seat-grid { grid-template-columns: repeat(4, minmax(40px, 1fr)); gap:8px; }
+  .booking-summary { margin-top: 16px; }
+}
+
+/* small helper */
+.text-muted { color: var(--muted); }

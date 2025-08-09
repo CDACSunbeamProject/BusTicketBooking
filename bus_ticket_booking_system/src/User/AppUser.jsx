@@ -14,7 +14,6 @@ import Profile from "./pages/Profile";
 import ViewBuses from "./pages/ViewBuses";
 import Payment from "./pages/payment";
 import SearchResults from "./pages/searchResults";
-import Home from "./pages/Home";
 import BusDetails from "./pages/busDetails";
 import Login from "./pages/Login";
 import PrivateRoute from "./pages/PrivateRoute";
@@ -44,7 +43,7 @@ function AppUser() {
         <Route path="viewbuses" element={<ViewBuses />} />
         <Route path="payment" element={<Payment />} />
         <Route path="searchResults" element={<SearchResults />} />
-        <Route path="home" element={<Home />} />
+       
         <Route path="dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
 
         <Route path="bus/:busId" element={<BusDetails />} />

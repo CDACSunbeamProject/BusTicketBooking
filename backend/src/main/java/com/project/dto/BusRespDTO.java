@@ -18,7 +18,7 @@ import lombok.*;
 public class BusRespDTO {
 	private String busName;
 	private String busNo;
-
+	private Long busId;
 	private String busType;
 	private String seatType;
 	private String operatorName;

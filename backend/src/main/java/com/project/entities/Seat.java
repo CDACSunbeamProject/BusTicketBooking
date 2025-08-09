@@ -42,6 +42,9 @@ public class Seat {
 
     private LocalDateTime lockTime; // used to auto-expire lock after X mins
 
+    private LocalDateTime lockExpiryTime;
+
+    
     private Long lockedByUserId; // ✅ Track who locked it
 
 }

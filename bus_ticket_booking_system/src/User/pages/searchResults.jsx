@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import moment from 'moment';
 
@@ -7,6 +7,7 @@ function SearchResults() {
   
   const [buses, setBuses] = useState([]);
   const location = useLocation();
+  const navigate = useNavigate();
 
   // Retrieve routeId and jDate from location or localStorage
   const routeId = location?.state?.routeId || localStorage.getItem("routeId");
@@ -56,9 +57,12 @@ function SearchResults() {
               </div>
               <div className="text-end">
                 <h5>₹{bus.price}</h5>
-                <Link to="/user/seatselection" state={{ busName: bus.busName }}>
-                  <button className="btn btn-primary">Select Seats</button>
-                </Link>
+                
+                  <button 
+                  onClick={() => navigate('/user/seatselection', {state: { busId: bus.id }})}
+                  className="btn btn-primary">Select Seats
+                  </button>
+              
               </div>
             </div>
           </div>
