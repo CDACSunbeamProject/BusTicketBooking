@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -18,7 +19,7 @@ import lombok.*;
 public class BusRespDTO {
 	private String busName;
 	private String busNo;
-	private Long busId;
+	private Long id;
 	private String busType;
 	private String seatType;
 	private String operatorName;
@@ -50,6 +51,6 @@ public class BusRespDTO {
 	
 	private List<String> amenities; // store JSON array like ["WiFi", "Blanket"]
 
-	
+	private Set<String> bookedSeats;
 
 }
