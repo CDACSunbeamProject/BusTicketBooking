@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.stream.Collectors;
+
 
 import org.json.JSONObject;
 import org.modelmapper.ModelMapper;
@@ -84,16 +86,19 @@ public class BookingServiceImpl implements BookingService{
 	    return modelMapper.map(seatDao.save(seat), SeatAvailabilityDTO.class);
 	}*/
 
-	@Override
+	/*@Override
 	public List<BookingRespDTO> getBookingsByUserId(Long userId) {
 		// TODO: Implement when BookingDao is available
 		return Collections.emptyList();
-	}
+	}*/
 
 	@Override
 	public List<BookingRespDTO> getAllBookings() {
-		// TODO: Implement when BookingDao is available
-		return Collections.emptyList();
+		 List<Booking> bookings = bookDao.findAll();
+
+		    return bookings.stream()
+		            .map(booking -> modelMapper.map(booking, BookingRespDTO.class))
+		            .collect(Collectors.toList());
 	}
 
 	
@@ -251,13 +256,25 @@ public class BookingServiceImpl implements BookingService{
 	}
 
 
+	
+	
 	@Override
-	public Booking getBookingById(Long bookingId) {
+	public List<BookingRespDTO> getBookingsByUserId(Long userId) {
+	    return bookDao.findByUserId(userId)
+	            .stream()
+	            .map(booking -> modelMapper.map(booking, BookingRespDTO.class))
+	            .collect(Collectors.toList());
+	}
+
+
+	
+
+	/*public Booking getBookingById(Long bookingId) {
 		Booking booking = new Booking();
 		booking = bookDao.findById(bookingId)
 				.orElseThrow(() -> new RuntimeException("booking not found"));
 		return booking;
-	}
+	}*/
 
 
 	/*@Override
