@@ -50,13 +50,10 @@ public class TicketServiceImpl implements TicketService {
 
         // Check if ticket already exists for this booking
         Ticket existingTicket = ticketDao.findByBookingId(bookingId);
-        if (existingTicket.getStatus().equals(TicketStatus.CANCELLED) ) {	
-            throw new ApiException("ticket is cancelled"); // Or throw exception if duplicate not allowed
-        }
+        
         if (existingTicket != null ) {	
             return existingTicket.getId(); // Or throw exception if duplicate not allowed
         }
-        
 
         Ticket ticket = new Ticket();
         ticket.setBooking(booking);

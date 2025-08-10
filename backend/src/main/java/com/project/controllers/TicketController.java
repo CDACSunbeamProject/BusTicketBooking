@@ -21,6 +21,7 @@ public class TicketController {
 
 	@PostMapping("/generate")
 	public ResponseEntity<?> generateTicket(@RequestBody TicketRequestDTO dto) {
+		System.out.println("inside controller");
 		if (dto.getBookingId() == null) {
 			return ResponseEntity.badRequest().body("Missing bookingId");
 		}

@@ -39,7 +39,7 @@ public class User extends BaseEntity implements UserDetails{
 
     @Enumerated(EnumType.STRING)
     @Column
-	private UserRole role=UserRole.USER;
+	private UserRole role=UserRole.ADMIN;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
