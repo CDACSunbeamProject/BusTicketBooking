@@ -14,7 +14,7 @@ export const loginUser = async (email, password) => {
 };
 
 export const signupUser = async (data) => {
-  console.log("inside signup")
+  console.log("inside signup"+data)
   try {
     const response = await axiosInstance.post("/users/signup", data);
 

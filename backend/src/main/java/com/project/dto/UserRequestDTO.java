@@ -41,7 +41,7 @@ public class UserRequestDTO {
 	)
 	private String phone;
 	
-	@NotNull
-	private UserRole role;
+//	@NotNull
+//	private UserRole role;
 	
 }
