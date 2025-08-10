@@ -133,7 +133,7 @@ function Payment() {
 
       // Navigate to ticket page
       setTimeout(() => {
-        navigate(`/user/ticket/${response.data.ticketNumber}`);
+        navigate(`/ticket/${response.data.ticketNumber}`);
       }, 1500);
 
     } catch (error) {
@@ -177,7 +177,7 @@ function Payment() {
       <div className="container mt-5">
         <div className="text-center">
           <h4>Booking not found</h4>
-          <button className="btn btn-primary" onClick={() => navigate("/user/home")}>
+          <button className="btn btn-primary" onClick={() => navigate("/")}>
             Back to Home
           </button>
         </div>
@@ -353,7 +353,7 @@ function Payment() {
             <div className="payment-actions">
               <button
                 className="btn btn-outline-secondary"
-                onClick={() => navigate(`/user/seat-selection/${booking.bus?.id}`)}
+                onClick={() => navigate(`/seatselection`)}
                 disabled={processing}
               >
                 ← Back to Booking

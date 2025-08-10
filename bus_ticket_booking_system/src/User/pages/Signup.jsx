@@ -42,7 +42,7 @@ function Signup() {
       const data = await signupUser(info);
       console.log("Full response from backend:", data);
       toast.success("Registration successful!");
-      navigate("/user/login");
+      navigate("/");
     } catch (err) {
       setError(
         err.response?.data?.message || "Registration failed. Please try again."
@@ -141,7 +141,7 @@ function Signup() {
         </div>
 
         <div className="text-center">
-          Already have an account? <a href="/user/login">Login</a>
+          Already have an account? <a href="/login">Login</a>
         </div>
       </div>
     </div>

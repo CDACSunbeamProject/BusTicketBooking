@@ -10,58 +10,51 @@ function Profile() {
   const [isEditable, setIsEditable] = useState(false);
 
   const [userDetails, setUserDetails] = useState({
-    firstname: "",
-    lastName: "",
+    name: "",
     email: "",
     age: "",
     gender: "",
-    mobile: "",
-    address: "",
+    phone: "",
   });
 
   // FETCH user profile on page load
   useEffect(() => {
     if (!token) {
-      navigate("/login");
+      navigate("/");
       return;
     }
 
-    axios.get("http://localhost:9090/users/profile", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-    .then((res) => {
-      const data = res.data;
-      setUserDetails({
-        firstname: data.firstname,
-        lastName: data.lastName,
-        email: data.email,
-        age: data.age,
-        gender: data.gender,
-        mobile: data.phone, // use correct field from backend
-        address: data.address,
+    axios
+      .get("http://localhost:9090/users/profile", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        setUserDetails(res.data);
+      })
+      .catch((err) => {
+        toast.error("Failed to load profile");
+        console.error(err);
       });
-    })
-    .catch((err) => {
-      toast.error("Failed to load profile");
-      console.error(err);
-    });
-  }, [token, navigate]);
+  }, []);
 
   const handleSave = () => {
-    axios.put("http://localhost:9090/users/update", userDetails, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-    .then(() => {
-      toast.success("Profile updated successfully");
-      setIsEditable(false);
-    })
-    .catch(() => {
-      toast.error("Update failed");
-    });
+    axios
+      .put("http://localhost:9090/users/profile/update", userDetails, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        toast.success("Profile updated successfully");
+        setUserDetails(res.data);
+        setIsEditable(false);
+      })
+      .catch(() => {
+        toast.error("Update failed");
+      });
   };
 
   const handleEdit = () => setIsEditable(true);
@@ -76,25 +69,15 @@ function Profile() {
 
       {/** First Name */}
       <div className="row m-4">
-        <label className="form-label fw-medium fs-6">First Name</label>
+        <label className="form-label fw-medium fs-6">Full Name</label>
         <input
           type="text"
           className="form-control"
-          value={userDetails.firstname}
+          value={userDetails.name}
           readOnly={!isEditable}
-          onChange={(e) => setUserDetails({ ...userDetails, firstname: e.target.value })}
-        />
-      </div>
-
-      {/** Last Name */}
-      <div className="row m-4">
-        <label className="form-label fw-medium fs-6">Last Name</label>
-        <input
-          type="text"
-          className="form-control"
-          value={userDetails.lastName}
-          readOnly={!isEditable}
-          onChange={(e) => setUserDetails({ ...userDetails, lastName: e.target.value })}
+          onChange={(e) =>
+            setUserDetails({ ...userDetails, name: e.target.value })
+          }
         />
       </div>
 
@@ -117,7 +100,9 @@ function Profile() {
           className="form-control"
           value={userDetails.age}
           readOnly={!isEditable}
-          onChange={(e) => setUserDetails({ ...userDetails, age: e.target.value })}
+          onChange={(e) =>
+            setUserDetails({ ...userDetails, age: e.target.value })
+          }
         />
       </div>
 
@@ -130,24 +115,31 @@ function Profile() {
             className="form-check-input"
             name="gender"
             id="male"
-            value="male"
-            checked={userDetails.gender === "male"}
+            value="Male"
+            checked={userDetails.gender?.toLowerCase() === "male"}
             disabled={!isEditable}
-            onChange={(e) => setUserDetails({ ...userDetails, gender: e.target.value })}
+            onChange={(e) =>
+              setUserDetails({ ...userDetails, gender: e.target.value })
+            }
           />
-          <label htmlFor="male" className="ms-2 me-4">Male</label>
-
+          <label htmlFor="male" className="ms-2 me-4">
+            Male
+          </label>
           <input
             type="radio"
             className="form-check-input"
             name="gender"
             id="female"
-            value="female"
-            checked={userDetails.gender === "female"}
+            value="Female"
+            checked={userDetails.gender?.toLowerCase() === "female"}
             disabled={!isEditable}
-            onChange={(e) => setUserDetails({ ...userDetails, gender: e.target.value })}
+            onChange={(e) =>
+              setUserDetails({ ...userDetails, gender: e.target.value })
+            }
           />
-          <label htmlFor="female" className="ms-2 me-4">Female</label>
+          <label htmlFor="female" className="ms-2 me-4">
+            Female
+          </label>
         </div>
       </div>
 
@@ -155,23 +147,13 @@ function Profile() {
       <div className="row m-4">
         <label className="form-label fw-medium fs-6">Mobile No</label>
         <input
-          type="tel"
-          className="form-control"
-          value={userDetails.mobile}
-          readOnly={!isEditable}
-          onChange={(e) => setUserDetails({ ...userDetails, mobile: e.target.value })}
-        />
-      </div>
-
-      {/** Address */}
-      <div className="row m-4">
-        <label className="form-label fw-medium fs-6">Address</label>
-        <input
           type="text"
           className="form-control"
-          value={userDetails.address}
+          value={userDetails.phone}
           readOnly={!isEditable}
-          onChange={(e) => setUserDetails({ ...userDetails, address: e.target.value })}
+          onChange={(e) =>
+            setUserDetails({ ...userDetails, phone: e.target.value })
+          }
         />
       </div>
 

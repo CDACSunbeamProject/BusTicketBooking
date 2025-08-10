@@ -74,3 +74,40 @@ a.nav-link.active {
 .bg-color-1{
     background-color: rgba(98, 87, 68, 0.508);
 }
+
+/* Hide navbar and buttons during printing */
+@media print {
+  body {
+    -webkit-print-color-adjust: exact !important; /* Safari/Chrome */
+    print-color-adjust: exact !important; /* Modern browsers */
+  }
+  @page {
+    size: portrate;
+  }
+
+  /* Keep your Bootstrap background colors */
+  .bg-primary {
+    background-color: #0d6efd !important;
+    color: white !important;
+  }
+
+  .table-primary {
+    background-color: #cfe2ff !important;
+  }
+
+  /* Hide buttons and navbar */
+  .no-print {
+    display: none !important;
+  }
+
+  /* Ensure card looks nice in print */
+  .card {
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+  }
+
+  /* Optional: Avoid page breaks inside tables */
+  table, tr, td, th {
+    page-break-inside: avoid !important;
+  }
+}

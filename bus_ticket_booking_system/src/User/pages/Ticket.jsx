@@ -51,7 +51,7 @@ function TicketDetails() {
         <div className="alert alert-danger">
           <p className="mb-0">{error}</p>
         </div>
-        <button onClick={() => navigate(-1)} className="btn btn-primary">
+        <button onClick={() => navigate("/")} className="btn btn-primary">
           Go Back
         </button>
       </div>
@@ -195,33 +195,47 @@ function TicketDetails() {
           </div>
 
           {/* Passengers Section */}
-          <div className="mb-4 p-3 border rounded">
-            <h4 className="text-primary mb-3">
-              <i className="fas fa-users me-2"></i>Passengers
+          <div className="mb-4 p-4 border rounded shadow-sm bg-white">
+            <h4 className="text-primary mb-3 d-flex align-items-center">
+              <i className="fas fa-users me-2"></i> Passengers
             </h4>
+
             <div className="table-responsive">
-              <table className="table table-striped table-hover">
-                <thead className="table-primary">
+              <table className="table table-bordered table-hover align-middle shadow-sm">
+                <thead className="table-primary text-center">
                   <tr>
-                    <th>Name</th>
-                    <th>Age</th>
-                    <th>Gender</th>
-                    <th>Seat Number</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Age</th>
+                    <th scope="col">Gender</th>
+                    <th scope="col">Seat Number</th>
                   </tr>
                 </thead>
                 <tbody>
                   {ticket?.passengers?.length > 0 ? (
                     ticket.passengers.map((p, index) => (
-                      <tr key={index}>
-                        <td>{p.name}</td>
-                        <td>{p.age}</td>
-                        <td>{p.gender}</td>
-                        <td>{p.seatNo}</td>
+                      <tr key={index} className="text-center">
+                        <td className="fw-semibold">{p.name}</td>
+                        <td>
+                          <span className="badge fw-bold text-dark px-3 py-2">
+                            {p.age}
+                          </span>
+                        </td>
+                        <td>
+                          <span className={`badge fw-bold text-dark px-3 py-2`}>
+                            {p.gender}
+                          </span>
+                        </td>
+                        <td>
+                          <span className="badge text-dark fw-bold px-3 py-2">
+                            {p.seatNo}
+                          </span>
+                        </td>
                       </tr>
                     ))
                   ) : (
                     <tr>
-                      <td colSpan={4} className="text-center text-muted">
+                      <td colSpan={4} className="text-center text-muted py-4">
+                        <i className="fas fa-info-circle me-2"></i>
                         No passengers found
                       </td>
                     </tr>
@@ -232,14 +246,17 @@ function TicketDetails() {
           </div>
 
           {/* Action Buttons */}
-          <div className="d-flex justify-content-evenly m-4">
+          <div className="d-flex justify-content-evenly no-print m-4">
             <button
-              onClick={() => navigate(-1)}
+              onClick={() => navigate("/")}
               className="btn btn-secondary col-2"
             >
               <i className="fas fa-arrow-left "></i>Back
             </button>
-            <button onClick={() => window.print()} className="btn btn-primary col-2">
+            <button
+              onClick={() => window.print()}
+              className="btn btn-primary col-2"
+            >
               <i className="fas fa-print"></i>Print Ticket
             </button>
           </div>

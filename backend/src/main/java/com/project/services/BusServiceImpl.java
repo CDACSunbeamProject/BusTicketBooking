@@ -90,13 +90,23 @@ public class BusServiceImpl implements BusService {
 	}
 
 	@Override
-	public List<BusesRespDTO> getAllBusesByRouteAndDate(int Routeid, LocalDate jDate) {
-		return busDao.findByBusRouteIdAndDepartureDate(Routeid,jDate)
-				.stream()
-				.map(bus -> 
-				modelMapper.map(bus,  BusesRespDTO.class))
-				.toList();	
-				
+	public List<BusRespDTO> getAllBusesByRouteAndDate(int Routeid, LocalDate jDate) {
+		return busDao.findByBusRouteIdAndDepartureDate(Routeid, jDate).stream().map(entity -> {
+	        BusRespDTO dto = modelMapper.map(entity, BusRespDTO.class);
+	        // Add route info if available
+	        if (entity.getBusRoute() != null) {
+	            dto.setStartLocation(entity.getBusRoute().getStartLocation());
+	            dto.setEndLocation(entity.getBusRoute().getEndLocation());
+	        }
+	        // Add amenities if available
+	        try {
+	            dto.setAmenities(entity.getAmenitiesList());
+	        } catch (Exception e) {
+	            e.printStackTrace(); // Or use proper logging
+	        }
+
+	        return dto;
+	    }).toList();
 	}
 
 	@Override
@@ -151,12 +161,25 @@ public class BusServiceImpl implements BusService {
 	}
 
 	@Override
-	public List<BusesRespDTO> getAllBuses() {
-		return busDao.findAll().stream().map(bus->{
-		return modelMapper.map(bus, BusesRespDTO.class);
-		}).toList();
+	public List<BusRespDTO> getAllBuses() {
+	    return busDao.findAll().stream().map(entity -> {
+	        BusRespDTO dto = modelMapper.map(entity, BusRespDTO.class);
+	        // Add route info if available
+	        if (entity.getBusRoute() != null) {
+	            dto.setStartLocation(entity.getBusRoute().getStartLocation());
+	            dto.setEndLocation(entity.getBusRoute().getEndLocation());
+	        }
+	        // Add amenities if available
+	        try {
+	            dto.setAmenities(entity.getAmenitiesList());
+	        } catch (Exception e) {
+	            e.printStackTrace(); // Or use proper logging
+	        }
+
+	        return dto;
+	    }).toList();
 	}
-	
+
 	
 }
 

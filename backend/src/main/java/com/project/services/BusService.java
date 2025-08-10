@@ -11,9 +11,9 @@ import com.project.dto.SeatSelectionResponseDTO;
 import com.project.entities.Bus;
 
 public interface BusService {
-	List<BusesRespDTO> getAllBusesByRouteAndDate(int id,LocalDate jDate);
+	List<BusRespDTO> getAllBusesByRouteAndDate(int id,LocalDate jDate);
 	ApiResponse addNewBus(AddBusDTO transientBus);
 	BusRespDTO getBusDetails(int busId);
 	SeatSelectionResponseDTO fetchBusDetailsByName(String busName);
-	List<BusesRespDTO> getAllBuses();
+	List<BusRespDTO> getAllBuses();
 }

@@ -7,7 +7,7 @@ function ViewTicket() {
   });
   const navigate = useNavigate();
   const handleViewTicket = () => {
-    navigate("/user/ticket");
+    navigate("/ticket");
   };
   return (
     <div className="container mt-5 pb-4 rounded-4 shadow small-size-page">

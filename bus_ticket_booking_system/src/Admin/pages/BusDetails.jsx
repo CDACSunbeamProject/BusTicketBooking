@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { getBusDetailsById } from "../../User/services/busService";
 
 function BusDetails() {
-  const { busId } = useParams() || 0;
+  const { id } = useParams();
   const navigate = useNavigate();
   const [bus, setBus] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -13,7 +13,7 @@ function BusDetails() {
   useEffect(() => {
     const loadBusData = async () => {
       try {
-        const data = await getBusDetailsById(busId);
+        const data = await getBusDetailsById(id);
         setBus(data);
       } catch (err) {
         setError("Failed to load bus details");
@@ -24,7 +24,7 @@ function BusDetails() {
     };
 
     loadBusData();
-  }, [busId]);
+  }, [id]);
 
   if (loading)
     return (
@@ -65,202 +65,202 @@ function BusDetails() {
         </button>
       </div>
     );
-    const getSleeperSeats = () => {
-      if (!bus) return null;
+  const getSleeperSeats = () => {
+    if (!bus) return null;
 
-      const totalSeats = bus.noOfSeats;
-      return (
-        <div className="container">
-          <div className="row p-4 justify-content-center align-items-center">
-            <div className="col shadow-sm border border-1 border-dark pt-3 pb-3 me-4 bg-white rounded-5">
-              <div className="pb-3 fs-5 fw-bold text-center">Lower Deck</div>
-              {renderSeatsSection(1, Math.floor(totalSeats / 2))}
-            </div>
-            <div className="ms-4 pt-3 border border-1 border-dark shadow-sm pb-3 col bg-white rounded-5">
-              <div className="pb-3 fs-5 fw-bold text-center">Upper Deck</div>
-              {renderSeatsSection(Math.floor(totalSeats / 2) + 1, totalSeats)}
-            </div>
+    const totalSeats = bus.noOfSeats;
+    return (
+      <div className="container">
+        <div className="row p-4 justify-content-center align-items-center">
+          <div className="col shadow-sm border border-1 border-dark pt-3 pb-3 me-4 bg-white rounded-5">
+            <div className="pb-3 fs-5 fw-bold text-center">Lower Deck</div>
+            {renderSeatsSection(1, Math.floor(totalSeats / 2))}
           </div>
+          <div className="ms-4 pt-3 border border-1 border-dark shadow-sm pb-3 col bg-white rounded-5">
+            <div className="pb-3 fs-5 fw-bold text-center">Upper Deck</div>
+            {renderSeatsSection(Math.floor(totalSeats / 2) + 1, totalSeats)}
+          </div>
+        </div>
+      </div>
+    );
+  };
+  const getSeaterSeats = () => {
+    if (!bus) return null;
+
+    const seatsPerRow = 4;
+    const rows = [];
+
+    for (let i = 1; i <= bus.noOfSeats; i += seatsPerRow) {
+      const rowSeats = [];
+
+      // Left 2 seats
+      for (let j = 0; j < 2; j++) {
+        const seatNo = i + j;
+        if (seatNo <= bus.noOfSeats) {
+          rowSeats.push(getSeatBox(seatNo));
+        }
+      }
+
+      // Walkway gap
+      rowSeats.push(
+        <div
+          key={`gap-${i}`}
+          className="m-1"
+          style={{ width: "30px", height: "35px", visibility: "hidden" }}
+        />
+      );
+
+      // Right 2 seats
+      for (let j = 2; j < 4; j++) {
+        const seatNo = i + j;
+        if (seatNo <= bus.noOfSeats) {
+          rowSeats.push(getSeatBox(seatNo));
+        }
+      }
+
+      rows.push(
+        <div key={`row-${i}`} className="d-flex justify-content-center">
+          {rowSeats}
         </div>
       );
-    };
-      const getSeaterSeats = () => {
-        if (!bus) return null;
+    }
 
-        const seatsPerRow = 4;
-        const rows = [];
+    return <div className="border rounded-3 bg-white p-4">{rows}</div>;
+  };
+  const renderSeatsSection = (start, end) => {
+    const seatsPerRow = 3;
+    const rows = [];
 
-        for (let i = 1; i <= bus.noOfSeats; i += seatsPerRow) {
-          const rowSeats = [];
+    for (let i = start; i <= end; i += seatsPerRow) {
+      const rowSeats = [];
 
-          // Left 2 seats
-          for (let j = 0; j < 2; j++) {
-            const seatNo = i + j;
-            if (seatNo <= bus.noOfSeats) {
-              rowSeats.push(getSeatBox(seatNo));
-            }
-          }
-
-          // Walkway gap
-          rowSeats.push(
-            <div
-              key={`gap-${i}`}
-              className="m-1"
-              style={{ width: "30px", height: "35px", visibility: "hidden" }}
-            />
-          );
-
-          // Right 2 seats
-          for (let j = 2; j < 4; j++) {
-            const seatNo = i + j;
-            if (seatNo <= bus.noOfSeats) {
-              rowSeats.push(getSeatBox(seatNo));
-            }
-          }
-
-          rows.push(
-            <div key={`row-${i}`} className="d-flex justify-content-center">
-              {rowSeats}
-            </div>
-          );
+      // Left seat
+      for (let j = 0; j < 1; j++) {
+        const seatNo = i + j;
+        if (seatNo <= end) {
+          rowSeats.push(getSeatBox(seatNo));
         }
+      }
 
-        return <div className="border rounded-3 bg-white p-4">{rows}</div>;
-      };
-      const renderSeatsSection = (start, end) => {
-        const seatsPerRow = 3;
-        const rows = [];
-
-        for (let i = start; i <= end; i += seatsPerRow) {
-          const rowSeats = [];
-
-          // Left seat
-          for (let j = 0; j < 1; j++) {
-            const seatNo = i + j;
-            if (seatNo <= end) {
-              rowSeats.push(getSeatBox(seatNo));
-            }
-          }
-
-          // Walkway gap
-          rowSeats.push(
-            <div
-              key={`gap-${i}`}
-              className=""
-              style={{ width: "30px", height: "35px", visibility: "hidden" }}
-            />
-          );
-
-          // Right 2 seats
-          for (let j = 1; j < 3; j++) {
-            const seatNo = i + j;
-            if (seatNo <= end) {
-              rowSeats.push(getSeatBox(seatNo));
-            }
-          }
-
-          rows.push(
-            <div key={`row-${i}`} className="d-flex justify-content-center">
-              {rowSeats}
-            </div>
-          );
-        }
-
-        return <div className="bg-white round-5">{rows}</div>;
-      };
-      
-    const renderSeats = () => {
-      if (!bus) return <div>Loading bus details...</div>;
-      return bus.seatType === "Sleeper"
-        ? getSleeperSeats()
-        : getSeaterSeats();
-    };
-      const getSeatBox = (seatNo) => {
-        if (!bus) return null;
-
-        const isBooked =
-          Array.isArray(bus.bookedSeats) && bus.bookedSeats.includes(seatNo);;
-
-        const seatClass = [
-          isBooked
-            ? "bg-danger text-white"
-            : "bg-light",
-          bus.seatType === "Sleeper" ? "pt-4 pb-4" : "",
-        ].join(" ");
-
-        return (
-          <div
-            key={seatNo}
-            className={`border rounded text-center p-2 m-2 seat-box ${seatClass}`}
-            style={{
-              width: "35px",
-              // cursor: isBooked ? "not-allowed" : "",
-            }}
-            onClick={() => !isBooked && handleSeatClick(seatNo)}
-          >
-            {seatNo}
-          </div>
-        );
-      };
-const renderBodyData = () => {
-  if (!bus) return <div>Loading bus layout...</div>;
-
-  const seatsDesign = bus.seatType === "Sleeper" ? "col-6" : "col-3";
-  return (
-    <div className="container">
-      <div className="row justify-content-center align-items-center">
+      // Walkway gap
+      rowSeats.push(
         <div
-          className={`${seatsDesign} justify-content-center align-items-center`}
-        >
-          {renderSeats()}
+          key={`gap-${i}`}
+          className=""
+          style={{ width: "40px", height: "40px", visibility: "hidden" }}
+        />
+      );
+
+      // Right 2 seats
+      for (let j = 1; j < 3; j++) {
+        const seatNo = i + j;
+        if (seatNo <= end) {
+          rowSeats.push(getSeatBox(seatNo));
+        }
+      }
+
+      rows.push(
+        <div key={`row-${i}`} className="d-flex justify-content-center">
+          {rowSeats}
         </div>
-        <div className="col-5 ms-0">
-          <div className="container">
-            <div className="row fs-4 bg-white align-items-center  border rounded p-5">
-              <div className="col-12 text-start">
-                <strong>Seat Type: {bus.seatType}</strong>
-              </div>
-              <div className="col-12 text-start">
-                <strong>Total No of Seats: {bus.noOfSeats}</strong>
-              </div>
-              <div className="col-12 text-start">
-                <strong className="text-danger">
-                  Total Booked Seats:{" "}
-                  {Array.isArray(bus.bookedSeats) ? bus.bookedSeats.length : 0}
-                </strong>
-              </div>
-              <div className="col-12 text-start">
-                <strong
-                  className="text-success"
-                >
-                  Total Available Seats:{" "}
-                  {bus.noOfSeats -
-                    (Array.isArray(bus.bookedSeats)
-                      ? bus.bookedSeats.length
-                      : 0)}
-                </strong>
-              </div>
-              <div className="row text-center mt-3">
-                <div className="col border m-2 bg-danger rounded p-2">
-                  <span>Booked</span>
+      );
+    }
+
+    return <div className="bg-white round-5">{rows}</div>;
+  };
+
+  const renderSeats = () => {
+    if (!bus) return <div>Loading bus details...</div>;
+    return bus.seatType === "Sleeper" ? getSleeperSeats() : getSeaterSeats();
+  };
+  const getSeatBox = (seatNo) => {
+    if (!bus) return null;
+
+    const isBooked =
+      Array.isArray(bus.bookedSeats) && bus.bookedSeats.includes(seatNo);
+
+    const seatClass = [
+      isBooked ? "bg-danger text-white" : "bg-light",
+      bus.seatType === "Sleeper" ? "pt-2 pb-2" : "",
+    ].join(" ");
+
+    return (
+      <div
+        key={seatNo}
+        className={`border rounded text-center p-2 m-2 seat-box ${seatClass}`}
+        style={{
+          width: "30px",
+          height: "30px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          // cursor: isBooked ? "not-allowed" : "",
+        }}
+        onClick={() => !isBooked && handleSeatClick(seatNo)}
+      >
+        {seatNo}
+      </div>
+    );
+  };
+  const renderBodyData = () => {
+    if (!bus) return <div>Loading bus layout...</div>;
+
+    const seatsDesign = bus.seatType === "Sleeper" ? "col-6" : "col-3";
+    return (
+      <div className="container">
+        <div className="row justify-content-center align-items-center">
+          <div
+            className={`${seatsDesign} justify-content-center align-items-center`}
+          >
+            {renderSeats()}
+          </div>
+          <div className="col-4 ms-0">
+            <div className="container">
+              <div className="row fs-5 bg-white align-items-center  border rounded p-3">
+                <div className="col-12 text-start">
+                  <strong>Seat Type: {bus.seatType}</strong>
                 </div>
-                <div className="col border m-2 bg-light rounded p-2">
-                  <span>Available</span>
+                <div className="col-12 text-start">
+                  <strong>Total No of Seats: {bus.noOfSeats}</strong>
+                </div>
+                <div className="col-12 text-start">
+                  <strong className="text-danger">
+                    Total Booked Seats:{" "}
+                    {Array.isArray(bus.bookedSeats)
+                      ? bus.bookedSeats.length
+                      : 0}
+                  </strong>
+                </div>
+                <div className="col-12 text-start">
+                  <strong className="text-success">
+                    Total Available Seats:{" "}
+                    {bus.noOfSeats -
+                      (Array.isArray(bus.bookedSeats)
+                        ? bus.bookedSeats.length
+                        : 0)}
+                  </strong>
+                </div>
+                <div className="row text-center mt-3">
+                  <div className="col border m-2 bg-danger rounded p-2">
+                    <span>Booked</span>
+                  </div>
+                  <div className="col border m-2 bg-light rounded p-2">
+                    <span>Available</span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  );
-};
+    );
+  };
   return (
     <div className="container m-4 p-5 my-4">
       {/* Hero Section */}
       <div className="card border-0 shadow-lg overflow-hidden mb-4">
         <div className="row g-0">
-          <div className="col-md-4 bg-primary text-white p-4 d-flex flex-column justify-content-center">
+          <div className="col-4 bg-primary text-white p-4 d-flex flex-column justify-content-center">
             <h1 className="display-5 fw-bold">{bus.busName}</h1>
             <div className="d-flex align-items-center mb-3">
               <span className="badge bg-white text-primary fs-6 me-2">
@@ -277,7 +277,7 @@ const renderBodyData = () => {
               <span>{bus.noOfSeats} Seats</span>
             </div>
           </div>
-          <div className="col-md-8">
+          <div className="col-8">
             <div className="card-body p-4">
               <div className="d-flex justify-content-between align-items-center mb-3">
                 <h2 className="mb-0">
@@ -313,11 +313,7 @@ const renderBodyData = () => {
                 <h3 className="text-success mb-0">₹{bus.price}</h3>
                 <button
                   className="btn btn-danger btn-lg px-4 py-2"
-                  onClick={() =>
-                    navigate("/User/seatselection", {
-                      state: { busName: bus.busName },
-                    })
-                  }
+                  onClick={() => navigate("/")}
                 >
                   <i className="bi bi-ticket-perforated me-2"></i> Book Now
                 </button>
@@ -368,7 +364,7 @@ const renderBodyData = () => {
         <div className="card-body p-4">
           {activeTab === "overview" && (
             <div className="row">
-              <div className="col-md-6">
+              <div className="col-sm-6">
                 <h4 className="mb-3 text-primary">
                   <i className="bi bi-building me-2"></i> Operator Details
                 </h4>
@@ -390,7 +386,7 @@ const renderBodyData = () => {
                   {bus.duration} hours.
                 </p>
               </div>
-              <div className="col-md-6">
+              <div className="col-sm-6">
                 <h4 className="mb-3 text-primary">
                   <i className="bi bi-clock-history me-2"></i> Schedule
                 </h4>
@@ -425,7 +421,7 @@ const renderBodyData = () => {
               </h4>
               <div className="row">
                 {bus.amenities.map((amenity, index) => (
-                  <div key={index} className="col-md-4 mb-3">
+                  <div key={index} className="col-4 mb-3">
                     <div className="d-flex align-items-center p-3 bg-light rounded">
                       <div className="bg-primary text-white rounded-circle p-2 me-3">
                         {getAmenityIcon(amenity)}
@@ -486,9 +482,7 @@ const renderBodyData = () => {
       <div className="text-center mb-5">
         <button
           className="btn btn-primary btn-lg px-5 py-3"
-          onClick={() =>
-            navigate("/User/seatselection", { state: { busName: bus.busName } })
-          }
+          onClick={() => navigate("/")}
         >
           <i className="bi bi-ticket-perforated me-2"></i> Book Your Seats Now
         </button>

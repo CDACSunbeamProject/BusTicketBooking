@@ -15,7 +15,7 @@ import com.project.dto.AuthRequest;
 import com.project.dto.AuthResp;
 import com.project.dto.BookingRespDTO;
 import com.project.dto.TicketRequestDTO;
-import com.project.dto.UserProfileRespDTO;
+import com.project.dto.UserProfileDTO;
 import com.project.dto.UserRequestDTO;
 import com.project.dto.UserRespDTO;
 import com.project.entities.User;
@@ -85,12 +85,17 @@ public class UserController {
 	@GetMapping("/profile")
 	public ResponseEntity<?> getProfile(Authentication authentication) {
 		String email = (String) authentication.getPrincipal(); // you stored email in JWT
-		UserProfileRespDTO user = userService.getUserProfileDetails(email); // fetch User from DB
+		UserProfileDTO user = userService.getUserProfileDetails(email); // fetch User from DB
 		if (user == null) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
 		}
 
 		return ResponseEntity.ok().body(user);
+	}
+	@PutMapping("profile/update")
+	public ResponseEntity<?> updateUserProfile(@RequestBody UserProfileDTO dto){
+		System.out.println("insisde controller");
+		return ResponseEntity.ok(userService.updateProfile(dto));
 	}
 
 	@GetMapping("/bookings")

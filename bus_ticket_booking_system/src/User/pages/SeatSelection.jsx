@@ -23,7 +23,7 @@ function SeatSelection() {
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [passengerDetails, setPassengerDetails] = useState([]);
   const [error, setError] = useState("");
-  // busDetails.seatType="Sleeper";
+  // busDetails.seatType="seater";
   useEffect(() => {
     if (!busId) {
       setError("No bus selected");
@@ -45,17 +45,15 @@ function SeatSelection() {
   }, [busId]);
 
   useEffect(() => {
-    if (selectedSeats.length > 0) {
-      const details = selectedSeats.map((seatNo) => ({
-        seatNo,
-        name: "",
-        gender: "",
-        age: "",
-      }));
-      setPassengerDetails(details);
-    } else {
-      setPassengerDetails([]);
-    }
+    setPassengerDetails((prevDetails) => {
+      // keep passenger details for seats still selected
+      const updatedDetails = selectedSeats.map((seatNo) => {
+        // find existing details for this seat, if any
+        const existing = prevDetails.find((p) => p.seatNo === seatNo);
+        return existing || { seatNo, name: "", gender: "", age: "" };
+      });
+      return updatedDetails;
+    });
   }, [selectedSeats]);
 
   const handleInputChange = (index, field, value) => {
@@ -94,9 +92,13 @@ function SeatSelection() {
     return (
       <div
         key={seatNo}
-        className={`border rounded text-center p-2 m-2 seat-box ${seatClass}`}
+        className={`border rounded text-center m-2 seat-box ${seatClass}`}
         style={{
-          width: "35px",
+          width: "40px",
+          height: "40px",
+          display:"flex",
+          justifyContent:"center",
+          alignItems:"center",
           cursor: isBooked ? "not-allowed" : "pointer",
         }}
         onClick={() => !isBooked && handleSeatClick(seatNo.toString())}
@@ -128,7 +130,7 @@ function SeatSelection() {
         <div
           key={`gap-${i}`}
           className="m-1"
-          style={{ width: "30px", height: "35px", visibility: "hidden" }}
+          style={{ width: "25px", height: "35px", visibility: "hidden" }}
         />
       );
 
@@ -156,12 +158,12 @@ function SeatSelection() {
     const totalSeats = busDetails.noOfSeats;
     return (
       <div className="container">
-        <div className="row p-4 justify-content-center align-items-center">
+        <div className="row ms-3 p-4 justify-content-center align-items-center">
           <div className="col shadow-sm border border-1 border-dark pt-3 pb-3 me-4 bg-white rounded-5">
             <div className="pb-3 fs-5 fw-bold">Lower Deck</div>
             {renderSeatsSection(1, Math.floor(totalSeats / 2))}
           </div>
-          <div className="ms-4 pt-3 border border-1 border-dark shadow-sm pb-3 col bg-white rounded-5">
+          <div className="ms-4 me-0 pt-3 border border-1 border-dark shadow-sm pb-3 col bg-white rounded-5">
             <div className="pb-3 fs-5 fw-bold">Upper Deck</div>
             {renderSeatsSection(Math.floor(totalSeats / 2) + 1, totalSeats)}
           </div>
@@ -282,7 +284,7 @@ function SeatSelection() {
       // Step 2: Save booking data to localStorage (or state management)
       const bookingData = {
         busId: parseInt(busId),
-        //bus: busDetails,
+        bus: busDetails,
         selectedSeats: selectedSeats,
         passengerDetails: passengerDetails,
         totalAmount: selectedSeats.length * busDetails.price,
@@ -291,7 +293,7 @@ function SeatSelection() {
       localStorage.setItem("pendingBooking", JSON.stringify(bookingData));
 
       // Navigate to payment page
-      navigate(`/user/newpayment`, { state: bookingData });
+      navigate(`/newpayment`, { state: bookingData });
     } catch (error) {
       console.error("Error locking seats creating booking:", error);
       toast.error("Failed to lock seats booking. Try again");
@@ -372,7 +374,7 @@ function SeatSelection() {
           >
             {renderSeats()}
           </div>
-          <div className="col-5 ms-5">
+          <div className="col-5 ms-4">
             <div className="container">
               <div className="row bg-white border rounded p-4">
                 <div className="col-12 text-start">
@@ -415,7 +417,7 @@ function SeatSelection() {
         <div className="alert alert-danger">{error}</div>
         <button
           className="btn btn-primary"
-          onClick={() => navigate("/user/searchresults")}
+          onClick={() => navigate("/searchresults")}
         >
           Back to Buses
         </button>
@@ -459,7 +461,7 @@ function SeatSelection() {
             <div className="col-5">
               <button
                 className="col-4 btn btn-danger"
-                onClick={() => navigate("/user/searchresults")}
+                onClick={() => navigate("/searchresults")}
               >
                 Cancel
               </button>

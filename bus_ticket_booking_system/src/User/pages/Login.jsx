@@ -41,10 +41,10 @@ function Login() {
 
       if (role === "ADMIN") {
         toast.success("admin login successful");
-        navigate("/admin/dashboard");
+        navigate("/admin");
       } else if (role === "USER") {
         toast.success("user login successful")
-        navigate("/user/dashboard");
+        navigate("/");
       } else {
         toast.error("Unknown user role");
       }
@@ -92,7 +92,7 @@ function Login() {
         </div>
 
         <div className="text-center">
-          Don't have an account? <a href="/user/signup">Sign Up</a>
+          Don't have an account? <a href="/signup">Sign Up</a>
         </div>
       </div>
     </div>

@@ -8,7 +8,7 @@ function CancelTicket() {
   const navigate = useNavigate();
   const handleCancelTicket = () => {
     alert("Ticket cancelled successfully!");
-    navigate("/user");
+    navigate("/");
   };
   return (
     <div className="container mt-5 pb-4 rounded-4 shadow small-size-page">

@@ -17,7 +17,7 @@ import com.project.daos.BookingDao;
 import com.project.daos.UserDao;
 import com.project.dto.BookingRespDTO;
 import com.project.dto.BusRespDTO;
-import com.project.dto.UserProfileRespDTO;
+import com.project.dto.UserProfileDTO;
 import com.project.dto.UserRequestDTO;
 import com.project.dto.UserRespDTO;
 import com.project.entities.Booking;
@@ -53,11 +53,12 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserProfileRespDTO getUserProfileDetails(String email) {
+	public UserProfileDTO getUserProfileDetails(String email) {
+		System.out.println("inside profile update");
 		User user = userDao.findByEmail(email)
 				.orElseThrow(() -> new ApiException("User Not Found with email:" + email));
 
-		UserProfileRespDTO userProfile = new UserProfileRespDTO();
+		UserProfileDTO userProfile = new UserProfileDTO();
 		userProfile.setId(user.getId());
 		userProfile.setName(user.getName());
 		userProfile.setEmail(user.getEmail());
@@ -110,10 +111,52 @@ public class UserServiceImpl implements UserService {
 		}
 		return allBookings;
 	}
-
+	
+	public long getTotalAmount() {
+		List<User> users= userDao.findAll();
+		long totalAmount = 0;
+		for(User u:users) {
+			List<Booking> bookings=u.getBookings();
+			for(Booking b: bookings) {
+				totalAmount += (long) b.getTotalFare();
+			}
+		}
+		return totalAmount;
+	}
+	
+	@Override
+	public Long getAllBookings() {
+		System.out.println("inside all bookings");
+		List<User> users=userDao.findAll();
+		Long totalBookings = 0L;
+		for(User user:users) {
+			totalBookings+=user.getBookings().size();
+		}
+		return totalBookings;
+	}
 	@Override
 	public List<UserRespDTO> getAllUsers() {
-		return userDao.findAll().stream().map(user -> modelMapper.map(user, UserRespDTO.class)).toList();
+		System.out.println("inside service");
+	    try {
+	        List<User> users = userDao.findAll();
+	        return users.stream()
+	            .map(user -> modelMapper.map(user, UserRespDTO.class))
+	            .toList();
+	    } catch (Exception e) {
+	        // Log exception details
+	        System.err.println("Error fetching users: " + e.getMessage());
+	        e.printStackTrace();
+	        throw e; // or return empty list / handle gracefully
+	    }
 	}
-
+	@Override
+	public UserProfileDTO updateProfile(UserProfileDTO dto) {
+		User user=userDao.findByEmail(dto.getEmail()).orElseThrow();
+		user.setAge(dto.getAge());
+		user.setGender(dto.getGender());
+		user.setName(dto.getName());
+		user.setPhone(dto.getPhone());
+		userDao.save(user);
+		return modelMapper.map(user, UserProfileDTO.class);
+	}
 }

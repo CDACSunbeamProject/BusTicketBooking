@@ -125,7 +125,7 @@ function BusDetails() {
                 <button
                   className="btn btn-danger btn-lg px-4 py-2"
                   onClick={() =>
-                    navigate("/User/seatselection", {
+                    navigate("/seatselection", {
                       state: { busName: bus.busName },
                     })
                   }
@@ -285,7 +285,7 @@ function BusDetails() {
         <button
           className="btn btn-primary btn-lg px-5 py-3"
           onClick={() =>
-            navigate("/User/seatselection", { state: { busName: bus.busName } })
+            navigate("/seatselection", { state: { busName: bus.busName } })
           }
         >
           <i className="bi bi-ticket-perforated me-2"></i> Book Your Seats Now
