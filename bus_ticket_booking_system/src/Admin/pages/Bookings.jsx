@@ -1,76 +1,101 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
-const AdminUserInfo = () => {
+function Bookings() {
+  const [bookings, setBookings] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:9090/booking/bookings")
+      .then((response) => {
+        // Filter out bookings with missing bus data
+        const validBookings = response.data.filter(
+          (booking) => booking.bus && booking.bus.busName
+        );
+        setBookings(validBookings);
+      })
+      .catch((error) => {
+        console.error("Error fetching bookings:", error);
+      });
+  }, []);
+
+  const handleDelete = async (bookingId) => {
+    if (!window.confirm("Are you sure you want to delete this booking?")) return;
+
+    try {
+      await axios.delete(`http://localhost:9090/booking/${bookingId}`);
+      // Remove deleted booking from state
+      setBookings((prevBookings) =>
+        prevBookings.filter((b) => b.bookingId !== bookingId)
+      );
+    } catch (error) {
+      console.error("Error deleting booking:", error);
+    }
+  };
+
   return (
-    <div className="container mt-5">
-      <h2 className="text-center mb-4">Booking Details</h2>
-
-      <div className="table-responsive">
-        <table className="table table-bordered table-hover align-middle text-center">
-          <thead className="table-dark">
+    <div>
+      <h2>All Bookings</h2>
+      <table
+        border="1"
+        cellPadding="10"
+        style={{ borderCollapse: "collapse", width: "100%" }}
+      >
+        <thead>
+          <tr>
+            <th>Booking ID</th>
+            <th>Bus Name</th>
+            <th>Bus No</th>
+            <th>Operator</th>
+            <th>Departure</th>
+            <th>Arrival</th>
+            <th>Fare</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {bookings.length > 0 ? (
+            bookings.map((booking, index) => (
+              <tr key={`${booking.bus?.id || "bus"}-${index}`}>
+                <td>{booking.bookingId || index + 1}</td>
+                <td>{booking.bus?.busName}</td>
+                <td>{booking.bus?.busNo}</td>
+                <td>{booking.bus?.operatorName}</td>
+                <td>
+                  {booking.bus?.departureDate} {booking.bus?.departureTime}
+                </td>
+                <td>
+                  {booking.bus?.arrivalDate} {booking.bus?.arrivalTime}
+                </td>
+                <td>{booking.bus?.price}</td>
+                <td>
+                  <button
+                    style={{
+                      background: "red",
+                      color: "white",
+                      border: "none",
+                      padding: "5px 10px",
+                      cursor: "pointer",
+                      borderRadius: "4px",
+                    }}
+                    onClick={() => handleDelete(booking.bookingId)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))
+          ) : (
             <tr>
-              <th>Sr.No</th>
-              <th>Bus ID</th>
-              <th>Name</th>
-              <th>Gender</th>
-              <th>Mobile No.</th>
-              <th>Email</th>
-              <th>Address</th>
-              <th>Route</th>
-              <th>Pickup Point</th>
-              <th>Pickup Date & Time</th>
-              <th>Drop Point</th>
-              <th>Drop Date & Time</th>
+              <td colSpan="8" style={{ textAlign: "center" }}>
+                No bookings available.
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td>B101</td>
-              <td>Priya Desai</td>
-              <td>Female</td>
-              <td>9876543210</td>
-              <td>priya@example.com</td>
-              <td>Shivaji Nagar, Pune</td>
-              <td>Pune → Mumbai</td>
-              <td>Swargate</td>
-              <td>2025-07-25, 08:00 AM</td>
-              <td>Dadar</td>
-              <td>2025-07-25, 11:30 AM</td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>B102</td>
-              <td>Rahul Jain</td>
-              <td>Male</td>
-              <td>8765432109</td>
-              <td>rahulj@example.com</td>
-              <td>Kothrud, Pune</td>
-              <td>Pune → Nashik</td>
-              <td>Katraj</td>
-              <td>2025-07-26, 06:00 AM</td>
-              <td>CBS Nashik</td>
-              <td>2025-07-26, 10:00 AM</td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td>B103</td>
-              <td>Sneha Patil</td>
-              <td>Female</td>
-              <td>9988776655</td>
-              <td>sneha.p@gmail.com</td>
-              <td>Hinjewadi, Pune</td>
-              <td>Pune → Bangalore</td>
-              <td>Hinjewadi</td>
-              <td>2025-07-27, 07:00 PM</td>
-              <td>Majestic</td>
-              <td>2025-07-28, 06:30 AM</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+          )}
+        </tbody>
+      </table>
     </div>
   );
-};
+}
 
-export default AdminUserInfo;
+export default Bookings;

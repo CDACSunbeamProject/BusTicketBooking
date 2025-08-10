@@ -8,6 +8,10 @@ import Sidebar from './Admin/components/Sidebar';
 //import AddBus from './Admin/services/AddBus';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import MyBookings from './User/pages/MyBookings';
+
+import Bookings from './Admin/pages/Bookings';
+
 
 //FOR ROUTING 
 function App(){
@@ -17,6 +21,8 @@ function App(){
         <Route path="/Admin/*" element={<AppAdmin />} />
         <Route path="/User/*" element={<AppUser />} />
         <Route path="*" element={<h1>Welcome to Bus Booking App</h1>} />
+        <Route path="/my-bookings/:id" element={<MyBookings />} />
+        <Route path="/bookings" element={<Bookings />} /> 
       </Routes>
       <ToastContainer position="top-right" autoClose={3000} />
     </BrowserRouter>

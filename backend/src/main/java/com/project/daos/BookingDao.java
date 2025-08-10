@@ -13,5 +13,7 @@ import com.project.entities.Seat;
 
 public interface BookingDao extends JpaRepository<Booking, Long>{
 	Optional<Booking> findById(Long id);
+	List<Booking> findByUserId(Long userId);
+
 	
 }
