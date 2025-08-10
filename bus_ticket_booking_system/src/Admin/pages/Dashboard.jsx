@@ -21,7 +21,7 @@ const cards = [
     title: "Add Bus",
     description: "Add a new bus to the system",
     icon: <FaBus size={24} />,
-    link: "/dmin/addbus",
+    link: "/admin/addbus",
     color: "primary",
   },
   {
