@@ -11,5 +11,4 @@ import lombok.Setter;
 @AllArgsConstructor
 public class TicketRequestDTO {
 	private Long bookingId;
-	private String transactionId;
 }

@@ -32,7 +32,7 @@ public class Booking extends BaseEntity{
 	@JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
+    @ManyToOne	
     @JoinColumn(name = "bus_id")
     private Bus bus;
     
@@ -41,7 +41,7 @@ public class Booking extends BaseEntity{
     @Enumerated(EnumType.STRING)
     private BookingStatus status; // PENDING, CONFIRMED, CANCELLED
 
-    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Passenger> passengers;
 
     @OneToOne(mappedBy = "booking", cascade = CascadeType.ALL)

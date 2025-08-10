@@ -12,4 +12,5 @@ public interface TicketDao extends JpaRepository<Ticket, Long>{
 	boolean existsById(Long ticketId);
 	boolean existsByTicketNumber(String ticketNumber);
 	Optional<Ticket> findByTicketNumber(String ticketNumber);
+	Ticket findByBookingId(Long bookingId);
 }

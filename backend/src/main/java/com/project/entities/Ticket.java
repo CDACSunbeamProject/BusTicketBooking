@@ -1,21 +1,12 @@
 package com.project.entities;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -31,23 +22,23 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Ticket extends BaseEntity {
 
-	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private User user;
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-	@ManyToOne
-	@JoinColumn(name = "bus_no")
-	private Bus bus;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bus_id", nullable = false)
+    private Bus bus;
 
-	@Column(name = "ticket_number",unique=true)
-	private String ticketNumber;
-	
-	@OneToOne
-	@JoinColumn(name = "booking_id")
-	private Booking booking;
-	
-	@Column(name = "ticket_status")
-	@Enumerated(EnumType.STRING)
-	private TicketStatus status;
+    @Column(name = "ticket_number", unique = true, nullable = false)
+    private String ticketNumber;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "booking_id", nullable = false, unique = true)
+    private Booking booking;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ticket_status", nullable = false)
+    private TicketStatus status;
 
 }

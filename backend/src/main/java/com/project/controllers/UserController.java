@@ -74,13 +74,13 @@ public class UserController {
 		// 3. In case of success , generate JWT n send it to REST client
 		return ResponseEntity.ok(new AuthResp(user.getId(),"auth successful", jwtUtils.generateJwtToken(validAuthentication), user.getEmail(), user.getRole().name()));
 	}
-
-	@PostMapping("/ticket")
-	@Operation(description = "Ticket is Generated")
-	public ResponseEntity<?> generateTicket(@RequestBody TicketRequestDTO dto) {
-		// call service method
-		return ResponseEntity.status(HttpStatus.CREATED).body(ticketService.generateTicketAfterPayment(dto));
-	}
+//
+//	@PostMapping("/ticket")
+//	@Operation(description = "Ticket is Generated")
+//	public ResponseEntity<?> generateTicket(@RequestBody TicketRequestDTO dto) {
+//		// call service method
+//		return ResponseEntity.status(HttpStatus.CREATED).body(ticketService.generateTicketAfterPayment(dto));
+//	}
 
 	@GetMapping("/profile")
 	public ResponseEntity<?> getProfile(Authentication authentication) {
@@ -99,12 +99,4 @@ public class UserController {
 		List<BookingRespDTO> bookings = userService.getMyBookings(email); // fetch User from DB
 		return ResponseEntity.ok().body(bookings);
 	}
-
-	
-		@GetMapping("/ticket/{ticketNumber}")
-		@Operation(description = "Getting Ticket")
-		public ResponseEntity<?> gettingTicket(@PathVariable String ticketNumber) {
-			return ResponseEntity.ok(ticketService.getTicket(ticketNumber));
-		}
-
 }

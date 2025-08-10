@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation,useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function NewPayment() {
     //const [bookingData, setBookingData] = useState(null);
     const [razorpayLoaded, setRazorpayLoaded] = useState(false);
     const location = useLocation();
+    const navigate=useNavigate()
     const bookingData = location.state || {};
 
     const {
@@ -68,22 +69,43 @@ function NewPayment() {
                     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = response;
 
                     // 4️⃣ Verify payment on backend
-                    axios.post("http://localhost:9090/payments/verify", {
+                    axios
+                      .post("http://localhost:9090/payments/verify", {
                         razorpay_order_id,
                         razorpay_payment_id,
                         razorpay_signature,
-                        bookingId
-                    }).then(() => {
-                        alert("Payment Successful! Booking Confirmed.");
-                        localStorage.clear();
-                        window.location.href = "/my-bookings";
-                    }).catch(() => {
-                        console.log("razorpay_order_id", razorpay_order_id);
-                        console.log("razorpay_payment_id", razorpay_payment_id);
-                        console.log("razorpay_signature", razorpay_signature);
-                        console.log("bookingId", bookingId);
-                        alert("Payment verification failed!");
-                    });
+                        bookingId,
+                      })
+                      .then((verifyResponse) => {
+                        console.log(
+                          "Payment verification successful:",
+                          verifyResponse.data
+                        );
+
+                        // Generate ticket after successful payment verification
+                        return axios.post(
+                          "http://localhost:9090/tickets/generate",
+                          {
+                            bookingId: bookingId,
+                          },
+                        );
+                      })
+                      .then((ticketResponse) => {
+                        const ticketId = ticketResponse.data; // backend must return ticketId
+                        console.log("Ticket generated:", ticketResponse.data);
+
+                        // localStorage.clear();
+
+                        // Navigate to ticket page with ticketId in state
+                        navigate("/user/ticket", { state: { ticketId:ticketId } });
+                      })
+                      .catch((error) => {
+                        console.error("Error occurred:", error);
+                        alert(
+                          "Payment verification or ticket generation failed!"
+                        );
+                      });
+
                 },
                 prefill: {
                     name: bookingData.passengerDetails[0]?.name, // First passenger name

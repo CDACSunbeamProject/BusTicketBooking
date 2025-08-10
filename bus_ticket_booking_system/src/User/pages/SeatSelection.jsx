@@ -15,7 +15,7 @@ function SeatSelection() {
   const token = localStorage.getItem("token");
   if (token) {
     const decoded = decodeToken(token);
-    const userId = decoded.userId || decoded.id; // depends on your backend
+    // const userId = decoded.userId || decoded.id; // depends on your backend
     console.log("User ID:", userId);
   }
 
@@ -79,8 +79,8 @@ function SeatSelection() {
   const getSeatBox = (seatNo) => {
     if (!busDetails) return null;
 
-    const isBooked = busDetails.bookedSeats.includes(seatNo);
-    const isSelected = selectedSeats.includes(seatNo);
+    const isBooked = busDetails.bookedSeats.includes(seatNo.toString());
+    const isSelected = selectedSeats.includes(seatNo.toString());
 
     const seatClass = [
       isBooked
@@ -99,7 +99,7 @@ function SeatSelection() {
           width: "35px",
           cursor: isBooked ? "not-allowed" : "pointer",
         }}
-        onClick={() => !isBooked && handleSeatClick(seatNo)}
+        onClick={() => !isBooked && handleSeatClick(seatNo.toString())}
       >
         {seatNo}
       </div>

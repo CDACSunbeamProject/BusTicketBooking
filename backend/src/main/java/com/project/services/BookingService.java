@@ -24,7 +24,5 @@ public interface BookingService {
 	List<SeatAvailabilityDTO> bookSeatsWithPessimistic(List<Long> seatIds, Long userId);
 	public void markSeatsAsBooked(Long bookingId);
 	public void releaseSeats(Long bookingId);
-	//public Booking getBookingById(Long bookingId);
-
-
+	public Booking getBookingById(Long bookingId);
 }

@@ -44,9 +44,9 @@ public class SecurityConfiguration {
 							//only for react apps - permit in flight requests - otherwise CORS error
 							.requestMatchers(HttpMethod.OPTIONS).permitAll()
 							.requestMatchers(HttpMethod.GET, "/buses/*").permitAll()
+							.requestMatchers(HttpMethod.GET, "/tickets/*").permitAll()
+							.requestMatchers(HttpMethod.POST, "/tickets/*").permitAll()
 							.requestMatchers(HttpMethod.POST, "/users/signin").permitAll()
-							.requestMatchers(HttpMethod.GET, "/booking/user/*").permitAll()
-
 							.requestMatchers(HttpMethod.POST, "/buses").hasRole("ADMIN").anyRequest()
 							.authenticated()
 							);

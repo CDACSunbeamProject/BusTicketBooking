@@ -3,10 +3,11 @@ package com.project.services;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.stream.Collectors;
-
+import java.util.HashSet;
 
 import org.json.JSONObject;
 import org.modelmapper.ModelMapper;
@@ -14,6 +15,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import com.project.custom_exceptions.ApiException;
 import com.project.custom_exceptions.ResourceNotFoundException;
 import com.project.daos.BookingDao;
 import com.project.daos.BusDao;
@@ -25,6 +27,7 @@ import com.project.dto.SeatAvailabilityDTO;
 import com.project.entities.Booking;
 import com.project.entities.BookingStatus;
 import com.project.entities.Bus;
+import com.project.entities.Passenger;
 import com.project.entities.PaymentStatus;
 import com.project.entities.Seat;
 import com.project.entities.SeatStatus;
@@ -66,6 +69,34 @@ public class BookingServiceImpl implements BookingService{
         booking.setStatus(BookingStatus.PENDING);
 
         // convert PassengerDTO list to Passenger entities, set to booking
+        List<Passenger> passengers = request.getPassengerDetails().stream().map(dto -> {
+            Passenger p = new Passenger();
+            p.setName(dto.getName());
+            p.setAge(dto.getAge());
+            p.setGender(dto.getGender());
+            p.setSeatNumber(dto.getSeatNo());  // <-- set seat number here
+            p.setBooking(booking);
+            return p;
+        }).collect(Collectors.toList());
+        booking.setPassengers(passengers);
+        Set<String> bookedSeats = bus.getBookedSeats();
+        if (bookedSeats == null) bookedSeats = new HashSet<>();
+
+        List<String> seatStrings = request.getSelectedSeats()
+                                          .stream()
+                                          .map(String::valueOf)
+                                          .collect(Collectors.toList());
+
+        // Check for conflicts
+        for (String seat : seatStrings) {
+            if (bookedSeats.contains(seat)) {
+                throw new ApiException("Seat " + seat + " is already booked.");
+            }
+        }
+
+        bookedSeats.addAll(seatStrings);
+        bus.setBookedSeats(bookedSeats);
+        busDao.save(bus);
         // save booking
         return bookDao.save(booking);
     }
@@ -86,19 +117,16 @@ public class BookingServiceImpl implements BookingService{
 	    return modelMapper.map(seatDao.save(seat), SeatAvailabilityDTO.class);
 	}*/
 
-	/*@Override
+	@Override
 	public List<BookingRespDTO> getBookingsByUserId(Long userId) {
 		// TODO: Implement when BookingDao is available
 		return Collections.emptyList();
-	}*/
+	}
 
 	@Override
 	public List<BookingRespDTO> getAllBookings() {
-		 List<Booking> bookings = bookDao.findAll();
-
-		    return bookings.stream()
-		            .map(booking -> modelMapper.map(booking, BookingRespDTO.class))
-		            .collect(Collectors.toList());
+		// TODO: Implement when BookingDao is available
+		return Collections.emptyList();
 	}
 
 	
@@ -256,25 +284,13 @@ public class BookingServiceImpl implements BookingService{
 	}
 
 
-	
-	
 	@Override
-	public List<BookingRespDTO> getBookingsByUserId(Long userId) {
-	    return bookDao.findByUserId(userId)
-	            .stream()
-	            .map(booking -> modelMapper.map(booking, BookingRespDTO.class))
-	            .collect(Collectors.toList());
-	}
-
-
-	
-
-	/*public Booking getBookingById(Long bookingId) {
+	public Booking getBookingById(Long bookingId) {
 		Booking booking = new Booking();
 		booking = bookDao.findById(bookingId)
 				.orElseThrow(() -> new RuntimeException("booking not found"));
 		return booking;
-	}*/
+	}
 
 
 	/*@Override

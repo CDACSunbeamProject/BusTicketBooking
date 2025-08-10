@@ -39,48 +39,59 @@ public class TicketServiceImpl implements TicketService {
 	private final UserDao userDao;
 	private final ModelMapper modelMapper;
 	private final BookingDao bookingDao;
+	private BookingService bookingService;
+	
+	
+	public Long generateTicket(Long bookingId) {
+        Booking booking = bookingService.getBookingById(bookingId);
+        if (booking == null) {
+            throw new ApiException("Booking not found with id: " + bookingId);
+        }
 
-	@Override
-	public TicketRespDTO generateTicketAfterPayment(TicketRequestDTO request) {
-		System.out.println("in ticket generation");
-		Booking booking = bookingDao.findById(request.getBookingId())
-			    .orElseThrow(() -> new ResourceNotFoundException("Booking is not found with id: " + request.getBookingId()));
-		if(!PaymentStatus.SUCCESS.equals(booking.getPayment().getStatus())) {
-			throw new ApiException("Booking is not completed");
-		}
-		Ticket ticket = new Ticket();
-		String ticketNumber=generateTicketNumber(booking.getId());
-//		while(ticketDao.existsByTicketNumber(ticketNumber)) {
-//		ticketNumber=generateTicketNumber(booking.getId());
-//		}
-		ticket.setTicketNumber(ticketNumber);
-		ticket.setBooking(booking);
-		ticket.setStatus(TicketStatus.ACTIVE);
-		ticket = ticketDao.save(ticket);
-		
-		return toRespDTO(ticket);
-	}
+        // Check if ticket already exists for this booking
+        Ticket existingTicket = ticketDao.findByBookingId(bookingId);
+        if (existingTicket.getStatus().equals(TicketStatus.CANCELLED) ) {	
+            throw new ApiException("ticket is cancelled"); // Or throw exception if duplicate not allowed
+        }
+        if (existingTicket != null ) {	
+            return existingTicket.getId(); // Or throw exception if duplicate not allowed
+        }
+        
+
+        Ticket ticket = new Ticket();
+        ticket.setBooking(booking);
+        ticket.setBus(booking.getBus());
+        ticket.setUser(booking.getUser());
+        ticket.setStatus(TicketStatus.ACTIVE); // or your enum value
+
+        // Generate unique ticket number (example: TKT + timestamp + bookingId)
+        String ticketNumber = "TKT" + System.currentTimeMillis() + bookingId;
+        ticket.setTicketNumber(ticketNumber);
+        ticketDao.save(ticket);
+        booking.setTicket(ticket);
+        return ticket.getId();
+    }
 	
 //	// Testing is pending
 	@Override
-	public TicketRespDTO getTicket(String ticketNumber) {
-		Ticket ticket = ticketDao.findByTicketNumber(ticketNumber).orElseThrow();
-		return modelMapper.map(ticket, TicketRespDTO.class);
+	public TicketRespDTO getTicket(Long ticketId) {
+		Ticket ticket = ticketDao.findById(ticketId).orElseThrow();
+        System.out.println("passengers: "+ ticket.getBooking().getPassengers().size());
+		return toRespDTO(ticket);
 	}
 	
-	public static String generateTicketNumber(Long bookingId) {
-	    String datePart = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-	    String paddedId = String.format("%05d", bookingId); // 00001, 00123, etc.
-	    return "TICK-" + datePart + "-" + paddedId;
-	}
 	public static TicketRespDTO toRespDTO(Ticket ticket) {
         // Tikcet info
 		TicketRespDTO dto = new TicketRespDTO();
+		dto.setTicketId(ticket.getId());
+		dto.setUserName(ticket.getUser().getName());
+		System.out.println("userName: "+ticket.getUser().getName());
+		dto.setTravelDate(ticket.getBooking().getCreationDateTime().toLocalDate());
+		dto.setBookingId(ticket.getBooking().getId());
         dto.setTicketNumber(ticket.getTicketNumber());
         dto.setGeneratedAt(ticket.getCreationDateTime());
         dto.setTotalAmount(ticket.getBooking().getTotalFare());
         dto.setStatus(ticket.getStatus());
-        
         // Bus info
         dto.setBusNumber(ticket.getBooking().getBus().getBusNo());
         dto.setBusName(ticket.getBooking().getBus().getBusName());
@@ -93,7 +104,6 @@ public class TicketServiceImpl implements TicketService {
         dto.setSeatType(ticket.getBooking().getBus().getSeatType());
         dto.setRoute(ticket.getBooking().getBus().getBusRoute().getStartLocation() + " → " +
                      ticket.getBooking().getBus().getBusRoute().getEndLocation());
-        
         // passenger info
         dto.setPassengers(
         		  ticket.getBooking().getPassengers().stream()
