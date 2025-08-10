@@ -12,28 +12,33 @@ export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [email, setEmail] = useState(null);
   const [role, setRole] = useState(null);
+  const [userId, setUserId] = useState(null);
 
   // ✅ Load from localStorage on app load
   useEffect(() => {
     const savedToken = localStorage.getItem("token");
     const savedEmail = localStorage.getItem("email");
     const savedRole = localStorage.getItem("role");
+    const savedUserId = localStorage.getItem("userId");
 
-    if (savedToken && savedEmail && savedRole) {
+    if (savedToken && savedEmail && savedRole && savedUserId) {
       setToken(savedToken);
       setEmail(savedEmail);
       setRole(savedRole);
+      setUserId(savedUserId)
       setIsLoggedIn(true);
     }
   }, []);
 
   // ✅ Login function
-  const login = (token, email, role) => {
+  const login = (token, email, role, userId) => {
     localStorage.setItem("token", token);
     localStorage.setItem("email", email);
     localStorage.setItem("role", role);
+    localStorage.setItem("userId", userId);
 
     setToken(token);
+    setUserId(userId);
     setEmail(email);
     setRole(role);
     setIsLoggedIn(true);
@@ -49,7 +54,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ token, isLoggedIn ,email, role, login, logout }}>
+    <AuthContext.Provider value={{ token, isLoggedIn, email, userId , role, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

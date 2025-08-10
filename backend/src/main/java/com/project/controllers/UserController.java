@@ -72,7 +72,7 @@ public class UserController {
 		System.out.println(user);// UserEntity
 //			System.out.println("after "+validAuthentication.isAuthenticated());//tru
 		// 3. In case of success , generate JWT n send it to REST client
-		return ResponseEntity.ok(new AuthResp("auth successful", jwtUtils.generateJwtToken(validAuthentication), user.getEmail(), user.getRole().name()));
+		return ResponseEntity.ok(new AuthResp(user.getId(),"auth successful", jwtUtils.generateJwtToken(validAuthentication), user.getEmail(), user.getRole().name()));
 	}
 
 	@PostMapping("/ticket")

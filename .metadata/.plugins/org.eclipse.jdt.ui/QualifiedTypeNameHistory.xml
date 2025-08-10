@@ -39,4 +39,6 @@
     <fullyQualifiedTypeName name="lombok.Setter"/>
     <fullyQualifiedTypeName name="lombok.NoArgsConstructor"/>
     <fullyQualifiedTypeName name="lombok.AllArgsConstructor"/>
+    <fullyQualifiedTypeName name="com.project.entities.PaymentStatus"/>
+    <fullyQualifiedTypeName name="com.project.entities.BookingStatus"/>
 </qualifiedTypeNameHistroy>

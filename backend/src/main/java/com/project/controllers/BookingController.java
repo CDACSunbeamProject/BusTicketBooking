@@ -3,8 +3,10 @@ package com.project.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +25,7 @@ import lombok.AllArgsConstructor;
 
 @RestController
 @RequestMapping("/booking")
+@CrossOrigin(origins = "http://localhost:3001")
 @AllArgsConstructor
 @Validated
 public class BookingController {
@@ -35,15 +38,24 @@ public class BookingController {
     }*/
     
     @PostMapping("/lock-multiple/user/{userId}")
-    public List<SeatAvailabilityDTO> lockMultipleSeats(@RequestBody List<Long> seatIds, @PathVariable Long userId) {
-        return bookService.lockMultipleSeats(seatIds, userId);
+    public ResponseEntity<?> lockMultipleSeats(@RequestBody List<Long> seatIds, @PathVariable Long userId) {
+    	try {
+            List<SeatAvailabilityDTO> lockedSeats = bookService.bookSeatsWithPessimistic(seatIds, userId);
+            return ResponseEntity.ok(lockedSeats);
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unexpected error occurred");
+        }
+    	
     }
 
 
-    @PostMapping("/confirm/{seatId}/user/{userId}")
+    /*@PostMapping("/confirm/{seatId}/user/{userId}")
     public SeatAvailabilityDTO confirmSeat(@PathVariable Long seatId, @PathVariable Long userId) {
         return bookService.confirmBooking(seatId, userId);
-    }
+    }*/
     
     @GetMapping("/bookings")
     public ResponseEntity<List<BookingRespDTO>> getAllBookings() {

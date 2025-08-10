@@ -6,6 +6,7 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 public class AuthResp {
+	private Long id;
 	private String message;
 	private String jwt;
 	private String email;

@@ -6,6 +6,9 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -46,5 +49,15 @@ public class Booking extends BaseEntity{
     
     @OneToOne(mappedBy = "booking", cascade = CascadeType.ALL)
     private Ticket ticket;
+    
+    @ElementCollection
+    @CollectionTable(name = "booking_seats", joinColumns = @JoinColumn(name = "booking_id"))
+    @Column(name = "seat_number")
+    private List<Long> seatNumbers;
+
+	public void setSeatNumbers(List<Long> selectedSeats) {
+		this.seatNumbers = selectedSeats;
+		
+	}
 	
 }

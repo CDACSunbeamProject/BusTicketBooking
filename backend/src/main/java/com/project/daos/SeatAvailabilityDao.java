@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.project.entities.Bus;
 import com.project.entities.Seat;
+import com.project.entities.SeatStatus;
 
 import jakarta.persistence.LockModeType;
 
@@ -20,11 +21,13 @@ public interface SeatAvailabilityDao extends JpaRepository<Seat, Long>{
 
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	@Query("SELECT s FROM Seat s WHERE s.id = :seatId")
-	Optional<Seat> findByIdAndLock(@Param("seatId") Long seatId);
+	Seat findByIdAndLock(@Param("seatId") Long seatId);
 
 	List<Seat> findAllByStatusAndLockTimeBefore(String status, LocalDateTime time);
 
 	@Query("SELECT s FROM Seat s WHERE s.status = 'LOCKED' AND s.lockExpiryTime <= :now")
 	List<Seat> findExpiredLocks(@Param("now") LocalDateTime now);
+
+	List<Seat> findByLockedByUserIdAndStatusAndBusId(Long userId, SeatStatus locked, Long id);
 
 }

@@ -17,7 +17,7 @@ import SearchResults from "./pages/searchResults";
 import BusDetails from "./pages/busDetails";
 import Login from "./pages/Login";
 import PrivateRoute from "./pages/PrivateRoute";
-
+import NewPayment from "./pages/NewPayment"
 
 function AppUser() {
   const location = useLocation();
@@ -42,6 +42,7 @@ function AppUser() {
         <Route path="profile" element={<Profile />} />
         <Route path="viewbuses" element={<ViewBuses />} />
         <Route path="payment" element={<Payment />} />
+        <Route path="newpayment" element={<NewPayment />} />
         <Route path="searchResults" element={<SearchResults />} />
        
         <Route path="dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />

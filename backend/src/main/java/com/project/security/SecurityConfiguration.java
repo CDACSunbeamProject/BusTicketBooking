@@ -39,7 +39,7 @@ public class SecurityConfiguration {
 					request -> request
 							.requestMatchers("/swagger-ui/**",
 									"/v3/api-docs/**",
-									"/users/signin","/test-signin", "/users/signup","/error")
+									"/users/signin","/test-signin", "/users/signup","/error", "/booking/*","/payments/*")
 							.permitAll()
 							//only for react apps - permit in flight requests - otherwise CORS error
 							.requestMatchers(HttpMethod.OPTIONS).permitAll()

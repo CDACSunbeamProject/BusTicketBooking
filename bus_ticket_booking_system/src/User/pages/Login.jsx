@@ -34,9 +34,10 @@ function Login() {
       const data = await loginUser(loginDetails.email, loginDetails.password);
 
       console.log("Full response from backend:", data);
-      const { jwt, email: userEmail, role } = data;
+      const { jwt, email: userEmail, role, id:userId } = data;
+      console.log("userid:",userId);
 
-      login(jwt, userEmail, role);
+      login(jwt, userEmail, role, userId );
 
       if (role === "ADMIN") {
         toast.success("admin login successful");

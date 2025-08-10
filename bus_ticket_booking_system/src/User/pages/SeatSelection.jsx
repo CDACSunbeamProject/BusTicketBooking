@@ -2,12 +2,22 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axiosInstance from "../services/axiosInstance";
 import { toast } from "react-toastify";
+import { decodeToken } from "react-jwt";
+
 
 function SeatSelection() {
-  const userId=localStorage.getItem("id")
+  const userId=localStorage.getItem("userId")
   const location = useLocation();
   const navigate = useNavigate();
   const { busId } = location.state || "";
+
+  // Get token from localStorage
+  const token = localStorage.getItem("token");
+  if (token) {
+    const decoded = decodeToken(token);
+    const userId = decoded.userId || decoded.id; // depends on your backend
+    console.log("User ID:", userId);
+  }
 
   const [busDetails, setBusDetails] = useState(null);
   const [selectedSeats, setSelectedSeats] = useState([]);
@@ -76,8 +86,8 @@ function SeatSelection() {
       isBooked
         ? "bg-danger text-white"
         : isSelected
-        ? "bg-success text-white"
-        : "bg-light",
+          ? "bg-success text-white"
+          : "bg-light",
       busDetails.seatType === "Sleeper" ? "pt-4 pb-4" : "",
     ].join(" ");
 
@@ -265,23 +275,23 @@ function SeatSelection() {
     }
     try {
       // Step 1: Lock seats on backend
-      await axiosInstance.post(
-        `/lock-multiple/user/${userId}`,
-        selectedSeats.map((seat) => seat.id) // send array only, not wrapped in object
-      );
+      console.log("Selected seats:", selectedSeats);
+      //console.log("Locking seats for userId", userId, "with seatIds", selectedSeats.map(seat => seat.id));
+      await axiosInstance.post(`http://localhost:9090/booking/lock-multiple/user/${userId}`,selectedSeats); // send array only, not wrapped in object;
 
       // Step 2: Save booking data to localStorage (or state management)
       const bookingData = {
         busId: parseInt(busId),
-        bus: busDetails,
+        //bus: busDetails,
         selectedSeats: selectedSeats,
         passengerDetails: passengerDetails,
         totalAmount: selectedSeats.length * busDetails.price,
+        userId: parseInt(userId),
       };
       localStorage.setItem("pendingBooking", JSON.stringify(bookingData));
 
       // Navigate to payment page
-      navigate(`/user/payment`, { state: bookingData });
+      navigate(`/user/newpayment`, { state: bookingData });
     } catch (error) {
       console.error("Error locking seats creating booking:", error);
       toast.error("Failed to lock seats booking. Try again");
