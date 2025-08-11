@@ -10,8 +10,11 @@ import org.springframework.data.repository.query.Param;
 
 import com.project.entities.Booking;
 import com.project.entities.Seat;
+import com.project.entities.User;
 
 public interface BookingDao extends JpaRepository<Booking, Long>{
 	Optional<Booking> findById(Long id);
+
+	List<Booking> findByUser(User user);
 	
 }

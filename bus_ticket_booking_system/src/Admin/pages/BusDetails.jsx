@@ -177,7 +177,7 @@ function BusDetails() {
     if (!bus) return null;
 
     const isBooked =
-      Array.isArray(bus.bookedSeats) && bus.bookedSeats.includes(seatNo);
+      Array.isArray(bus.bookedSeats) && bus.bookedSeats.includes(seatNo.toString());
 
     const seatClass = [
       isBooked ? "bg-danger text-white" : "bg-light",

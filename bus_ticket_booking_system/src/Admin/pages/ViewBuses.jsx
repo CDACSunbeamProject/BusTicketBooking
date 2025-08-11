@@ -23,6 +23,7 @@ function ViewBuses() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log("inside page")
     const loadBuses = async () => {
       try {
         const data = await fetchAllBuses(token);

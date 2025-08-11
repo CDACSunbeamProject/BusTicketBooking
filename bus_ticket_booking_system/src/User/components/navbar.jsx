@@ -31,6 +31,9 @@ function Navbar() {
   const handleAbout = () =>{
     navigate("/about")
   }
+  const handleRoutes = () => {
+    navigate("/routes");
+  };
   
   const handleContactUs = () => {
     navigate("/contact");
@@ -72,6 +75,17 @@ function Navbar() {
             >
               <span className="btn border-3 w-100 btn-outline-info text-white">
                 Home
+              </span>
+            </button>
+          </li>
+          <li className="nav-item me-3">
+            <button
+              className="nav-link d-grid gap-1"
+              onClick={handleRoutes}
+              style={{ width: "120px" }}
+            >
+              <span className="btn border-3 w-100 btn-outline-info text-white">
+                Routes
               </span>
             </button>
           </li>
@@ -124,19 +138,19 @@ function Navbar() {
           )}
           {isLoggedIn && (
             <>
-          <li className="nav-item me-3">
-            <button
-              className="nav-link d-grid gap-1"
-              onClick={handleProfile}
-              style={{ width: "120px" }}
-            >
-              <span className="btn border-3 w-100 btn-outline-info text-white">
-                <FaUser className="me me-2 mb-1" />
-                Profile
-              </span>
-            </button>
-          </li>
-          </>
+              <li className="nav-item me-3">
+                <button
+                  className="nav-link d-grid gap-1"
+                  onClick={handleProfile}
+                  style={{ width: "120px" }}
+                >
+                  <span className="btn border-3 w-100 btn-outline-info text-white">
+                    <FaUser className="me me-2 mb-1" />
+                    Profile
+                  </span>
+                </button>
+              </li>
+            </>
           )}
 
           {/* ✅ Conditionally show Login / Logout */}

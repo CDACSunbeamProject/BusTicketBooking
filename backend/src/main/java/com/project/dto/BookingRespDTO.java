@@ -14,10 +14,15 @@ import lombok.Setter;
 @NoArgsConstructor
 public class BookingRespDTO {
 	// Booking Info
+	private Long userId;
+	private String userName;
 	private Long BookingId;
 	private String bookingTime;
 	private BookingStatus bookingStatus;
 	private double totalAmount;
 	private PaymentStatus paymentStatus;
-	private BusRespDTO bus; 
+	private long noOfSeats;
+	private String busName;
+	private String busNo;
+	private Long busId;
 }

@@ -5,10 +5,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +13,12 @@ import com.project.daos.BookingDao;
 import com.project.daos.UserDao;
 import com.project.dto.BookingRespDTO;
 import com.project.dto.BusRespDTO;
+import com.project.dto.MyBookingRespDTO;
 import com.project.dto.UserProfileDTO;
 import com.project.dto.UserRequestDTO;
 import com.project.dto.UserRespDTO;
 import com.project.entities.Booking;
+import com.project.entities.Bus;
 import com.project.entities.User;
 
 import jakarta.transaction.Transactional;
@@ -69,48 +67,41 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<BookingRespDTO> getMyBookings(String email) {
+	public List<MyBookingRespDTO> getMyBookings(String email) {
 		User user = userDao.findByEmail(email)
-				.orElseThrow(() -> new ApiException("User Not Found with email:" + email));
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-		List<Booking> bookings = user.getBookings();
-		List<BookingRespDTO> allBookings = new ArrayList<>();
-		for (Booking myBooking : bookings) {
+        // Fetch bookings for that user
+        List<Booking> bookings = bookingDao.findByUser(user);
 
-			BookingRespDTO b = new BookingRespDTO();
-			b.setBookingId(myBooking.getId());
-			b.setBookingTime(myBooking.getCreationDateTime().toString());
-			b.setBookingStatus(myBooking.getStatus());
-			b.setTotalAmount(myBooking.getTotalFare());
-			b.setPaymentStatus(myBooking.getPayment().getStatus());
+        // Map Booking entities to DTO
+        return bookings.stream().map(booking -> {
+        	MyBookingRespDTO dto = new MyBookingRespDTO();
 
-			BusRespDTO bus = new BusRespDTO();
-			bus.setBusNo(myBooking.getBus().getBusNo());
-			bus.setBusName(myBooking.getBus().getBusName());
-			bus.setBusType(myBooking.getBus().getBusType());
-			bus.setSeatType(myBooking.getBus().getSeatType());
-			bus.setOperatorName(myBooking.getBus().getOperatorName());
-			bus.setNoOfSeats(myBooking.getBus().getNoOfSeats());
-			bus.setStartLocation(myBooking.getBus().getBusRoute().getStartLocation());
-			bus.setEndLocation(myBooking.getBus().getBusRoute().getEndLocation());
-			bus.setDepartureDate(myBooking.getBus().getDepartureDate());
-			bus.setDepartureTime(myBooking.getBus().getDepartureTime());
-			bus.setArrivalDate(myBooking.getBus().getArrivalDate());
-			bus.setArrivalTime(myBooking.getBus().getArrivalTime());
-			bus.setDuration(myBooking.getBus().getDuration());
-			bus.setPrice(myBooking.getBus().getPrice());
-			bus.setRating(myBooking.getBus().getRating());
-			try {
-				bus.setAmenities(myBooking.getBus().getAmenitiesList());
-			} catch (Exception e) {
-				bus.setAmenities(new ArrayList<String>());
-				e.printStackTrace();
-			}
-			b.setBus(bus);
-			allBookings.add(b);
-		}
-		return allBookings;
-	}
+            dto.setBookingId(booking.getId());
+            dto.setBookingTime(booking.getCreationDateTime()); // assuming createdOn or bookingTime stored in BaseEntity or Booking
+            dto.setBookingStatus(booking.getStatus().name());
+            dto.setTotalFare(booking.getTotalFare());
+
+            Bus bus = booking.getBus();
+            dto.setBusNo(bus.getBusNo());
+            dto.setBusName(bus.getBusName());
+
+            dto.setDepartureDate(bus.getDepartureDate() != null ? bus.getDepartureDate().toString() : null);
+            dto.setDepartureTime(bus.getDepartureTime() != null ? bus.getDepartureTime().toString() : null);
+
+            // Ticket info (can be null if not generated yet)
+            if (booking.getTicket() != null) {
+                dto.setTicketId(booking.getTicket().getId());
+                dto.setTicketStatus(booking.getTicket().getStatus().name());
+            }
+            dto.setSource(booking.getBus().getBusRoute().getStartLocation());
+            dto.setDestination(booking.getBus().getBusRoute().getEndLocation());
+            dto.setPassengerCount(booking.getPassengers() != null ? booking.getPassengers().size() : 0);
+
+            return dto;
+        }).collect(Collectors.toList());
+    }
 	
 	public long getTotalAmount() {
 		List<User> users= userDao.findAll();
@@ -125,29 +116,45 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public Long getAllBookings() {
+	public List<BookingRespDTO> getAllBookings() {
 		System.out.println("inside all bookings");
+		List<BookingRespDTO> bookings =new ArrayList<>();
 		List<User> users=userDao.findAll();
-		Long totalBookings = 0L;
 		for(User user:users) {
-			totalBookings+=user.getBookings().size();
+			
+			for(Booking booking : user.getBookings()) {
+				BookingRespDTO b = new BookingRespDTO();
+				b.setBookingId(booking.getId());
+				b.setBookingTime(booking.getCreationDateTime().toString());
+				b.setBookingStatus(booking.getStatus());
+				b.setTotalAmount(booking.getTotalFare());
+				b.setPaymentStatus(booking.getPayment().getStatus());
+				b.setUserId(user.getId());
+				b.setNoOfSeats(booking.getPassengers().size());
+				b.setBusName(booking.getBus().getBusName());
+				b.setBusNo(booking.getBus().getBusNo());
+				b.setBusId(booking.getBus().getId());
+				b.setUserName(booking.getUser().getName());
+				bookings.add(b);
+			}
 		}
-		return totalBookings;
+		return bookings;
 	}
 	@Override
 	public List<UserRespDTO> getAllUsers() {
-		System.out.println("inside service");
-	    try {
-	        List<User> users = userDao.findAll();
-	        return users.stream()
-	            .map(user -> modelMapper.map(user, UserRespDTO.class))
-	            .toList();
-	    } catch (Exception e) {
-	        // Log exception details
-	        System.err.println("Error fetching users: " + e.getMessage());
-	        e.printStackTrace();
-	        throw e; // or return empty list / handle gracefully
-	    }
+		List<User> users = userDao.findAll();
+		System.out.println("Users fetched: " + users.size());
+
+		List<UserRespDTO> dtoList = users.stream().map(user -> {
+		    System.out.println("Mapping user: " + user);
+		    UserRespDTO dto = modelMapper.map(user, UserRespDTO.class);
+		    dto.setCreationDate(user.getCreationDateTime() != null ? user.getCreationDateTime().toLocalDate() : null);
+		    dto.setNoOfBookings(user.getBookings().size());
+		    System.out.println("Mapped DTO: " + dto);
+		    return dto;
+		}).toList();
+
+		return dtoList;
 	}
 	@Override
 	public UserProfileDTO updateProfile(UserProfileDTO dto) {

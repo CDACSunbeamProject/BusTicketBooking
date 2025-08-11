@@ -1,120 +1,156 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useAuth } from "../../AuthContext";
+import { FaSearch, FaSpinner } from "react-icons/fa";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function ViewUsers() {
+  const { token } = useAuth();
+
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    console.log("inside page")
-    axios
-      .get("http://localhost:9090/admin/users", {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      })
-      .then((res) => {
-        setUsers(res.data);
+    if (!token) {
+      setLoading(false);
+      return;
+    }
+
+    const loadInfo = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:9090/users/allusers",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log(response.data)
+        setUsers(response.data);
+      } catch (err) {
+        setError("Failed to load users");
+        console.error("Error loading users:", err);
+        toast.error("Failed to load users");
+      } finally {
         setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setError("Failed to fetch users");
-        setLoading(false);
-      });
-  }, []);
+      }
+    };
 
-  // const handleDelete = (userId) => {
-  //   if (!window.confirm("Are you sure you want to delete this user?")) return;
+    loadInfo();
+  }, [token]);
 
-  //   setLoading(true);
+  const filteredUsers = users.filter((user) =>
+    Object.values(user).some(
+      (value) =>
+        value &&
+        value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  );
 
-  //   axios
-  //     .delete(`http://localhost:9090/admin/user/delete/${userId}`, {
-  //       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-  //     })
-  //     .then(() => {
-  //       setUsers(users.filter((user) => user.id !== userId));
-  //       setLoading(false);
-  //     })
-  //     .catch((err) => {
-  //       console.error(err);
-  //       setError("Failed to delete user");
-  //       setLoading(false);
-  //     });
-  // };
-
-  if (loading) {
+  if (loading)
     return (
-      <div className="d-flex flex-column align-items-center justify-content-center vh-100">
-        <div className="spinner-border text-primary mb-3" role="status"></div>
-        <span className="fw-semibold">Loading users...</span>
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{ height: "50vh" }}
+      >
+        <FaSpinner className="fa-spin me-2" size={30} />
+        <span>Loading users...</span>
       </div>
     );
-  }
+
+  if (error)
+    return (
+      <div className="alert alert-danger text-center my-5">
+        {error}
+        <button
+          className="btn btn-sm btn-outline-dark ms-3"
+          onClick={() => window.location.reload()}
+        >
+          Retry
+        </button>
+      </div>
+    );
 
   return (
-    <div className="container mt-4 mb-5">
-      {/* Page Header */}
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2 className="fw-bold text-primary mb-0">
-          <i className="bi bi-people-fill me-2"></i>All Users
-        </h2>
-        <span className="badge bg-primary fs-6">Total: {users.length}</span>
-      </div>
-
-      {/* Error Alert */}
-      {error && (
-        <div className="alert alert-danger shadow-sm" role="alert">
-          {error}
+    <div className="container my-4">
+      <div className="card shadow">
+        <div className="card-header bg-primary text-white">
+          <div className="d-flex justify-content-between align-items-center">
+            <h2 className="mb-0">All User Details</h2>
+            <div className="input-group" style={{ width: "300px" }}>
+              <span className="input-group-text">
+                <FaSearch />
+              </span>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Search bookings..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+          </div>
         </div>
-      )}
+        <div className="card-body">
+          {filteredUsers.length === 0 ? (
+            <div className="text-center py-5">
+              <h4 className="text-muted">
+                {users.length === 0
+                  ? "No users found"
+                  : "No matching users found"}
+              </h4>
+            </div>
+          ) : (
+            <div className="table-responsive shadow-sm rounded">
+              <table className="table table-hover text-center">
+                <thead className="table-info">
+                  <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Age</th>
+                    <th>Gender</th>
+                    <th>Phone</th>
+                    <th>Role</th>
+                    <th>Bookings</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredUsers.map((user, index) => (
+                    <tr key={user.id}>
+                      <td>{index + 1}</td>
+                      <td className="fw-semibold">{user.name}</td>
+                      <td>{user.email}</td>
+                      <td>{user.age ?? "-"}</td>
+                      <td>{user.gender ?? "-"}</td>
+                      <td>{user.phone ?? "-"}</td>
+                      <td>
+                        <span
+                          className={`badge ${
+                            user.role?.toLowerCase() === "admin"
+                              ? "bg-danger"
+                              : "bg-success"
+                          }`}
+                        >
+                          {user.role ?? "-"}
+                        </span>
+                      </td>
+                      <td>{user.noOfBookings}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
 
-      {/* Users Table */}
-      <div className="table-responsive shadow-sm rounded">
-        <table className="table table-striped table-hover align-middle mb-0">
-          <thead className="table-dark text-center">
-            <tr>
-              <th>#</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Age</th>
-              <th>Gender</th>
-              <th>Phone</th>
-              <th>Role</th>
-              <th>Bookings</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.length > 0 ? (
-              users.map((user, index) => (
-                <tr key={user.id} className="text-center">
-                  <td>{index + 1}</td>
-                  <td className="fw-semibold">{user.name}</td>
-                  <td>{user.email}</td>
-                  <td>{user.age ?? "-"}</td>
-                  <td>{user.gender ?? "-"}</td>
-                  <td>{user.phone ?? "-"}</td>
-                  <td>
-                    <span
-                      className={`badge ${
-                        user.role === "admin" ? "bg-danger" : "bg-success"
-                      }`}
-                    >
-                      {user.role ?? "-"}
-                    </span>
-                  </td>
-                  <td>{user.bookings?.length ?? 0}</td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="9" className="text-center text-muted py-4">
-                  No users found
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+        <div className="card-footer text-muted">
+          Showing {filteredUsers.length} of {users.length} users
+        </div>
       </div>
     </div>
   );

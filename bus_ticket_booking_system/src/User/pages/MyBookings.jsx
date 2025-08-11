@@ -1,88 +1,196 @@
-import React, { use, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useAuth } from "../../AuthContext";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { FaSpinner, FaSearch, FaTicketAlt } from "react-icons/fa";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 function MyBookings() {
-  const [bookings, setBookings] = useState([
-    {
-      busNo: "KA-06-5678",
-      from: "Pune",
-      to: "Hyderabad",
-      date: "2023-10-01",
-      seatsCount: "02",
-      price: 1000,
-    },
-    {
-      busNo: "MH-14-1234",
-      from: "Hyderabad",
-      to: "Bangalore",
-      date: "2023-10-02",
-      seatsCount: "03",
-      price: 1800,
-    },
-    {
-      busNo: "AP-26-9101",
-      from: "Bangalore",
-      to: "Pune",
-      date: "2023-10-03",
-      seatsCount: "03",
-      price: 1700,
-    },
-    {
-      busNo: "MH-04-1121",
-      from: "Mumbai",
-      to: "Hyderabad",
-      date: "2023-10-04",
-      seatsCount: "01",
-      price: 800,
-    },
-  ]);
+  const [bookings, setBookings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const { token } = useAuth();
   const navigate = useNavigate();
-  const handleBack = () => {
-    navigate("/user");
+
+  useEffect(() => {
+    if (!token) {
+      setLoading(false);
+      return;
+    }
+
+    const loadInfo = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:9090/users/bookings",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        console.log(response.data)
+        setBookings(response.data);
+      } catch (err) {
+        setError("Failed to load bookings");
+        console.error("Error loading bookings:", err);
+        toast.error("Failed to load bookings");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadInfo();
+  }, [token]);
+
+  const filteredBookings = bookings.filter((booking) =>
+    Object.values(booking).some(
+      (value) =>
+        value &&
+        value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  );
+
+  const handleViewTicket = (ticketId) => {
+    navigate("/ticket", { state: { ticketId } });
   };
-  return (
-    <div className="container-sm medium-size-page mt-5 mb-5 bg-light border shadow rounded-4">
-      <div className="row justify-content-center align-items-center text-center">
-        <div className="fs-4 rounded-top-4 header-color pt-2 pb-3 fw-medium p-2 text-white">
-          My Bookings
-        </div>
+
+  // Helper to combine date and time into one string
+  const formatDeparture = (date, time) => {
+    return `${date} ${time}`;
+  };
+
+  // Helper to combine route string
+  const formatRoute = (source, destination) => {
+    return `${source} → ${destination}`;
+  };
+
+  if (loading)
+    return (
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{ height: "50vh" }}
+      >
+        <FaSpinner className="fa-spin me-2" size={30} />
+        <span>Loading bookings...</span>
       </div>
-      <div>
-        <div className="row m-5 mb-3 p-1 justtify-content-center align-items-center text-center">
-          <div className="border border-dark m-0 p-0">
-            <table className="table m-0 border-dark shadow text-center">
-              <thead>
-                <tr className=" border-dark table-primary align-middle">
-                  <th>No.</th>
-                  <th>Bus Number</th>
-                  <th>From</th>
-                  <th>To</th>
-                  <th>Date</th>
-                  <th>No. Seats Booked</th>
-                  <th>Price</th>
-                </tr>
-              </thead>
-              <tbody className="table-bordered table">
-                {bookings.map((booking, index) => (
-                  <tr key={index} className="align-middle bg-white">
-                    <td className="col">{index + 1}</td>
-                    <td className="col">{booking.busNo}</td>
-                    <td className="col">{booking.from}</td>
-                    <td className="col">{booking.to}</td>
-                    <td className="col">{booking.date}</td>
-                    <td className="col">{booking.seatsCount}</td>
-                    <td className="col">{booking.price}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+    );
+
+  if (error)
+    return (
+      <div className="alert alert-danger text-center my-5">
+        {error}
+        <button
+          className="btn btn-sm btn-outline-dark ms-3"
+          onClick={() => window.location.reload()}
+        >
+          Retry
+        </button>
+      </div>
+    );
+
+  return (
+    <div className="container my-4">
+      <div className="card shadow">
+        <div className="card-header bg-primary text-white">
+          <div className="d-flex justify-content-between align-items-center">
+            <h2 className="mb-0">My Bookings</h2>
+            <div className="input-group" style={{ width: "300px" }}>
+              <span className="input-group-text">
+                <FaSearch />
+              </span>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Search bookings..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
           </div>
         </div>
-        <div className="row mt-3 mb-5 justify-content-center align-items-center text-center">
-          <div className="d-grid col-2">
-            <button className="btn fw-bold btn-warning" onClick={handleBack}>
-              Back
-            </button>
-          </div>
+
+        <div className="card-body">
+          {filteredBookings.length === 0 ? (
+            <div className="text-center py-5">
+              <h4 className="text-muted">
+                {bookings.length === 0
+                  ? "No bookings found"
+                  : "No matching bookings found"}
+              </h4>
+            </div>
+          ) : (
+            <div className="table-responsive">
+              <table className="table table-hover text-center">
+                <thead className="table-info">
+                  <tr>
+                    <th>Booking Time</th>
+                    <th>Booking ID</th>
+                    <th>Bus Name</th>
+                    <th>Bus No</th>
+                    <th>Departure</th>
+                    <th>Route</th>
+                    {/* <th>Passengers</th> */}
+                    <th>Status</th>
+                    <th>Amount (₹)</th>
+                    <th>Ticket</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredBookings.map((booking) => (
+                    <tr key={booking.bookingId}>
+                      <td>{new Date(booking.bookingTime).toLocaleString()}</td>
+                      <td>{booking.bookingId}</td>
+                      <td>{booking.busName}</td>
+                      <td>{booking.busNo}</td>
+                      <td>
+                        {formatDeparture(
+                          booking.departureDate,
+                          booking.departureTime.substring(0, 5)
+                        )}
+                      </td>
+                      <td>
+                        {formatRoute(booking.source, booking.destination)}
+                      </td>
+                      {/* <td>{booking.passengerCount}</td> */}
+                      <td>
+                        <span
+                          className={`badge ${
+                            booking.bookingStatus === "CONFIRMED"
+                              ? "bg-success"
+                              : booking.bookingStatus === "CANCELLED"
+                              ? "bg-danger"
+                              : "bg-warning"
+                          }`}
+                        >
+                          {booking.bookingStatus}
+                        </span>
+                      </td>
+                      <td className="fw-bold">
+                        {booking.totalFare.toFixed(2)}
+                      </td>
+                      <td>
+                        {booking.ticketId ? (
+                          <button
+                            className="btn btn-sm btn-outline-primary"
+                            onClick={() => handleViewTicket(booking.ticketId)}
+                            title="View Ticket"
+                          >
+                            <FaTicketAlt className="mb-1" /> View
+                          </button>
+                        ) : (
+                          <span className="text-muted">N/A</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+
+        <div className="card-footer text-muted">
+          Showing {filteredBookings.length} of {bookings.length} bookings
         </div>
       </div>
     </div>

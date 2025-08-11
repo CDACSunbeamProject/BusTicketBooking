@@ -21,6 +21,7 @@ import com.project.dto.AddBusDTO;
 import com.project.dto.ApiResponse;
 import com.project.dto.BusRespDTO;
 import com.project.dto.BusesRespDTO;
+import com.project.dto.RouteDTO;
 import com.project.dto.SeatSelectionResponseDTO;
 import com.project.entities.Bus;
 import com.project.entities.Route;
@@ -178,6 +179,13 @@ public class BusServiceImpl implements BusService {
 
 	        return dto;
 	    }).toList();
+	}
+
+	@Override
+	public List<RouteDTO> getAllRoutes() {
+		return routeDao.findAll().stream().map(route ->{
+			return modelMapper.map(route, RouteDTO.class);
+		}).toList();
 	}
 
 	

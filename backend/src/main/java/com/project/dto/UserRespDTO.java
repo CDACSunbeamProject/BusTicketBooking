@@ -18,5 +18,5 @@ public class UserRespDTO extends BaseDTO{
 	private String gender;
 	private String phone;
 	private UserRole role;
-	private List<Booking> bookings;
+	private long noOfBookings;
 }

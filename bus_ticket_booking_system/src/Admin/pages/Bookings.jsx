@@ -1,76 +1,204 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
+import { useAuth } from "../../AuthContext";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { FaSpinner, FaEye, FaTrashAlt, FaSearch } from "react-icons/fa";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const AdminUserInfo = () => {
+function Bookings() {
+  const [bookings, setBookings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const { token } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!token) {
+      setLoading(false);
+      return;
+    }
+
+    const loadInfo = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:9090/admin/bookings",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setBookings(response.data);
+      } catch (err) {
+        setError("Failed to load bookings");
+        console.error("Error loading bookings:", err);
+        toast.error("Failed to load bookings");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadInfo();
+  }, [token]);
+
+  const filteredBookings = bookings.filter((booking) =>
+    Object.values(booking).some(
+      (value) =>
+        value &&
+        value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  );
+
+  const handleViewDetails = (bookingId) => {
+    navigate(`/admin/bookings/${bookingId}`);
+  };
+
+  const handleDeleteBooking = async (bookingId) => {
+    if (!window.confirm("Are you sure you want to delete this booking?"))
+      return;
+
+    try {
+      await axios.delete(`http://localhost:9090/admin/bookings/${bookingId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setBookings(
+        bookings.filter((booking) => booking.bookingId !== bookingId)
+      );
+      toast.success("Booking deleted successfully");
+    } catch (err) {
+      console.error("Error deleting booking:", err);
+      toast.error("Failed to delete booking");
+    }
+  };
+
+  if (loading)
+    return (
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{ height: "50vh" }}
+      >
+        <FaSpinner className="fa-spin me-2" size={30} />
+        <span>Loading bookings...</span>
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="alert alert-danger text-center my-5">
+        {error}
+        <button
+          className="btn btn-sm btn-outline-dark ms-3"
+          onClick={() => window.location.reload()}
+        >
+          Retry
+        </button>
+      </div>
+    );
+
   return (
-    <div className="container mt-5">
-      <h2 className="text-center mb-4">Booking Details</h2>
+    <div className="container my-4">
+      <div className="card shadow">
+        <div className="card-header bg-primary text-white">
+          <div className="d-flex justify-content-between align-items-center">
+            <h2 className="mb-0">All Booking Details</h2>
+            <div className="input-group" style={{ width: "300px" }}>
+              <span className="input-group-text">
+                <FaSearch />
+              </span>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Search bookings..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+          </div>
+        </div>
 
-      <div className="table-responsive">
-        <table className="table table-bordered table-hover align-middle text-center">
-          <thead className="table-dark">
-            <tr>
-              <th>Sr.No</th>
-              <th>Bus ID</th>
-              <th>Name</th>
-              <th>Gender</th>
-              <th>Mobile No.</th>
-              <th>Email</th>
-              <th>Address</th>
-              <th>Route</th>
-              <th>Pickup Point</th>
-              <th>Pickup Date & Time</th>
-              <th>Drop Point</th>
-              <th>Drop Date & Time</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td>B101</td>
-              <td>Priya Desai</td>
-              <td>Female</td>
-              <td>9876543210</td>
-              <td>priya@example.com</td>
-              <td>Shivaji Nagar, Pune</td>
-              <td>Pune → Mumbai</td>
-              <td>Swargate</td>
-              <td>2025-07-25, 08:00 AM</td>
-              <td>Dadar</td>
-              <td>2025-07-25, 11:30 AM</td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>B102</td>
-              <td>Rahul Jain</td>
-              <td>Male</td>
-              <td>8765432109</td>
-              <td>rahulj@example.com</td>
-              <td>Kothrud, Pune</td>
-              <td>Pune → Nashik</td>
-              <td>Katraj</td>
-              <td>2025-07-26, 06:00 AM</td>
-              <td>CBS Nashik</td>
-              <td>2025-07-26, 10:00 AM</td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td>B103</td>
-              <td>Sneha Patil</td>
-              <td>Female</td>
-              <td>9988776655</td>
-              <td>sneha.p@gmail.com</td>
-              <td>Hinjewadi, Pune</td>
-              <td>Pune → Bangalore</td>
-              <td>Hinjewadi</td>
-              <td>2025-07-27, 07:00 PM</td>
-              <td>Majestic</td>
-              <td>2025-07-28, 06:30 AM</td>
-            </tr>
-          </tbody>
-        </table>
+        <div className="card-body">
+          {filteredBookings.length === 0 ? (
+            <div className="text-center py-5">
+              <h4 className="text-muted">
+                {bookings.length === 0
+                  ? "No bookings found"
+                  : "No matching bookings found"}
+              </h4>
+            </div>
+          ) : (
+            <div className="table-responsive">
+              <table className="table table-hover text-center">
+                <thead className="table-info">
+                  <tr>
+                    <th>Booking Time</th>
+                    <th>Booking ID</th>
+                    <th>User Name</th>
+                    <th>Bus No</th>
+                    <th>No of Seats</th>
+                    <th>Status</th>
+                    <th>Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredBookings.map((booking) => (
+                    <tr key={booking.bookingId}>
+                      <td>{new Date(booking.bookingTime).toLocaleString()}</td>
+                      <td>{booking.bookingId}</td>
+                      <td>{booking.userName}</td>
+                      <td>{booking.busNo}</td>
+                      <td className="text-center">{booking.noOfSeats}</td>
+                      <td>
+                        <span
+                          className={`badge ${
+                            booking.bookingStatus === "CONFIRMED"
+                              ? "bg-success"
+                              : booking.bookingStatus === "CANCELLED"
+                              ? "bg-danger"
+                              : "bg-warning"
+                          }`}
+                        >
+                          {booking.bookingStatus}
+                        </span>
+                      </td>
+                      <td className="fw-bold">
+                        ₹{booking.totalAmount.toFixed(2)}
+                      </td>
+                      {/* <td>
+                        <div className="d-flex gap-2">
+                          <button
+                            className="btn btn-sm btn-outline-primary"
+                            onClick={() => handleViewDetails(booking.bookingId)}
+                          >
+                            <FaEye />
+                          </button>
+                          <button
+                            className="btn btn-sm btn-outline-danger"
+                            onClick={() =>
+                              handleDeleteBooking(booking.bookingId)
+                            }
+                          >
+                            <FaTrashAlt />
+                          </button>
+                        </div>
+                      </td> */}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+
+        <div className="card-footer text-muted">
+          Showing {filteredBookings.length} of {bookings.length} bookings
+        </div>
       </div>
     </div>
   );
-};
+}
 
-export default AdminUserInfo;
+export default Bookings;

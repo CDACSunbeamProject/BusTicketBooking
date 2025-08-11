@@ -101,7 +101,13 @@ public class UserController {
 	@GetMapping("/bookings")
 	public ResponseEntity<?> getMyBooking(Authentication authentication) {
 		String email = (String) authentication.getPrincipal(); // you stored email in JWT
-		List<BookingRespDTO> bookings = userService.getMyBookings(email); // fetch User from DB
-		return ResponseEntity.ok().body(bookings);
+		return ResponseEntity.ok().body(userService.getMyBookings(email));
+	}
+	
+	@GetMapping("/allusers")
+	public ResponseEntity<?> getAllUsers() {
+		System.out.println("inside controller");
+		
+	    return ResponseEntity.ok().body(userService.getAllUsers());
 	}
 }

@@ -2,7 +2,6 @@
 <qualifiedTypeNameHistroy>
     <fullyQualifiedTypeName name="com.project.dto.ApiResponse"/>
     <fullyQualifiedTypeName name="com.fasterxml.jackson.annotation.JsonIgnore"/>
-    <fullyQualifiedTypeName name="com.project.entities.Bus"/>
     <fullyQualifiedTypeName name="com.project.entities.Passenger"/>
     <fullyQualifiedTypeName name="com.project.entities.Ticket"/>
     <fullyQualifiedTypeName name="com.project.services.TicketService"/>
@@ -12,7 +11,6 @@
     <fullyQualifiedTypeName name="jakarta.persistence.OneToOne"/>
     <fullyQualifiedTypeName name="jakarta.persistence.Enumerated"/>
     <fullyQualifiedTypeName name="jakarta.persistence.EnumType"/>
-    <fullyQualifiedTypeName name="java.time.LocalDateTime"/>
     <fullyQualifiedTypeName name="lombok.ToString"/>
     <fullyQualifiedTypeName name="com.project.custom_exceptions.ResourceNotFoundException"/>
     <fullyQualifiedTypeName name="com.project.dto.TicketRespDTO"/>
@@ -21,7 +19,6 @@
     <fullyQualifiedTypeName name="java.time.format.DateTimeFormatter"/>
     <fullyQualifiedTypeName name="com.project.dto.PassengerDTO"/>
     <fullyQualifiedTypeName name="com.project.dto.SeatSelectionRequestDTO"/>
-    <fullyQualifiedTypeName name="com.project.dto.SeatSelectionResponseDTO"/>
     <fullyQualifiedTypeName name="java.lang.Long"/>
     <fullyQualifiedTypeName name="org.springframework.security.core.annotation.AuthenticationPrincipal"/>
     <fullyQualifiedTypeName name="com.project.entities.User"/>
@@ -30,15 +27,24 @@
     <fullyQualifiedTypeName name="org.modelmapper.ModelMapper"/>
     <fullyQualifiedTypeName name="com.project.dto.UserProfileRespDTO"/>
     <fullyQualifiedTypeName name="com.project.daos.BookingDao"/>
-    <fullyQualifiedTypeName name="java.util.List"/>
-    <fullyQualifiedTypeName name="java.util.ArrayList"/>
     <fullyQualifiedTypeName name="com.project.entities.Booking"/>
-    <fullyQualifiedTypeName name="com.project.dto.BookingRespDTO"/>
-    <fullyQualifiedTypeName name="com.project.dto.BusRespDTO"/>
-    <fullyQualifiedTypeName name="lombok.Getter"/>
-    <fullyQualifiedTypeName name="lombok.Setter"/>
-    <fullyQualifiedTypeName name="lombok.NoArgsConstructor"/>
-    <fullyQualifiedTypeName name="lombok.AllArgsConstructor"/>
     <fullyQualifiedTypeName name="com.project.entities.PaymentStatus"/>
     <fullyQualifiedTypeName name="com.project.entities.BookingStatus"/>
+    <fullyQualifiedTypeName name="com.project.dto.SummaryRespDTO"/>
+    <fullyQualifiedTypeName name="com.project.dto.BusRespDTO"/>
+    <fullyQualifiedTypeName name="com.project.dto.SeatSelectionResponseDTO"/>
+    <fullyQualifiedTypeName name="com.project.dto.BookingRespDTO"/>
+    <fullyQualifiedTypeName name="java.util.ArrayList"/>
+    <fullyQualifiedTypeName name="jakarta.persistence.SequenceGenerator"/>
+    <fullyQualifiedTypeName name="com.project.dto.UserRespDTO"/>
+    <fullyQualifiedTypeName name="lombok.AllArgsConstructor"/>
+    <fullyQualifiedTypeName name="lombok.NoArgsConstructor"/>
+    <fullyQualifiedTypeName name="java.time.LocalDateTime"/>
+    <fullyQualifiedTypeName name="com.project.entities.Bus"/>
+    <fullyQualifiedTypeName name="java.util.stream.Collectors"/>
+    <fullyQualifiedTypeName name="com.project.dto.MyBookingRespDTO"/>
+    <fullyQualifiedTypeName name="java.util.List"/>
+    <fullyQualifiedTypeName name="com.project.dto.RouteDTO"/>
+    <fullyQualifiedTypeName name="lombok.Getter"/>
+    <fullyQualifiedTypeName name="lombok.Setter"/>
 </qualifiedTypeNameHistroy>

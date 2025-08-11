@@ -120,6 +120,13 @@ public class BusController {
 		System.out.println("inside get all buses");
 		return ResponseEntity.ok(busService.getAllBuses());
 	}
+	
+	@GetMapping("/getroutes")
+	public ResponseEntity<?> getAllPossibleRoutes(){
+		System.out.println("inside get all buses");
+		return ResponseEntity.ok(busService.getAllRoutes());
+	}
+	
 }
 
 
